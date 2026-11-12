@@ -15,3 +15,15 @@
 .debate-card{background:#e7ede5}
 .debate-card .card-number{color:#50735e}
 @media(max-width:720px){.publication-grid{grid-template-columns:1fr}.publication-card{min-height:270px}}
+
+
+/* Five consistent primary destinations; collapse menu before text overlaps. */
+@media(max-width:1080px){
+ .menu-toggle{display:flex;flex-direction:column;gap:5px;padding:12px;border:0;background:transparent;cursor:pointer;margin-left:auto}
+ .menu-toggle span{width:22px;height:2px;background:var(--pine)}
+ .site-nav{display:none;position:absolute;top:89px;left:0;right:0;padding:18px;background:var(--paper);border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch;gap:0}
+ .site-nav.is-open{display:flex}
+ .site-nav a{padding:13px 8px}
+}
+@media(max-width:720px){.site-nav{top:72px}}
+.site-nav a[aria-current="page"]{color:var(--pine);text-decoration:underline;text-decoration-color:#8eac91;text-underline-offset:6px}
