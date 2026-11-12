@@ -2,6 +2,8 @@
 
 Dette er et **arbeidsutkast** på GitHub-grenen `design/tidsskrift-forside-2026`. Den offentlige siden på `main` er ikke oppdatert.
 
+[**Slik redigerer du tekstene selv i GitHub**](REDIGERING.md)
+
 ## Hovedstruktur
 
 Nettstedet organiseres i **fire redaksjonelle områder**, mens faglige artikkeltemaer kan deles inn i underkategorier.
