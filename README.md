@@ -1,41 +1,61 @@
-# Norsk idrettsvitenskap – utviklingsutkast
+# Norsk idrettsvitenskap – nettsideutkast
 
-Dette er et **utkast til nettsted**, utviklet i GitHub-grenen `design/tidsskrift-forside-2026`.
+Dette er et **arbeidsutkast** på GitHub-grenen `design/tidsskrift-forside-2026`. Den offentlige siden på `main` er ikke oppdatert.
 
-## Innhold
+## Hovedstruktur
 
-- `index.html`: forside med fire publikasjonsområder og første artikkelserie.
-- `vitenskap.html`: vitenskapelige originalartikler og oversiktsartikler (narrative og systematiske reviews; metaanalyser der relevant). Beskriver metodiske krav og forskjellen fra pensum som bruksområde.
-- `debatt.html`: fjerde publikasjonsområde med debattinnlegg, faglige kommentarer og replikker/tilsvar. Foreløpige redaksjonelle prinsipper; ingen innsending er aktivert.
-- `artikler.html`: søkbart og kategorisert arkiv over planlagte artikkeltemaer.
-- `artikler/*.html`: seks individuelle artikkelskisser med fungerende interne lenker, innholdsfortegnelse og utskriftsvisning.
-- `styles.css`, `articles.css`: responsiv utforming.
-- `site.js`: mobilmeny og dynamisk filtrering.
+Nettstedet organiseres i **fire redaksjonelle områder**, mens faglige artikkeltemaer kan deles inn i underkategorier.
 
-## Nettbasert forhåndsvisning (ingen publisering på hoveddomenet)
+| Område | Side | Innhold / redaksjonelt formål |
+| --- | --- | --- |
+| Pensum og faggrunnlag | `artikler.html` | Faglige grunnlagsartikler for utdanning; artikkelutkast og kritiske kunnskapsvurderinger |
+| Trening forklart | `trening-forklart.html` | Populærvitenskapelig formidling for allmennhet, trenere og utøvere |
+| Vitenskapelige artikler | `vitenskap.html` | Originalstudier og oversiktsartikler: narrative/kritiske reviews, systematiske reviews og metaanalyser når relevant |
+| Debatt og kommentar | `debatt.html` | Debattinnlegg, faglige kommentarer samt replikk og tilsvar |
 
-Åpne sidene direkte i nettleseren via HTML Preview, som leser de **offentlig tilgjengelige** filene i utviklingsgrenen:
+**Viktig kategoriskille:** Originalforskning og oversiktsartikler er *publikasjonstyper*. Pensum er en *tiltenkt anvendelse/målgruppe*. En vitenskapelig oversiktsartikkel kan derfor også være egnet som pensumlitteratur. En metaanalyse er en statistisk syntesemetode, ikke en garanti for kvalitet.
+
+### Planlagt første artikkelserie
+
+`artikler.html` har søk og filtrering for tre emnegrupper:
+- **Begreper og definisjoner**: tretthet; styrke og utholdenhet; motorikk og motorisk læring.
+- **Modeller og mekanismer**: superkompensasjon og treningsprinsippene; laktat, muskelskade og adaptasjon.
+- **Utøverutvikling**: fra barn til senior.
+
+De seks individuelle filene under `artikler/` er **redaksjonelle skisser**, ikke ferdige eller fagfellevurderte vitenskapelige artikler.
+
+## Filer
+
+- `index.html`: forside og inngang til de fire publikasjonsområdene.
+- `artikler.html`: oversikt over planlagte pensumtemaer.
+- `artikler/*.html`: seks artikkelskisser med innholdsfortegnelse og interne lenker.
+- `trening-forklart.html`: populærvitenskap, under utvikling.
+- `vitenskap.html`: originalforskning, reviews og metaanalyser – foreløpige redaksjonelle standarder.
+- `debatt.html`: debatt og kommentar – foreløpige redaksjonelle prinsipper.
+- `styles.css` og `articles.css`: responsiv utforming.
+- `site.js`: mobilnavigasjon, søk og emnefiltre.
+
+## Nettbasert forhåndsvisning
+
+Disse lenkene bruker en **ekstern** HTML-viser som leser offentlig tilgjengelige filer direkte fra GitHub. Dette er ikke en egen GitHub Pages-utgivelse.
 
 - [Forsiden](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/index.html)
-- [Artikkeloversikt](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler.html)
-- [Forskning og oversiktsartikler](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/vitenskap.html)
+- [Pensum og faggrunnlag](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler.html)
+- [Trening forklart](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/trening-forklart.html)
+- [Vitenskapelige artikler](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/vitenskap.html)
 - [Debatt og kommentar](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/debatt.html)
-- [Eksempelartikkel: Hva er tretthet?](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler/tretthet.html)
+- [Eksempel på artikkelskisse: Hva er tretthet?](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler/tretthet.html)
 
-**Merk:** HTML Preview er en ekstern tredjepartsvisning, ikke GitHub Pages. Tjenesten henter HTML, CSS og JavaScript fra GitHub og kan ha begrensninger; den er bare ment for demonstrasjon. Ikke skriv inn personopplysninger eller andre sensitive data. Ved feil, bruk lokal forhåndsvisning nedenfor.
+HTML-viseren er en tredjepartstjeneste og kan ha tekniske begrensninger. Ikke bruk skjemaer der eller oppgi personopplysninger. Den faktiske visningen er ikke nettlesertestet.
 
-Lenkene følger utviklingsgrenen og endrer ikke `main`, `CNAME` eller innholdet på norskidrettsvitenskap.no.
-
-## Forhåndsvisning (lokalt)
+## Lokal forhåndsvisning
 
 1. Last ned utviklingsgrenen som ZIP fra GitHub og pakk ut.
-2. Åpne `index.html` i en nettleser. Lenker og filtrering fungerer uten server.
-3. Eventuelt start en lokal server fra mappen: `python -m http.server 8000` og åpne `http://localhost:8000/`.
+2. Åpne `index.html` i nettleseren.
+3. Eventuelt start `python -m http.server 8000` og åpne `http://localhost:8000/`.
 
-## Redaksjonell status
+## Før publisering
 
-Alle artikkelsider er **skisser til videre faglig arbeid**. Vitenskaps- og debattsidene er forslag til redaksjonell organisering, ikke åpne kanaler for publisering. De er ikke ferdige, fagfellevurderte vitenskapelige artikler eller godkjent pensumlitteratur. Sidene har derfor ikke forfatter, DOI, referanselister eller publiseringsdato. Det er heller ikke aktivert manusinnsending.
+Det er **ikke** etablert innsending eller behandling av manuskripter, DOI, redaksjon, formelle retningslinjer for fagfellevurdering eller publiserte artikler. Den faglige og redaksjonelle kvalitetssikringen må avklares før lansering.
 
-## Publisering
-
-Ikke slå sammen utkastet med `main` før innhold og design er gjennomgått og redaksjonelle rutiner avklart. GitHub Pages bruker eksisterende domeneoppsett i `CNAME`, som ikke endres her. Utviklingsgrenen endrer ikke den offentlige forsiden.
+Ikke slå sammen grenen med `main` før innhold, design og publiseringsrutiner er gjennomgått. Filen `CNAME` for `norskidrettsvitenskap.no` skal forbli urørt frem til publisering.
