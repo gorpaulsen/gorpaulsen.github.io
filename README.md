@@ -20,17 +20,17 @@ Nettstedet organiseres i **fire redaksjonelle områder**, mens faglige artikkelt
 ### Planlagt første artikkelserie
 
 `artikler.html` har søk og filtrering for tre emnegrupper:
-- **Begreper og definisjoner**: tretthet; styrke og utholdenhet; motorikk og motorisk læring.
+- **Begreper og definisjoner**: tretthet; styrke; utholdenhet; motorikk og motorisk læring.
 - **Modeller og mekanismer**: superkompensasjon og treningsprinsippene; laktat, muskelskade og adaptasjon.
 - **Utøverutvikling**: fra barn til senior.
 
-De seks individuelle filene under `artikler/` er **redaksjonelle skisser**, ikke ferdige eller fagfellevurderte vitenskapelige artikler.
+De sju individuelle disposisjonene under `artikler/` er **redaksjonelle skisser**, ikke ferdige eller fagfellevurderte vitenskapelige artikler.
 
 ## Filer
 
 - `index.html`: forside og inngang til de fire publikasjonsområdene.
 - `artikler.html`: oversikt over planlagte pensumtemaer.
-- `artikler/*.html`: seks artikkelskisser med innholdsfortegnelse og interne lenker.
+- `artikler/*.html`: sju artikkeldisposisjoner med innholdsfortegnelse og interne lenker.
 - `trening-forklart.html`: populærvitenskap, under utvikling.
 - `vitenskap.html`: originalforskning, reviews og metaanalyser – foreløpige redaksjonelle standarder.
 - `debatt.html`: debatt og kommentar – foreløpige redaksjonelle prinsipper.
