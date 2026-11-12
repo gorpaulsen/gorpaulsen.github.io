@@ -145,3 +145,34 @@
 .research-cross .button{margin-top:14px}
 @media(max-width:900px){.research-hero-grid{grid-template-columns:1fr 230px;gap:30px}.research-format{padding:26px}.research-standards-grid{gap:40px}}
 @media(max-width:720px){.research-hero{padding-bottom:56px}.research-hero-grid,.research-format-grid,.research-standards-grid,.research-cross-grid{grid-template-columns:1fr;gap:30px}.research-hero-grid{padding-top:48px}.research-hero h1{font-size:clamp(42px,10vw,65px)}.research-hero-grid>div>p:last-child{font-size:15px}.research-aside{max-width:540px}.research-aside p:not(.research-aside-label){font-size:20px}.research-format{min-height:0}}
+
+
+/* Trening forklart: independent public-science section */
+.outreach-page{background:#fbfcf8}
+.outreach-hero{background:#f0f4e9;padding-bottom:74px}
+.outreach-hero .breadcrumbs{padding-top:32px}
+.outreach-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:clamp(35px,7vw,95px);align-items:end;padding-top:70px}
+.outreach-hero h1{font:400 clamp(46px,6.7vw,80px)/1.035 var(--font-display);letter-spacing:-.025em;color:var(--pine);margin:0 0 24px}
+.outreach-hero h1 em{font-weight:400;color:#819f82}
+.outreach-hero-grid>div>p:last-child{font-size:17px;line-height:1.85;color:#5e7465;max-width:750px;margin:0}
+.outreach-aside{border-top:3px solid #799a7c;padding-top:25px}
+.outreach-aside-label{font-size:10px!important;font-weight:700;letter-spacing:.16em;color:#608369!important;margin:0 0 15px!important}
+.outreach-aside p:not(.outreach-aside-label){font:400 24px/1.4 var(--font-display);color:#335f43;margin:0 0 25px}
+.outreach-aside>span{font-size:11px;line-height:1.6;color:#79917c}
+.outreach-formats h2{font-size:clamp(36px,4.6vw,58px);margin-bottom:40px}
+.outreach-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.outreach-grid article{background:#f0f4ec;border:1px solid #dce7d9;padding:30px;min-height:260px}
+.outreach-grid article>span{font-size:10px;letter-spacing:.12em;font-weight:700;color:#789b80}
+.outreach-grid h3{font:400 31px/1.13 var(--font-display);margin:38px 0 17px;color:var(--pine)}
+.outreach-grid p{font-size:13px;line-height:1.8;color:#627668;margin:0}
+.outreach-method{background:var(--pine);color:#fff}
+.outreach-method-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(35px,8vw,100px)}
+.outreach-method h2{font-size:clamp(36px,4.5vw,56px)}
+.outreach-method h2 em{color:#bbd5b0}
+.outreach-method-grid>div:last-child>p{font-size:15px;line-height:1.9;color:#c4d9cb}
+.outreach-method-grid strong{color:#fff}
+.outreach-status-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(35px,8vw,100px)}
+.outreach-status-grid>div:last-child>p{font-size:15px;line-height:1.88;color:#5d7364}
+.outreach-status .button{margin-top:15px}
+@media(max-width:900px){.outreach-hero-grid{grid-template-columns:1fr 230px;gap:30px}.outreach-grid article{padding:24px}.outreach-grid h3{font-size:27px}}
+@media(max-width:720px){.outreach-hero{padding-bottom:56px}.outreach-hero-grid,.outreach-grid,.outreach-method-grid,.outreach-status-grid{grid-template-columns:1fr;gap:30px}.outreach-hero-grid{padding-top:48px}.outreach-hero h1{font-size:clamp(42px,10vw,64px)}.outreach-hero-grid>div>p:last-child{font-size:15px}.outreach-aside{max-width:480px}.outreach-grid article{min-height:0}.outreach-grid h3{margin-top:20px}}
