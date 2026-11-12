@@ -5,6 +5,7 @@ Dette er et **utkast til nettsted**, utviklet i GitHub-grenen `design/tidsskrift
 ## Innhold
 
 - `index.html`: forside med fire publikasjonsområder og første artikkelserie.
+- `vitenskap.html`: vitenskapelige originalartikler og oversiktsartikler (narrative og systematiske reviews; metaanalyser der relevant). Beskriver metodiske krav og forskjellen fra pensum som bruksområde.
 - `debatt.html`: fjerde publikasjonsområde med debattinnlegg, faglige kommentarer og replikker/tilsvar. Foreløpige redaksjonelle prinsipper; ingen innsending er aktivert.
 - `artikler.html`: søkbart og kategorisert arkiv over planlagte artikkeltemaer.
 - `artikler/*.html`: seks individuelle artikkelskisser med fungerende interne lenker, innholdsfortegnelse og utskriftsvisning.
@@ -17,6 +18,7 @@ Dette er et **utkast til nettsted**, utviklet i GitHub-grenen `design/tidsskrift
 
 - [Forsiden](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/index.html)
 - [Artikkeloversikt](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler.html)
+- [Forskning og oversiktsartikler](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/vitenskap.html)
 - [Debatt og kommentar](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/debatt.html)
 - [Eksempelartikkel: Hva er tretthet?](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler/tretthet.html)
 
@@ -32,7 +34,7 @@ Lenkene følger utviklingsgrenen og endrer ikke `main`, `CNAME` eller innholdet 
 
 ## Redaksjonell status
 
-Alle artikkelsider er **skisser til videre faglig arbeid**. De er ikke ferdige, fagfellevurderte vitenskapelige artikler eller godkjent pensumlitteratur. Sidene har derfor ikke forfatter, DOI, referanselister eller publiseringsdato. Det er heller ikke aktivert manusinnsending.
+Alle artikkelsider er **skisser til videre faglig arbeid**. Vitenskaps- og debattsidene er forslag til redaksjonell organisering, ikke åpne kanaler for publisering. De er ikke ferdige, fagfellevurderte vitenskapelige artikler eller godkjent pensumlitteratur. Sidene har derfor ikke forfatter, DOI, referanselister eller publiseringsdato. Det er heller ikke aktivert manusinnsending.
 
 ## Publisering
 
