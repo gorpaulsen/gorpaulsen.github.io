@@ -4,3 +4,14 @@
 @media(max-width:960px){.container{width:min(100% - 44px,1180px)}.hero-grid{gap:35px}.hero{padding:60px 0}.issue-cover{min-height:440px}.hero h1{font-size:clamp(46px,6vw,64px)}.section{padding:80px 0}.method-grid{gap:50px}.publication-card{padding:23px}.publication-card h3{font-size:30px}.site-nav{gap:17px}}
 @media(max-width:720px){.container{width:calc(100% - 36px)}.header-inner{height:72px}.menu-toggle{display:flex;flex-direction:column;gap:5px;padding:12px;border:0;background:transparent;cursor:pointer;margin-left:auto}.menu-toggle span{width:22px;height:2px;background:var(--pine)}.site-nav{display:none;position:absolute;top:72px;left:0;right:0;padding:18px;background:var(--paper);border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch;gap:0}.site-nav.is-open{display:flex}.site-nav a{padding:13px 8px}.hero-grid,.section-intro,.issue-heading,.method-grid,.about-grid{grid-template-columns:1fr;gap:30px}.hero{padding:54px 0 65px}.hero h1{font-size:clamp(44px,10vw,67px)}.hero-lead{font-size:15px}.issue-cover{min-height:420px;max-width:500px;width:100%;margin:auto}.principle-inner{display:block}.principle-inner>span{display:block;margin-bottom:11px}.principle-inner p{font-size:13px;line-height:1.7}.section{padding:70px 0}.section h2{font-size:clamp(37px,9vw,52px)}.publication-grid{grid-template-columns:1fr}.publication-card{min-height:270px}.card-label{margin-top:20px}.topic{grid-template-columns:35px 1fr 18px;gap:12px;padding:23px 0}.topic h3{font-size:23px}.topic-filter{font-size:11px;padding:10px 13px}.method-section .method-grid>div>p:last-child{margin-top:16px}.footer-inner{flex-wrap:wrap}.footer-inner a{margin-left:auto}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.publication-card{transition:none}}
+
+
+/* Four publication formats: balanced two-column cards on wide screens. */
+.publication-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.publication-card{min-height:315px}
+.publication-card .card-footer{display:flex;justify-content:space-between;align-items:start;gap:15px;flex-wrap:wrap;line-height:1.6}
+.publication-card .card-footer a{font-weight:700;color:#245b3f;text-decoration:underline;text-underline-offset:3px}
+.publication-card .card-footer a:hover{color:#578568}
+.debate-card{background:#e7ede5}
+.debate-card .card-number{color:#50735e}
+@media(max-width:720px){.publication-grid{grid-template-columns:1fr}.publication-card{min-height:270px}}
