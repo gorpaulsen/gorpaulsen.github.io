@@ -4,7 +4,8 @@ Dette er et **utkast til nettsted**, utviklet i GitHub-grenen `design/tidsskrift
 
 ## Innhold
 
-- `index.html`: forside med tre publikasjonsområder og første artikkelserie.
+- `index.html`: forside med fire publikasjonsområder og første artikkelserie.
+- `debatt.html`: fjerde publikasjonsområde med debattinnlegg, faglige kommentarer og replikker/tilsvar. Foreløpige redaksjonelle prinsipper; ingen innsending er aktivert.
 - `artikler.html`: søkbart og kategorisert arkiv over planlagte artikkeltemaer.
 - `artikler/*.html`: seks individuelle artikkelskisser med fungerende interne lenker, innholdsfortegnelse og utskriftsvisning.
 - `styles.css`, `articles.css`: responsiv utforming.
@@ -16,6 +17,7 @@ Dette er et **utkast til nettsted**, utviklet i GitHub-grenen `design/tidsskrift
 
 - [Forsiden](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/index.html)
 - [Artikkeloversikt](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler.html)
+- [Debatt og kommentar](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/debatt.html)
 - [Eksempelartikkel: Hva er tretthet?](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler/tretthet.html)
 
 **Merk:** HTML Preview er en ekstern tredjepartsvisning, ikke GitHub Pages. Tjenesten henter HTML, CSS og JavaScript fra GitHub og kan ha begrensninger; den er bare ment for demonstrasjon. Ikke skriv inn personopplysninger eller andre sensitive data. Ved feil, bruk lokal forhåndsvisning nedenfor.
