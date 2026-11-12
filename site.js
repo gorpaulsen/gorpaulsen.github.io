@@ -30,7 +30,7 @@
       topic.hidden = !show;
       if (show) visible++;
     });
-    if (count) count.textContent = `Viser ${visible} av ${topics.length} planlagte temaer`;
+    if (count) count.textContent = `Viser ${visible} av ${topics.length} temaer`;
   }));
 
   const archiveFilters = [...document.querySelectorAll('.archive-filter')];
@@ -50,7 +50,7 @@
         item.hidden = !show;
         if (show) visible++;
       });
-      if (archiveCount) archiveCount.textContent = `Viser ${visible} av ${archiveItems.length} skisser`;
+      if (archiveCount) archiveCount.textContent = `Viser ${visible} av ${archiveItems.length} temaer`;
       if (archiveEmpty) archiveEmpty.hidden = visible !== 0;
     };
     archiveFilters.forEach(button => button.addEventListener('click', () => {
