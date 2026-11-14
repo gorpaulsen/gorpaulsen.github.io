@@ -176,3 +176,9 @@
 .outreach-status .button{margin-top:15px}
 @media(max-width:900px){.outreach-hero-grid{grid-template-columns:1fr 230px;gap:30px}.outreach-grid article{padding:24px}.outreach-grid h3{font-size:27px}}
 @media(max-width:720px){.outreach-hero{padding-bottom:56px}.outreach-hero-grid,.outreach-grid,.outreach-method-grid,.outreach-status-grid{grid-template-columns:1fr;gap:30px}.outreach-hero-grid{padding-top:48px}.outreach-hero h1{font-size:clamp(42px,10vw,64px)}.outreach-hero-grid>div>p:last-child{font-size:15px}.outreach-aside{max-width:480px}.outreach-grid article{min-height:0}.outreach-grid h3{margin-top:20px}}
+
+/* Balanced title scale for card grids; preserve the existing publication layout. */
+.archive-item h2{font-size:clamp(24px,2.15vw,29px);line-height:1.18}
+.outreach-grid h3{font-size:clamp(24px,1.95vw,27px);line-height:1.18}
+.debate-format-grid h3{font-size:clamp(24px,1.95vw,27px);line-height:1.18}
+@media(max-width:720px){.archive-item h2{font-size:26px}.outreach-grid h3,.debate-format-grid h3{font-size:26px}}
