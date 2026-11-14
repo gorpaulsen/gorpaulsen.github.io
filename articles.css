@@ -182,3 +182,7 @@
 .outreach-grid h3{font-size:clamp(24px,1.95vw,27px);line-height:1.18}
 .debate-format-grid h3{font-size:clamp(24px,1.95vw,27px);line-height:1.18}
 @media(max-width:720px){.archive-item h2{font-size:26px}.outreach-grid h3,.debate-format-grid h3{font-size:26px}}
+
+/* Den alternative graf-logoen markerer forskning uten å illustrere faktiske studiedata. */
+.research-aside .science-symbol{display:block;width:128px;max-width:45%;height:auto;margin:0 0 20px auto;opacity:.9}
+@media(max-width:720px){.research-aside .science-symbol{width:105px}}
