@@ -2,6 +2,16 @@
 
 Dette er et **arbeidsutkast** på GitHub-grenen `design/tidsskrift-forside-2026`. Den offentlige siden på `main` er ikke oppdatert.
 
+## Grafisk profil
+
+Den godkjente logoen er en mørkegrønn **N** med en kvinnelig løpersilhuett i lys grønn og en mannlig løpersilhuett i mørkere grønn, uten draktdetaljer. Logoen brukes konsekvent på nettstedets sider:
+
+- `assets/niv-mark.svg`: symbolvariant for toppmeny og nettstedikon.
+- `assets/niv-logo.svg`: full logo med ordmerke, vist under mandatet på forsiden.
+
+Logoene er klargjort som skalerbare SVG-containere med integrerte, transparente PNG-motiver; de er ikke manuelt nytegnet som rene vektorbaner. Ved senere profesjonell logoferdigstilling bør de vektoriseres og kontrolleres for varemerke- og rettighetskonflikter. Endringer på utviklingsgrenen publiseres ikke automatisk på det offentlige domenet.
+
+
 [**Slik redigerer du tekstene selv i GitHub**](REDIGERING.md) · [**Faglig mandat og prinsipper**](MANDAT.md)
 
 ## Hovedstruktur
