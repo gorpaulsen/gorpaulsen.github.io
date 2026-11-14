@@ -79,3 +79,10 @@ Vi kan senere sette opp en **egen nettbasert forhåndsvisning** på en separat a
 Det er **ikke** etablert innsending eller behandling av manuskripter, DOI, redaksjon, formelle retningslinjer for fagfellevurdering eller publiserte artikler. Den faglige og redaksjonelle kvalitetssikringen må avklares før lansering.
 
 Ikke slå sammen grenen med `main` før innhold, design og publiseringsrutiner er gjennomgått. Filen `CNAME` for `norskidrettsvitenskap.no` skal forbli urørt frem til publisering.
+
+## To logovarianter
+
+- **Logo 1 (hovedlogo):** Mørkegrønn N med kvinnelig og mannlig løpersilhuett. Brukes i toppmenyen, nettstedikonet og på presentasjonens forside. Ressurser: `assets/niv-mark.svg` og `assets/niv-logo.svg`.
+- **Logo 2 (vitenskapelig symbol):** To buede kurver, akser og markert punkt. Brukes i temaseriens grønne forsidekort og som diskret markør på siden for vitenskapelige artikler. Ressurser: `assets/niv-graph-mark.svg`, `assets/niv-graph-mark-light.svg` og `assets/niv-graph-logo.svg`.
+
+Grafen er **et stilisert symbol, ikke en framstilling av forskningsdata**. Begge logovariantene er forslag til visuell identitet; offentlig bruk bør forutgås av kontroll for likhet med eksisterende varemerker.
