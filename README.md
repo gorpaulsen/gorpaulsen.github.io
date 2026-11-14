@@ -2,7 +2,7 @@
 
 Dette er et **arbeidsutkast** på GitHub-grenen `design/tidsskrift-forside-2026`. Den offentlige siden på `main` er ikke oppdatert.
 
-[**Slik redigerer du tekstene selv i GitHub**](REDIGERING.md)
+[**Slik redigerer du tekstene selv i GitHub**](REDIGERING.md) · [**Faglig mandat og prinsipper**](MANDAT.md)
 
 ## Hovedstruktur
 
