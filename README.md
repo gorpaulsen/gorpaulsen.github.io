@@ -86,3 +86,7 @@ Ikke slå sammen grenen med `main` før innhold, design og publiseringsrutiner e
 - **Logo 2 (vitenskapelig symbol):** To buede kurver, akser og markert punkt. Brukes i temaseriens grønne forsidekort og som diskret markør på siden for vitenskapelige artikler. Ressurser: `assets/niv-graph-mark.svg`, `assets/niv-graph-mark-light.svg` og `assets/niv-graph-logo.svg`.
 
 Grafen er **et stilisert symbol, ikke en framstilling av forskningsdata**. Begge logovariantene er forslag til visuell identitet; offentlig bruk bør forutgås av kontroll for likhet med eksisterende varemerker.
+
+## Mulige fremtidige formidlingsformater
+
+Under **Trening forklart** er **infografikk** og **podkast** presentert som mulige formidlingsformater, ikke lanserte tjenester. Infografikk skal gi sporbar, faglig kvalitetssikret visualisering; podkast skal ha kildeliste og tekstversjon. 2027-budsjettet vurderer tre nivåer: basis, basis med infografikk, og basis med infografikk og podkast. Beslutning forutsetter finansiering, ressurser og redaksjonell kvalitetssikring.
