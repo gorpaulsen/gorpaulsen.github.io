@@ -38,24 +38,31 @@ De elleve individuelle disposisjonene under `artikler/` er **redaksjonelle skiss
 - `styles.css` og `articles.css`: responsiv utforming.
 - `site.js`: mobilnavigasjon, søk og emnefiltre.
 
-## Nettbasert forhåndsvisning
+## Åpne en fungerende forhåndsvisning
 
-Disse lenkene bruker en **ekstern** HTML-viser som leser offentlig tilgjengelige filer direkte fra GitHub. Dette er ikke en egen GitHub Pages-utgivelse.
+Den tidligere foreslåtte tredjepartstjenesten for HTML-forhåndsvisning er fjernet fra prosjektanvisningene fordi lenkene ikke fungerte pålitelig.
 
-- [Forsiden](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/index.html)
-- [Pensum og faggrunnlag](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler.html)
-- [Trening forklart](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/trening-forklart.html)
-- [Vitenskapelige artikler](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/vitenskap.html)
-- [Debatt og kommentar](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/debatt.html)
-- [Eksempel på artikkelskisse: Hva er tretthet?](https://htmlpreview.github.io/?https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler/tretthet.html)
+**Følg disse trinnene for å se det komplette nettstedet med design og fungerende interne lenker:**
 
-HTML-viseren er en tredjepartstjeneste og kan ha tekniske begrensninger. Ikke bruk skjemaer der eller oppgi personopplysninger. Den faktiske visningen er ikke nettlesertestet.
+1. Åpne [GitHub-prosjektets utviklingsgren](https://github.com/gorpaulsen/gorpaulsen.github.io/tree/design/tidsskrift-forside-2026).
+2. Kontroller at grenen øverst heter **`design/tidsskrift-forside-2026`** – ikke `main`.
+3. Klikk den grønne **Code**-knappen og velg **Download ZIP**.
+4. Høyreklikk ZIP-filen i Windows og velg **Pakk ut alle**.
+5. Åpne mappen og dobbeltklikk **`index.html`**. Nettstedet åpnes i nettleseren.
 
-## Lokal forhåndsvisning
+Dette er en lokal kopi. Endringer i GitHub blir synlige i den lokale kopien først etter at du har lastet ned en ny ZIP.
 
-1. Last ned utviklingsgrenen som ZIP fra GitHub og pakk ut.
-2. Åpne `index.html` i nettleseren.
-3. Eventuelt start `python -m http.server 8000` og åpne `http://localhost:8000/`.
+### Les eller rediger enkeltfiler i GitHub
+
+GitHubs filvisning er en **kodevisning**, ikke en ferdig designvisning:
+
+- [Forsiden (`index.html`)](https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/index.html)
+- [Artikkeloversikten (`artikler.html`)](https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler.html)
+- [Vevsskade og treningstilpasning](https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler/vevsskade-tilpasning.html)
+- [Inflammasjon ved trening](https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler/inflammasjon-trening.html)
+- [Restitusjon, reparasjon og treningstilpasning](https://github.com/gorpaulsen/gorpaulsen.github.io/blob/design/tidsskrift-forside-2026/artikler/restitusjon-adaptasjon.html)
+
+Vi kan senere sette opp en **egen nettbasert forhåndsvisning** på en separat adresse uten å endre `main` eller det offentlige domenet. En slik forhåndsvisning er ennå ikke konfigurert.
 
 ## Før publisering
 
