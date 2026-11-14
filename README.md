@@ -90,3 +90,11 @@ Grafen er **et stilisert symbol, ikke en framstilling av forskningsdata**. Begge
 ## Mulige fremtidige formidlingsformater
 
 Under **Trening forklart** er **infografikk** og **podkast** presentert som mulige formidlingsformater, ikke lanserte tjenester. Infografikk skal gi sporbar, faglig kvalitetssikret visualisering; podkast skal ha kildeliste og tekstversjon. 2027-budsjettet vurderer tre nivåer: basis, basis med infografikk, og basis med infografikk og podkast. Beslutning forutsetter finansiering, ressurser og redaksjonell kvalitetssikring.
+
+## Redaksjon, fagredaktører og fagfellepool
+
+Se [redaksjon og fagfellevurdering](redaksjon.html). Den foreslåtte oppstartsmodellen omfatter **én ansvarlig redaktør, fire fagredaktører, vitenskapelig redaksjonsråd (3–5) og en fagfellepool på 30–40 forskere**. Fagredaktørene har delegert håndteringsansvar, mens ansvarlig redaktør har øverste ansvar for publiseringsbeslutninger. Verken navn eller roller er oppnevnt ennå.
+
+Etter § 7 i utkastet til vedtekter oppnevnes ansvarlig redaktør av styret, redaksjonsrådet skal ha minst tre forskningskompetente medlemmer, og styret kan ikke instruere redaktøren i enkeltsaker. § 8 krever uavhengig fagfellevurdering for vitenskapelige artikler.
+
+DOAJ veileder om minst **to uavhengige fagfeller** per vitenskapelig artikkel og anbefaler **minst fem kvalifiserte redaktører** i redaksjonskollegiet. Rekruttering, faglige habilitetsregler og skille mellom vitenskapelige artikler og øvrig formidling må være på plass før ordningen fremstilles som operativ.
