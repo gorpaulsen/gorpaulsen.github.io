@@ -197,3 +197,24 @@
 .outreach-media-grid article p{font-size:14px;line-height:1.7;color:#556f60;margin:0}
 .outreach-media-note{font-size:12px;line-height:1.6;color:#74877b;margin:17px 0 0}
 @media(max-width:720px){.outreach-media-grid{grid-template-columns:1fr}.outreach-media-grid article{padding:22px}}
+
+/* Redaksjon og fagfellevurdering: forslag – ikke etablert drift. */
+.editorial-section h2{font-size:clamp(34px,4.6vw,54px);line-height:1.12;margin:10px 0 30px}
+.editorial-roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.editorial-roles article{padding:28px 30px;background:#eff4eb;border:1px solid #dce5d6}
+.editorial-count{color:#78977b;font:400 34px/1.1 var(--font-display);margin:0 0 18px}
+.editorial-roles h3,.editorial-two-col h3{font:400 27px/1.16 var(--font-display);margin:0 0 12px;color:var(--pine)}
+.editorial-roles p:last-child,.editorial-two-col p{font-size:14px;line-height:1.74;color:#506b5d;margin:0}
+.editorial-process{background:#e9eee4}
+.editorial-steps{list-style:none;counter-reset:none;margin:0;padding:0;max-width:940px}
+.editorial-steps li{display:grid;grid-template-columns:62px 1fr;gap:18px;border-top:1px solid #bdcebe;padding:20px 0}
+.editorial-steps li>span{color:#5f8473;font-weight:700;font-size:15px}
+.editorial-steps h3{font-size:22px;margin:0 0 7px}
+.editorial-steps p{margin:0;font-size:14px;line-height:1.68;color:#4d685b}
+.editorial-two-col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:30px}
+.editorial-ethics{background:var(--pine);color:#eef4e5}
+.editorial-ethics h2,.editorial-ethics h3{color:#eef4e5}
+.editorial-ethics>div>p{max-width:960px;font-size:15px;line-height:1.85;color:#d3e3d3}
+.editorial-ethics .editorial-disclaimer{font-size:12px;color:#a9c9a8}
+.editorial-section a:not(.button){text-decoration:underline;text-underline-offset:3px}
+@media(max-width:720px){.editorial-roles,.editorial-two-col{grid-template-columns:1fr}.editorial-roles article{padding:22px}.editorial-steps li{grid-template-columns:36px 1fr;gap:12px}}
