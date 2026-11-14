@@ -27,3 +27,11 @@
 }
 @media(max-width:720px){.site-nav{top:72px}}
 .site-nav a[aria-current="page"]{color:var(--pine);text-decoration:underline;text-decoration-color:#8eac91;text-underline-offset:6px}
+
+/* Layout precision and restrained typography – 14 November 2026. */
+.cover-center{top:50%;left:50%;transform:translate(-50%,-50%)}
+.cover-bottom h2{font-size:clamp(28px,2.55vw,38px);line-height:1.17;letter-spacing:-.008em}
+.publication-card{min-width:0}
+.publication-card h3{font-size:clamp(26px,2.35vw,31px);line-height:1.13;overflow-wrap:normal}
+.topic h3{font-size:clamp(22px,2vw,26px);line-height:1.2}
+@media(max-width:720px){.cover-bottom h2{font-size:clamp(27px,6.7vw,34px)}.publication-card h3{font-size:28px}.topic h3{font-size:23px}}
