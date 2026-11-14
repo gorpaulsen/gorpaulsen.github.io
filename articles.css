@@ -186,3 +186,14 @@
 /* Den alternative graf-logoen markerer forskning uten å illustrere faktiske studiedata. */
 .research-aside .science-symbol{display:block;width:128px;max-width:45%;height:auto;margin:0 0 20px auto;opacity:.9}
 @media(max-width:720px){.research-aside .science-symbol{width:105px}}
+
+/* Mulige formidlingsformater: infografikk og podkast. */
+.outreach-media-options{margin-top:32px;padding-top:24px;border-top:1px solid #dce5d8}
+.outreach-media-options>.eyebrow{margin-bottom:18px}
+.outreach-media-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.outreach-media-grid article{padding:25px 28px;background:#eef3eb;border:1px solid #dce5d8}
+.outreach-media-grid article>span{font-size:10px;letter-spacing:.15em;font-weight:700;color:#678a71}
+.outreach-media-grid article h3{font:400 clamp(24px,2.1vw,30px)/1.15 var(--font-display);color:var(--pine);margin:15px 0 12px}
+.outreach-media-grid article p{font-size:14px;line-height:1.7;color:#556f60;margin:0}
+.outreach-media-note{font-size:12px;line-height:1.6;color:#74877b;margin:17px 0 0}
+@media(max-width:720px){.outreach-media-grid{grid-template-columns:1fr}.outreach-media-grid article{padding:22px}}
