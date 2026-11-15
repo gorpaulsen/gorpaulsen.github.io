@@ -2,6 +2,8 @@
 
 Dette er et **arbeidsutkast** på GitHub-grenen `design/tidsskrift-forside-2026`. Den offentlige siden på `main` er ikke oppdatert.
 
+Visuelle prinsipper og kontrastkrav er dokumentert i [designprofilen](DESIGN.md). Den nye paletten viderefører mørkegrønt og elfenben, bruker terrakotta sparsomt og reduserer kortbasert design på nettsidene.
+
 ## Grafisk profil
 
 Den godkjente logoen er en mørkegrønn **N** med en kvinnelig løpersilhuett i lys grønn og en mannlig løpersilhuett i mørkere grønn, uten draktdetaljer. Logoen brukes konsekvent på nettstedets sider:
