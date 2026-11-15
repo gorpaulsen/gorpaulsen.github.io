@@ -238,3 +238,113 @@
 .cooperation-close em{color:#c7deb8}
 .cooperation-close p{max-width:820px;font-size:16px;line-height:1.8;color:#cfdfd0}
 @media(max-width:720px){.cooperation-grid,.cooperation-structure{grid-template-columns:1fr}.cooperation-grid article{padding:22px}}
+
+
+/* ----------------------------------------------------------------------
+   NORSK IDRETTSVITENSKAP | Redaksjonell profil v2 (15.11.2026)
+   Mindre kortbasert, strengere kontrast og dempet terrakotta-aksent.
+   Original CSS beholdes over, slik at dette er reverserbart.
+   ---------------------------------------------------------------------- */
+:root{
+  --pine:#193b32;
+  --pine-dark:#102e27;
+  --cream:#f6f5ef;
+  --paper:#fffefa;
+  --ink:#243b33;
+  --muted:#496258;
+  --line:#d8ded5;
+  --accent:#a56d4f;
+  --accent-ink:#805038;
+}
+body,.article-page,.archive-page{background:var(--paper);color:var(--ink)}
+.hero{background:var(--cream)}
+.site-header{border-bottom:1px solid var(--line)}
+.site-nav{color:var(--ink)}
+.site-nav a:hover,.text-link:hover,.article-sidebar a:hover{color:var(--accent-ink)}
+.site-nav a[aria-current="page"]{color:var(--pine);text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:8px}
+.eyebrow,.eyebrow.muted,.principle-inner>span,.article-section-label,.article-sidebar>p{color:var(--muted)}
+.eyebrow-line{background:var(--accent);height:2px}
+.hero h1 em,.section h2 em,.article-heading h1 em,.archive-hero h1 em,
+.research-hero h1 em,.outreach-hero h1 em,.national-grid h2 em,
+.cooperation-purpose em,.cooperation-model em,.cooperation-projects em{color:var(--muted)}
+.hero-lead,.hero-note,.section-intro p,.principle-inner p,
+.article-intro,.article-body p:not(.article-section-label),
+.topic p:not(.topic-type),.cooperation-lead,.national-grid p:not(.eyebrow){color:var(--muted)}
+.card-top,.card-label,.topic-type,.topic-num,.article-meta,.breadcrumbs,
+.footer-inner small,.site-footer small{color:var(--muted)}
+.site-footer{background:var(--cream);border-top:1px solid var(--line)}
+.site-footer p,.footer-inner p{color:var(--muted)}
+/* Forsiden: indekserte publikasjoner i stedet for fire nesten identiske kort. */
+.publication-card,.publication-card.accent-card{
+  background:transparent;
+  border:none;
+  border-top:2px solid var(--line);
+  padding:27px 18px 32px 0;
+  min-height:330px;
+  box-shadow:none;
+  border-radius:0;
+  transition:border-color .15s ease;
+}
+.publication-card:hover{transform:none;border-top-color:var(--accent)}
+.publication-card h3,.publication-card p{color:var(--pine)}
+.publication-card p:not(.card-label){color:var(--muted)}
+.issue-section{background:var(--cream)}
+.topic{border-bottom-color:var(--line)}
+.topic-type{color:var(--muted)}
+.topic-num{color:var(--accent-ink)}
+/* Samarbeid: åpne, typografiske rekker fremfor en vegg av grønne bokser. */
+.national-cooperation{background:var(--paper)}
+.national-pillars>div{
+  background:transparent;
+  border-left:none;
+  border-top:1px solid var(--line);
+  padding:20px 8px 20px 0;
+}
+.national-pillars>div:first-child{border-top:2px solid var(--accent)}
+.national-pillars span{color:var(--accent-ink)}
+.national-pillars small{color:var(--muted)}
+.cooperation-model{background:var(--cream)}
+.cooperation-grid article,.editorial-roles article,.outreach-media-grid article{
+  background:transparent;
+  border:0;
+  border-top:2px solid var(--line);
+  padding:26px 20px 26px 0;
+  border-radius:0;
+  box-shadow:none;
+}
+.cooperation-grid article:first-child,.editorial-roles article:first-child,
+.outreach-media-grid article:first-child{border-top-color:var(--accent)}
+.cooperation-grid p,.cooperation-structure p,.editorial-roles p:last-child,
+.outreach-media-grid article p{color:var(--muted)}
+.cooperation-grid article>span,.cooperation-structure-label,
+.outreach-media-grid article>span,.editorial-count{color:var(--accent-ink)}
+/* Artikler og formidling: færre fylte flater, tydeligere tekstkontrast. */
+.article-lead-area,.outreach-hero,.research-hero{background:var(--cream)}
+.article-body .draft-note{background:var(--cream);border-left-color:var(--accent)}
+.research-format,.outreach-grid>article{
+  background:transparent;
+  border:0;
+  border-top:2px solid var(--line);
+  padding:27px 20px 29px 0;
+  border-radius:0;
+  box-shadow:none;
+}
+.research-format:first-child,.outreach-grid>article:first-child{border-top-color:var(--accent)}
+.research-format h3,.outreach-grid h3{color:var(--pine)}
+.research-format p,.outreach-grid p{color:var(--muted)}
+.article-sidebar a,.breadcrumbs a{color:var(--muted)}
+/* Dekorativ aksent skal være sparsom; mørk aksent brukes for små bokstaver. */
+.article-label-box,.research-aside{border-top-color:var(--accent)}
+.print-button{border-color:var(--line);color:var(--pine)}
+.print-button:hover{border-color:var(--accent)}
+.button-primary{background:var(--pine);color:#fff}
+.button-primary:hover{background:#2d5346;color:#fff}
+.topic-filter{border-color:var(--line);color:var(--pine)}
+.topic-filter:hover{border-color:var(--accent)}
+.topic-filter.is-active{background:var(--pine);border-color:var(--pine);color:#fff}
+@media(max-width:720px){
+ .publication-card,.publication-card.accent-card{min-height:0;padding:23px 0 26px}
+ .cooperation-grid article,.editorial-roles article,.outreach-media-grid article,
+ .research-format,.outreach-grid>article{padding:22px 0 26px}
+ .site-nav a[aria-current="page"]{text-underline-offset:4px}
+}
