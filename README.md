@@ -98,3 +98,11 @@ Se [redaksjon og fagfellevurdering](redaksjon.html). Den foreslåtte oppstartsmo
 Etter § 7 i utkastet til vedtekter oppnevnes ansvarlig redaktør av styret, redaksjonsrådet skal ha minst tre forskningskompetente medlemmer, og styret kan ikke instruere redaktøren i enkeltsaker. § 8 krever uavhengig fagfellevurdering for vitenskapelige artikler.
 
 DOAJ veileder om minst **to uavhengige fagfeller** per vitenskapelig artikkel og anbefaler **minst fem kvalifiserte redaktører** i redaksjonskollegiet. Rekruttering, faglige habilitetsregler og skille mellom vitenskapelige artikler og øvrig formidling må være på plass før ordningen fremstilles som operativ.
+
+## Nasjonalt institusjonssamarbeid
+
+Dette er et **selvstendig hovedpunkt i mandatet**. Se [Nasjonalt samarbeid](samarbeid.html): en felles nasjonal arena for institusjoner med idrettsutdanning, idrettsvitenskapelige forskningsmiljøer og flerinstitusjonelle forskningsprosjekter.
+
+**Anbefalt modell under drøfting:** Styret beholder 3–5 medlemmer, valgt av årsmøtet med hensyn til faglig og institusjonell bredde. Alle relevante institusjoner kan foreslå kandidater, men det foreslås **ikke en automatisk styreplass for hver institusjon**. Deltakende institusjoner inviteres i stedet til å oppnevne én kontaktperson hver til et rådgivende *nasjonalt institusjonsråd*. Rådet kan ta initiativ til samarbeid og faglige prosjekter, men kan ikke instruere styret eller redaktøren i publiseringssaker.
+
+Forslaget utvider ikke automatisk hvem som er medlemmer av foreningen; vedtektsutkast v1.1 gir medlemskap til **personer**. Endringer i institusjonsrepresentasjon må vedtas uttrykkelig. Uavhengig vitenskapelig redaksjon, institusjonsråd og foreningsstyre er tre forskjellige funksjoner.
