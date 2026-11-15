@@ -15,6 +15,18 @@ Gjennom vitenskapelig kvalitetssikring, kritisk analyse og tilgjengelig formidli
 3. **Klargjøre kunnskapsgrenser:** Skille mellom hva som er godt dokumentert, hva som har foreløpig støtte, hva det er begrunnet faglig uenighet om, og spørsmål det foreløpig ikke finnes tilstrekkelig forskningsgrunnlag for. Skille mangel på dokumentasjon fra dokumentasjon for fravær av effekt.
 4. **Vitenskapelig tyngde i moderne formidling:** Gjøre kunnskapen forståelig og tilgjengelig uten å ofre presisjon. Skille forskningsfunn, tolkninger og praktiske råd, og korrigere egne feil på en synlig måte.
 
+## Nasjonalt institusjonssamarbeid – et selvstendig mandatpunkt
+
+**Norsk idrettsvitenskap skal være en felles nasjonal arena for universiteter, høyskoler og forskningsmiljøer som arbeider med idrettsvitenskap.** Tidsskriftet skal fremme faglig samarbeid på tvers av institusjoner, stimulere til felles forskningsprosjekter og bidra til utvikling av norsk fagterminologi, et felles kunnskapsgrunnlag og vitenskapelige standarder.
+
+Dette skal blant annet gjennomføres ved å legge til rette for flerinstitusjonelle prosjekter, åpne faglige møteplasser, kompetansedeling, felles kunnskapsoppsummeringer og samarbeid om forskningsbasert formidling.
+
+**Organisatorisk forslag:** Alle relevante institusjoner bør kunne foreslå styrekandidater, men ikke ha automatisk fast styreplass. Foreningens styre beholdes på 3–5 medlemmer. Alle deltakende institusjoner bør kunne utpeke én kontaktperson til et rådgivende *nasjonalt institusjonsråd*. Rådet er ikke det samme som styret eller den vitenskapelige redaksjonen, og skal ikke kunne påvirke publiseringsbeslutninger.
+
+Tidsskriftet kan være møteplass og tilrettelegger for prosjektutvikling uten selv å være forskningsansvarlig for prosjektene. Forskningsansvar, finansiering, etikk, avtaler og databehandling må avklares konkret for hvert prosjekt.
+
+*Denne organiseringen er et forslag som ikke er formelt vedtatt. Ingen institusjoner er foreløpig oppnevnt som deltakere.*
+
 ## Felles redaksjonelle prinsipper
 
 - **Presise kategorier:** Fagbegreper, fysiologiske mekanismer, prestasjonsutfall, helseutfall og normative anbefalinger omtales hver for seg når det er nødvendig.
