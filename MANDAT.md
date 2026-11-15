@@ -21,6 +21,8 @@ Gjennom vitenskapelig kvalitetssikring, kritisk analyse og tilgjengelig formidli
 
 Dette skal blant annet gjennomføres ved å legge til rette for flerinstitusjonelle prosjekter, åpne faglige møteplasser, kompetansedeling, felles kunnskapsoppsummeringer og samarbeid om forskningsbasert formidling.
 
+**Forhold til eksisterende nasjonalt fagorgan:** UHR har et Nasjonalt fagorgan for idrett og kroppsøving. Før et eget tidsskriftstilknyttet institusjonsråd eventuelt etableres, bør vi avklare med UHR om oppgavene kan utfylle eksisterende nasjonal samordning. Se https://www.uhr.no/strategiske-enheter/fagstrategiske-enheter/uhr-samfunnsfag/nasjonale-fagorganer-for-uhr-samfunnsfag/.
+
 **Organisatorisk forslag:** Alle relevante institusjoner bør kunne foreslå styrekandidater, men ikke ha automatisk fast styreplass. Foreningens styre beholdes på 3–5 medlemmer. Alle deltakende institusjoner bør kunne utpeke én kontaktperson til et rådgivende *nasjonalt institusjonsråd*. Rådet er ikke det samme som styret eller den vitenskapelige redaksjonen, og skal ikke kunne påvirke publiseringsbeslutninger.
 
 Tidsskriftet kan være møteplass og tilrettelegger for prosjektutvikling uten selv å være forskningsansvarlig for prosjektene. Forskningsansvar, finansiering, etikk, avtaler og databehandling må avklares konkret for hvert prosjekt.
