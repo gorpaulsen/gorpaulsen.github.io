@@ -218,3 +218,23 @@
 .editorial-ethics .editorial-disclaimer{font-size:12px;color:#a9c9a8}
 .editorial-section a:not(.button){text-decoration:underline;text-underline-offset:3px}
 @media(max-width:720px){.editorial-roles,.editorial-two-col{grid-template-columns:1fr}.editorial-roles article{padding:22px}.editorial-steps li{grid-template-columns:36px 1fr;gap:12px}}
+
+/* Nasjonal samarbeidsarena – utkast til mandat og styringsmodell */
+.cooperation-purpose h2,.cooperation-model h2,.cooperation-projects h2,.cooperation-close h2{font-size:clamp(34px,4.3vw,54px);line-height:1.16;margin:0 0 26px}
+.cooperation-purpose em,.cooperation-model em,.cooperation-projects em,.cooperation-close em{font-weight:400;color:#829b80}
+.cooperation-lead{font-size:19px;line-height:1.75;color:#557061;max-width:860px;margin-bottom:28px}
+.cooperation-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.cooperation-grid article{background:#edf3e9;border:1px solid #dae5d8;padding:26px 28px}
+.cooperation-grid article>span,.cooperation-structure-label{font-size:10px;color:#6d8974;font-weight:700;letter-spacing:.13em}
+.cooperation-grid h3,.cooperation-structure h3{font:400 27px/1.2 var(--font-display);color:var(--pine);margin:15px 0 10px}
+.cooperation-grid p,.cooperation-structure p{font-size:14px;line-height:1.7;color:#516d5e;margin:0}
+.cooperation-model{background:#f0f3ec}
+.cooperation-structure{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.cooperation-structure article{background:#fffefa;border-top:3px solid #85a789;padding:25px}
+.cooperation-caveat{margin:22px 0 0;font-size:12px;line-height:1.7;color:#667b6d}
+.cooperation-projects .editorial-steps{max-width:1000px}
+.cooperation-close{background:var(--pine);color:#e5f0e5}
+.cooperation-close h2{color:#e5f0e5}
+.cooperation-close em{color:#c7deb8}
+.cooperation-close p{max-width:820px;font-size:16px;line-height:1.8;color:#cfdfd0}
+@media(max-width:720px){.cooperation-grid,.cooperation-structure{grid-template-columns:1fr}.cooperation-grid article{padding:22px}}
