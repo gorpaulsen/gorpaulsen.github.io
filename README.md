@@ -103,6 +103,8 @@ DOAJ veileder om minst **to uavhengige fagfeller** per vitenskapelig artikkel og
 
 Dette er et **selvstendig hovedpunkt i mandatet**. Se [Nasjonalt samarbeid](samarbeid.html): en felles nasjonal arena for institusjoner med idrettsutdanning, idrettsvitenskapelige forskningsmiljøer og flerinstitusjonelle forskningsprosjekter.
 
+**Eksisterende samordning:** UHR har allerede et Nasjonalt fagorgan for idrett og kroppsøving (oppført leder ved OsloMet). Det første steget er å avklare arbeidsdeling og mulig samarbeid før noen ny rådsstruktur etableres. En foreløpig institusjonsliste og invitasjonsplan er lagret som arbeidsdokumenter i prosjektmappen i Google Drive.
+
 **Anbefalt modell under drøfting:** Styret beholder 3–5 medlemmer, valgt av årsmøtet med hensyn til faglig og institusjonell bredde. Alle relevante institusjoner kan foreslå kandidater, men det foreslås **ikke en automatisk styreplass for hver institusjon**. Deltakende institusjoner inviteres i stedet til å oppnevne én kontaktperson hver til et rådgivende *nasjonalt institusjonsråd*. Rådet kan ta initiativ til samarbeid og faglige prosjekter, men kan ikke instruere styret eller redaktøren i publiseringssaker.
 
 Forslaget utvider ikke automatisk hvem som er medlemmer av foreningen; vedtektsutkast v1.1 gir medlemskap til **personer**. Endringer i institusjonsrepresentasjon må vedtas uttrykkelig. Uavhengig vitenskapelig redaksjon, institusjonsråd og foreningsstyre er tre forskjellige funksjoner.
