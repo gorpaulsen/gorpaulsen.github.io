@@ -93,7 +93,7 @@ export default {
         notice: "Intern pilot – ingen originalartikler er verifisert."
       }, 200, origin);
     }
-    const sources = found.map(publicSource);
+    const sources = found.map((source, index) => publicSource(source, index + 1));
     if (!env.OPENAI_API_KEY) return json({ error: "Språkmodellen er ikke konfigurert. Bruk demoeksemplene." }, 503, origin);
 
     const excerpts = found.map((source, i) => (
