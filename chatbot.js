@@ -111,6 +111,12 @@
         const link = safeSourceLink(source);
         if (!link) continue;
         const li = document.createElement("li");
+        // Nummeret samsvarer med henvisningen [n] ved faglige påstander.
+        if (Number.isInteger(source.number) && source.number > 0) {
+          const n = document.createElement("strong");
+          n.textContent = "[" + source.number + "] ";
+          li.append(n);
+        }
         li.append(link);
         const small = document.createElement("small");
         small.textContent = " · " + (source.status || "Ukjent status");
