@@ -1,0 +1,18 @@
+name = "niv-kildeassistent-pilot"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+# Ikke legg OpenAI-nøkkelen i denne filen. Se README.
+# ALLOWED_ORIGIN må være eksakt origin, for eksempel http://localhost:8000.
+[vars]
+ALLOWED_ORIGIN = "http://localhost:8000"
+OPENAI_MODEL = "gpt-4.1-mini"
+
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+
+[ratelimits.simple]
+limit = 6
+period = 60
