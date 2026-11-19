@@ -3,6 +3,7 @@
 const STOP = new Set("og i er det at som for med til på om en et de den dette der hva hvilke hvorfor hvordan kan skal har var vi jeg du min sin fra under mellom eller ikke ved av etter når hvor mye mange blir være innen også noen mer mot ut alle ulike".split(" "));
 export function terms(value) {
   return [...new Set(String(value || "").toLocaleLowerCase("nb-NO")
+    .replace(/₂/g,"2").replace(/₁/g,"1").replace(/₀/g,"0")
     .replace(/æ/g,"ae").replace(/ø/g,"o").replace(/å/g,"a")
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .match(/[a-z0-9]{3,}/g) || [])].filter(t => !STOP.has(t));
@@ -11,7 +12,14 @@ function matches(haystack, q) {
   return haystack.some(token => (token.startsWith(q) || (q.length >= 5 && q.startsWith(token))) && Math.min(q.length, token.length) >= 4);
 }
 export function retrieve(question, sources, limit = 3) {
-  const q = terms(question);
+  // Noen sammensatte norske faguttrykk er nærbeslektede med ordlyden i
+  // disposisjonene. Ekspansjonene påvirker søket, ikke vitenskapelige konklusjoner.
+  const q0 = terms(question);
+  const additions = new Map([
+    ["muskelkraft", ["kraft", "muskel"]],
+    ["leddmoment", ["ledd", "moment"]]
+  ]);
+  const q = [...new Set(q0.flatMap(token => [token, ...(additions.get(token) || [])]))];
   if (!q.length) return [];
   return sources.map(source => {
     const title = terms(source.title), body = terms(source.content);
