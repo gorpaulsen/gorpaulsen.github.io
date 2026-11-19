@@ -7,7 +7,7 @@ const origin = "http://localhost:8000";
 const env = () => ({
   ALLOWED_ORIGIN: origin,
   OPENAI_API_KEY: "unit-test-only",
-  OPENAI_MODEL: "gpt-4.1-mini",
+  OPENAI_MODEL: "gpt-6-luna",
   RATE_LIMITER: { limit: async () => ({ success: true }) }
 });
 function request(question, overrides = {}) {
