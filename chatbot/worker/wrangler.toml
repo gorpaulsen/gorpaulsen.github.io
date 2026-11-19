@@ -1,11 +1,12 @@
 name = "niv-kildeassistent-pilot"
 main = "src/index.js"
 compatibility_date = "2026-11-01"
-workers_dev = true
+workers_dev = false
 
 # Ikke legg OpenAI-nøkkelen i denne filen. Se README.
 # ALLOWED_ORIGIN må være eksakt origin, for eksempel http://localhost:8000.
 [vars]
+PILOT_MODE = "local"
 ALLOWED_ORIGIN = "http://localhost:8000"
 OPENAI_MODEL = "gpt-6-luna"
 
