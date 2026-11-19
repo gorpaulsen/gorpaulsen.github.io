@@ -2,7 +2,9 @@
    Ingen nøkkel eller personlige data lagres i nettleserens storage. */
 (() => {
   if (document.getElementById("niv-chat-launcher")) return;
-  const rawEndpoint = document.querySelector('meta[name="niv-chat-endpoint"]')?.content?.trim() ||\n    (window.location.hostname === "localhost" && window.location.port === "8000"\n      ? "http://localhost:8787/chat" : "");
+  const rawEndpoint = document.querySelector('meta[name="niv-chat-endpoint"]')?.content?.trim() ||
+    (window.location.hostname === "localhost" && window.location.port === "8000"
+      ? "http://localhost:8787/chat" : "");
   let endpoint = "";
   if (rawEndpoint) {
     try {
