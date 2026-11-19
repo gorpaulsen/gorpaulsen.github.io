@@ -7,7 +7,7 @@ workers_dev = true
 # ALLOWED_ORIGIN må være eksakt origin, for eksempel http://localhost:8000.
 [vars]
 ALLOWED_ORIGIN = "http://localhost:8000"
-OPENAI_MODEL = "gpt-4.1-mini"
+OPENAI_MODEL = "gpt-6-luna"
 
 [[ratelimits]]
 name = "RATE_LIMITER"
