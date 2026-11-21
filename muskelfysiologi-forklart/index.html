@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Muskelfysiologi forklart v32 | Albue og kne</title>
+<title>Muskelfysiologi forklart v33 | Albue og kne</title>
 <style>:root {
   color-scheme: light;
   --ink: #173142;
@@ -373,6 +373,12 @@ html.projector .fv-panel .strength-figure svg { max-height: 470px; }
 .hs-model-line p span { display: inline-block; min-width: 13rem; color: var(--muted); }
 .hs-model-line code { font-size: .95rem; color: #09505b; }
 .hs-panel .hs-master-only { display: none; }
+.hs-dag { margin: 0 16px 10px; }
+.strength-figure.hs-dag svg { max-height: 250px; }
+.hs-dag-label { font-size: 12px; fill: #345565; }
+.hs-dag-value { font-weight: 600; text-anchor: start; }
+html.projector .hs-dag-label { font-size: 14px; }
+@media (max-width: 600px) { .hs-dag-label { font-size: 14.5px; } }
 .hs-panel.hs-advanced .hs-master-only { display: revert; }
 #hs-redraw { margin-top: 8px; }
 .hs-numbers-heading { font-size: .93rem; margin: 4px 0 6px; }
@@ -1029,6 +1035,12 @@ html.projector .fv-panel .strength-figure svg { max-height: 470px; }
         </figure>
       </div>
     </div>
+    <figure class="strength-figure hs-dag">
+      <figcaption><strong>Årsaksdiagram: hvilke veier gir korrelasjonen?</strong><span class="fv-axis-note">Tykkere pil betyr større β<span class="hs-master-only"> eller ρ</span></span></figcaption>
+      <svg id="hs-dag" viewBox="0 0 490 230" role="img" aria-labelledby="hs-dag-desc"></svg>
+      <p id="hs-dag-desc" class="fv-legend-text"></p>
+      <p class="fv-hint">Heltrukne bokser er det studien måler. Stiplede bokser er det vi ikke ser direkte. Pilene viser hva som påvirker hva i modellen. Korrelasjonen mellom de to målingene kan bare komme fra veier som forbinder dem: den direkte veien der veksten gir styrke (β)<span class="hs-master-only"> og omveien gjennom felles årsaker (ρ)</span>. Målefeil forbinder ikke målingene, og det gjør heller ikke andre tilpasninger så lenge de ikke samvarierer med veksten. De gir bare mer spredning, og det svekker korrelasjonen.<span class="hs-master-only"> Samvariasjonen er tegnet som felles årsaker, for eksempel hvor godt den enkelte responderer på treningen, eller hvor hardt og regelmessig hen trener. Hvis veksten selv endrer andre tilpasninger, hører den veien med til effekten av veksten. Det kan ikke korrelasjonen skille.</span></p>
+    </figure>
     <section class="fv-tasks" aria-labelledby="hs-tasks-heading">
       <h3 id="hs-tasks-heading">Oppgaver</h3>
       <p>Start med oppsettet fra Räntilä mfl. (2025), og trykk «Tilbake til oppsettet» mellom oppgavene. Svar før du åpner fasiten.</p>
@@ -1058,6 +1070,11 @@ html.projector .fv-panel .strength-figure svg { max-height: 470px; }
           <p class="fv-task-question">Sett β = 0, slik at veksten ikke gir styrke, og samvariasjonen til 0,5. Hvor sterk blir korrelasjonen?</p>
           <details class="hs-answer"><summary>Fasit</summary><p>r = 0,41. Målingene henger sammen fordi de som vokser mest, også får mest av de andre tilpasningene. Verken en svak eller en sterk korrelasjon avgjør altså om veksten gir styrke. Til det trengs design der veksten varierer uavhengig av resten, eller målinger av mekanismene hver for seg.</p></details>
         </article>
+        <article class="fv-task hs-master-only">
+          <h4>6. Samme korrelasjon, ulike årsaker</h4>
+          <p class="fv-task-question">Sammenlign β = 1 og samvariasjon 0 med β = 0,5 og samvariasjon 0,5. Hvilken gir sterkest korrelasjon, og hvor mye av den går gjennom veksten ifølge årsaksdiagrammet? Hva måtte en studie gjort for å skille de to?</p>
+          <details class="hs-answer"><summary>Fasit</summary><p>Med β = 1 og ρ = 0 er r = 0,51, og alt går gjennom veksten. Med β = 0,5 og ρ = 0,5 er r = 0,58, men bare 44 % går gjennom veksten og 56 % gjennom felles årsaker. Halvparten så stor effekt av veksten gir altså sterkere korrelasjon. En korrelasjonsstudie ser bare summen. For å skille veiene må veksten variere av en grunn som ikke også endrer de andre tilpasningene, eller de felles årsakene og mekanismene må måles hver for seg.</p></details>
+        </article>
       </div>
     </section>
     <details class="strength-method">
@@ -1069,6 +1086,7 @@ html.projector .fv-panel .strength-figure svg { max-height: 470px; }
         <li>Forventet korrelasjon er <code>r = (βσ<sub>x</sub><sup>2</sup> + ρσ<sub>x</sub>σ<sub>n</sub>) / (SD<sub>H</sub> · SD<sub>S</sub>)</code>. Uten målefeil deles det på <code>σ<sub>x</sub></code> og <code>√(SD<sub>S</sub><sup>2</sup> − s<sub>S</sub><sup>2</sup>)</code> i stedet.</li>
         <li>Andelene med ulikt fortegn regnes fra den todimensjonale normalfordelingen. Andelen som havner over medianen på det ene målet og under på det andre, er <code>1/2 − arcsin(r)/π</code>.</li>
         <li>En korrelasjon er signifikant når p &lt; 0,05 (tosidig) i t-testen for Pearsons r. Den samme grensen brukes for den simulerte studien, det skraverte feltet og sannsynligheten for at en studie ikke finner en signifikant korrelasjon. Fordelingen av korrelasjonen i mange studier er den eksakte utvalgsfordelingen av Pearsons r for n uavhengige par fra en todimensjonal normalfordeling (<a href="https://doi.org/10.2307/2331838">Fisher 1915</a>; formen med hypergeometrisk funksjon fra <a href="https://doi.org/10.1111/j.2517-6161.1953.tb00135.x">Hotelling 1953</a>). Kurven og sannsynlighetene bruker den samme tettheten. Sannsynlighetene regnes ved numerisk integrasjon. I kontrollene, med 4–1 000 000 deltakere og sann korrelasjon 0–0,9999999, avvek de under 10<sup>−8</sup> fra to uavhengige beregninger. Det er ikke vist som en generell feilgrense. Kurven tegnes med ekstra punkter rundt toppen, så også smale fordelinger nær 1 kommer med. Er forventet korrelasjon 1, gir alle studier r = 1, og grafen viser det som en strek ved r = 1. Til og med v29 ble fordelingen tilnærmet med Fishers z-transformasjon. Den undervurderer styrken, mest ved små og middels utvalg: i oppgave 1 ga den 37 % ikke-signifikante studier og 29 deltakere for 80 %, mot 34 % og 28 med den eksakte fordelingen. Antall deltakere for 80 % er det minste antallet der minst 80 % av studiene blir signifikante.</li>
+        <li>Årsaksdiagrammet bygger på at kovariansen mellom målingene er <code>βσ<sub>x</sub><sup>2</sup> + ρσ<sub>x</sub>σ<sub>n</sub></code>. Forventet korrelasjon deles derfor i en del gjennom veksten, <code>βσ<sub>x</sub><sup>2</sup> / (SD<sub>H</sub> · SD<sub>S</sub>)</code>, og en del gjennom samvariasjonen, <code>ρσ<sub>x</sub>σ<sub>n</sub> / (SD<sub>H</sub> · SD<sub>S</sub>)</code>. Målefeil og andre tilpasninger som ikke samvarierer med veksten, bidrar bare til spredningen. Samvariasjonen er tegnet som felles årsaker. Om den i stedet kommer av at veksten selv endrer andre tilpasninger, kan modellen ikke skille.</li>
         <li>Den simulerte studien trekker deltakere fra den samme fordelingen. p-verdien er fra t-testen for Pearsons korrelasjon. «Ny studie» trekker nye deltakere. Når du endrer en glidebryter, beholdes deltakerne, så du ser hvordan de samme personene flytter seg.</li>
       </ol>
       <p><strong>Räntilä mfl. (2025):</strong> 10 uker styrketrening hos utrente: 20 trente og 27 kontroller. Bare 19 av de trente har tverrsnittsmålinger, så det finnes 19 komplette målepar. Standardavvikene for tverrsnitt bygger på 19 og for 1RM på 20 trente. Simuleringen starter med 20 deltakere, men det er et valg i panelet, ikke antallet målepar. Tverrsnittet av vastus lateralis ble målt med ultralyd, og styrken som 1RM i beinpress delt på kroppsmasse ved start. Vastus lateralis økte 16,0 ± 8,4 % hos de som trente og 1,5 ± 4,1 % i kontrollgruppen. 1RM økte 21,7 ± 12,6 % og 2,9 ± 4,5 %. Studien rapporterer ikke korrelasjonen mellom endring i tverrsnitt og i styrke, så modellens forventning kan ikke sjekkes mot den. Variansen i individuell respons i tverrsnitt (SD<sub>IR</sub><sup>2</sup>) var 5,11 cm<sup>4</sup> med 95 %-konfidensintervall 0,95–9,28 cm<sup>4</sup>. Den er regnet fra absolutte endringer i cm<sup>2</sup> (SD<sub>IR</sub> = 2,26 cm<sup>2</sup>). Panelet bruker prosentendringer, så intervallet er regnet på nytt fra prosenttallene med standardfeilen <code>√(2(SD<sub>E</sub><sup>4</sup>/(n<sub>E</sub> − 1) + SD<sub>K</sub><sup>4</sup>/(n<sub>K</sub> − 1)))</code>. Med 19 trente og 27 kontroller gjenskaper den standardfeilen i artikkelen (2,126 mot 2,125). Prosenttallene gir 53,7 %<sup>2</sup> med 95 %-konfidensintervall 6,7–100,8 %<sup>2</sup>. Nedre grense svarer til 8,0 % målefeil og variasjon for tverrsnitt og r ≈ 0,06. Øvre grense er større enn hele variansen i treningsgruppen og svarer til ingen målefeil for tverrsnitt og r ≈ 0,67. Intervallet tar bare med usikkerheten i tverrsnitt, ikke i styrke. <a href="https://doi.org/10.1002/ejsc.70095">Räntilä mfl. (2025)</a></p>
@@ -4320,7 +4338,10 @@ function hypertrophyStrengthModel({sizeMean, sizeSd, strengthMean, strengthSd, s
       together: 2 * beta * rho * sx * sn / total,
       other: sn ** 2 / total,
       noise: strengthNoise ** 2 / total
-    }
+    },
+    // Forventet korrelasjon delt etter vei: kovariansen er βσx² (gjennom veksten) + ρσxσn (gjennom samvariasjonen).
+    rViaGrowth: beta * varX / (sizeSd * strengthSd),
+    rViaCommon: rho * sx * sn / (sizeSd * strengthSd)
   };
 }
 
@@ -4556,6 +4577,69 @@ function setupHypertrophyStrength() {
     }));
   }
 
+  // Årsaksdiagrammet. Heltrukne bokser er målt, stiplede er det vi ikke ser. Pilen fra veksten til målt styrke blir tykkere
+  // jo større β er, og pilene fra felles årsaker (bare på masternivå) jo større ρ er. Fargene er de samme som i variansfiguren.
+  function drawDag(values, model) {
+    const svg = id("hs-dag");
+    svg.replaceChildren();
+    const add = (parent, name, attributes, text) => {
+      const node = svgElement(name, attributes, text);
+      parent.append(node);
+      return node;
+    };
+    const colours = {growth: "#0c6b75", common: "#5ea5ad", other: "#c98a4b", noise: "#9db0b8", measured: "#345565", off: "#b8c5cb"};
+    const defs = add(svg, "defs", {});
+    for (const [key, colour] of Object.entries(colours)) {
+      const marker = add(defs, "marker", {id: "hs-dag-pil-" + key, viewBox: "0 0 10 10", refX: 9, refY: 5,
+        markerWidth: 9, markerHeight: 9, markerUnits: "userSpaceOnUse", orient: "auto"});
+      add(marker, "path", {d: "M0,0 L10,5 L0,10 z", fill: colour});
+    }
+    const arrow = (parent, [x1, y1], [x2, y2], key, width, dashed, name) => add(parent, "line", {x1, y1, x2, y2,
+      stroke: colours[key], "stroke-width": width, "stroke-dasharray": dashed ? "5 4" : "none",
+      "marker-end": `url(#hs-dag-pil-${key})`, class: name || ""});
+    const box = (parent, cx, cy, width, height, lines, colour, measured) => {
+      add(parent, "rect", {x: cx - width / 2, y: cy - height / 2, width, height, rx: 7, fill: "white", stroke: colour,
+        "stroke-width": measured ? 2 : 1.6, "stroke-dasharray": measured ? "none" : "5 4"});
+      lines.forEach((line, i) => add(parent, "text", {x: cx, y: cy + (i - (lines.length - 1) / 2) * 15 + 4,
+        "text-anchor": "middle", class: "hs-dag-label"}, line));
+    };
+    const {beta, rho} = values;
+    const common = add(svg, "g", {class: "hs-master-only hs-dag-common"});
+    for (const end of [[116, 60], [116, 170]]) {
+      arrow(common, [84, end[1] < 115 ? 105 : 125], end, rho > 0 ? "common" : "off", rho > 0 ? 1.5 + 5 * rho : 1.5, !(rho > 0), "hs-dag-rho");
+    }
+    box(common, 43, 115, 82, 44, ["Felles", "årsaker"], colours.common, false);
+    add(common, "text", {x: 18, y: 84, class: "hs-dag-label hs-dag-value"}, "ρ = " + fmt(rho, 2));
+    arrow(svg, [246, 45], [282, 45], "measured", 2, false);
+    arrow(svg, [246, 185], [282, 185], "other", 2, false);
+    arrow(svg, [236, 67], [296, 163], beta > 0 ? "growth" : "off", beta > 0 ? 1.5 + 4.5 * beta : 1.5, !(beta > 0), "hs-dag-beta");
+    add(svg, "text", {x: 274, y: 119, class: "hs-dag-label hs-dag-value"}, beta > 0 ? "β = " + fmt(beta, 2) : "β = 0: ingen effekt");
+    arrow(svg, [432, 45], [412, 45], "noise", 1.5, false);
+    arrow(svg, [432, 185], [412, 185], "noise", 1.5, false);
+    box(svg, 181, 45, 130, 44, ["Sann vekst i", "tverrsnittet (x)"], colours.growth, false);
+    box(svg, 181, 185, 130, 44, ["Andre", "tilpasninger (n)"], colours.other, false);
+    box(svg, 347, 45, 130, 44, ["Målt endring i", "tverrsnitt (ΔH)"], colours.measured, true);
+    box(svg, 347, 185, 130, 44, ["Målt endring i", "styrke (ΔS)"], colours.measured, true);
+    box(svg, 460, 45, 56, 40, ["Måle-", "feil"], colours.noise, false);
+    box(svg, 460, 185, 56, 40, ["Måle-", "feil"], colours.noise, false);
+    const direct = model.rViaGrowth, viaCommon = model.rViaCommon;
+    let text;
+    if (!(direct + viaCommon > 1e-12)) {
+      text = "Ingen vei forbinder de to målingene, så forventet korrelasjon er 0.";
+    } else if (!(viaCommon > 1e-12)) {
+      text = "Forventet korrelasjon (r = " + fmt(model.r, 2) + ") kommer bare fra den direkte veien, der veksten gir styrke (β = "
+        + fmt(beta, 2) + ")." + (model.r < 1 - 1e-9 ? " Andre tilpasninger og målefeil svekker den." : "");
+    } else if (!(direct > 1e-12)) {
+      text = "Forventet korrelasjon (r = " + fmt(model.r, 2) + ") kommer bare fra omveien gjennom felles årsaker (ρ = " + fmt(rho, 2)
+        + "). Veksten gir ingen styrke (β = 0), men målingene henger likevel sammen.";
+    } else {
+      const share = Math.round(100 * direct / (direct + viaCommon));
+      text = "Av forventet korrelasjon (r = " + fmt(model.r, 2) + ") går " + share + " % gjennom den direkte veien (β = " + fmt(beta, 2)
+        + ") og " + (100 - share) + " % gjennom felles årsaker (ρ = " + fmt(rho, 2) + "). En korrelasjonsstudie ser bare summen.";
+    }
+    id("hs-dag-desc").textContent = text;
+  }
+
   function card(label, value, note) {
     const box = document.createElement("div");
     const title = document.createElement("span");
@@ -4582,8 +4666,8 @@ function setupHypertrophyStrength() {
       warning.textContent = model.error === "size"
         ? "Spredningen i kontrollgruppen kan ikke være større enn i treningsgruppen. Senk målefeilen for tverrsnitt, eller øk standardavviket for tverrsnitt."
         : "Spredningen i styrkeendring er mindre enn det veksten og målefeilen alene gir. Øk standardavviket for styrke, eller senk β eller målefeilen for styrke.";
-      for (const key of ["hs-scatter", "hs-dist", "hs-numbers", "hs-variance", "hs-variance-key"]) id(key).replaceChildren();
-      for (const key of ["hs-scatter-desc", "hs-dist-desc", "hs-study-note", "hs-dist-note"]) id(key).textContent = "";
+      for (const key of ["hs-scatter", "hs-dist", "hs-numbers", "hs-variance", "hs-variance-key", "hs-dag"]) id(key).replaceChildren();
+      for (const key of ["hs-scatter-desc", "hs-dist-desc", "hs-study-note", "hs-dist-note", "hs-dag-desc"]) id(key).textContent = "";
       delete section.dataset.model;
       return;
     }
@@ -4592,6 +4676,7 @@ function setupHypertrophyStrength() {
     drawScatter(values, sample);
     drawDistribution(values, model, sample);
     drawVariance(model);
+    drawDag(values, model);
     const significant = sample.p < 0.05;
     id("hs-study-note").textContent = values.n + " deltakere";
     id("hs-scatter-desc").textContent = "I denne studien er r = " + fmt(sample.r, 2) + " (p " + (sample.p < 0.001 ? "< 0,001" : "= " + fmt(sample.p, 3))
@@ -4610,7 +4695,8 @@ function setupHypertrophyStrength() {
     );
     section.dataset.model = JSON.stringify({r: model.r, rTrue: model.rTrue, strongerWithoutGrowth: model.strongerWithoutGrowth,
       growthWithoutStronger: model.growthWithoutStronger, oppositeHalves: model.oppositeHalves,
-      notSignificant: model.notSignificant, needed: Number.isFinite(model.needed) ? model.needed : null, shares: model.shares});
+      notSignificant: model.notSignificant, needed: Number.isFinite(model.needed) ? model.needed : null, shares: model.shares,
+      rViaGrowth: model.rViaGrowth, rViaCommon: model.rViaCommon});
   }
 
   id("hs-preset").addEventListener("change", () => applyPreset(hsPresets.find(({key}) => key === id("hs-preset").value)));
