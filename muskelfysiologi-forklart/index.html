@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Muskelfysiologi forklart v25 | Albue og kne</title>
+<title>Muskelfysiologi forklart v26 | Albue og kne</title>
 <style>:root {
   color-scheme: light;
   --ink: #173142;
@@ -366,6 +366,46 @@ html.projector .fv-panel .strength-figure svg { max-height: 470px; }
 @media (max-width: 900px) {
   html.projector .fv-panel .strength-results { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Hypertrofi og styrke */
+.hs-model-line { margin: 12px 16px 0; padding: 9px 12px; background: var(--accent-light); border-radius: 8px; font-size: .9rem; }
+.hs-model-line p { margin: 2px 0; }
+.hs-model-line p span { display: inline-block; min-width: 13rem; color: var(--muted); }
+.hs-model-line code { font-size: .95rem; color: #09505b; }
+.hs-panel .hs-master-only { display: none; }
+.hs-panel.hs-advanced .hs-master-only { display: revert; }
+#hs-redraw { margin-top: 8px; }
+.hs-numbers-heading { font-size: .93rem; margin: 4px 0 6px; }
+#hs-numbers { margin-bottom: 9px; }
+.hs-person { stroke: white; stroke-width: 1; }
+.hs-person-same { fill: #0c6b75; }
+.hs-person-strength { fill: #c46a1f; }
+.hs-person-size { fill: #7a4f9a; }
+.hs-key-same::before { width: 9px; height: 9px; border-radius: 50%; background: #0c6b75; }
+.hs-key-strength::before { width: 9px; height: 9px; border-radius: 50%; background: #c46a1f; box-shadow: 0 0 0 3px #fbf0e4; }
+.hs-key-size::before { width: 9px; height: 9px; border-radius: 50%; background: #7a4f9a; box-shadow: 0 0 0 3px #f1ebf6; }
+.hs-key-ns::before { width: 14px; height: 9px; background: #e4f0f1; border: 1px solid #c4d9dc; }
+.hs-key-expected::before { width: 18px; border-top: 2px dashed #0c6b75; }
+.hs-key-this::before { width: 9px; height: 9px; border-radius: 50%; background: #8c5428; }
+.hs-bar { display: flex; height: 22px; margin: 7px 0 4px; overflow: hidden; border-radius: 6px; background: #eef1f2; }
+.hs-bar span { display: block; height: 100%; }
+#hs-variance-key span::before { width: 12px; height: 9px; }
+.hs-share-growth { background: #0c6b75; }
+.hs-share-together { background: #5ea5ad; }
+.hs-share-other { background: #c98a4b; }
+.hs-share-noise { background: #c4d0d5; }
+#hs-variance-key .hs-share-growth, #hs-variance-key .hs-share-together,
+#hs-variance-key .hs-share-other, #hs-variance-key .hs-share-noise { background: none; }
+#hs-variance-key .hs-share-growth::before { background: #0c6b75; }
+#hs-variance-key .hs-share-together::before { background: #5ea5ad; }
+#hs-variance-key .hs-share-other::before { background: #c98a4b; }
+#hs-variance-key .hs-share-noise::before { background: #c4d0d5; }
+#hs-task-list { display: grid; gap: 12px; }
+.hs-answer { margin-top: 6px; font-size: .9rem; }
+.hs-answer summary { cursor: pointer; font-weight: 600; color: #09505b; }
+.hs-answer p { margin: 6px 0 0; }
+.hs-invalid .strength-results figure, .hs-invalid .strength-results #hs-numbers, .hs-invalid .hs-numbers-heading { opacity: .35; }
+#hs-scatter, #hs-dist { max-height: 330px; }
 </style>
 </head>
 <body>
@@ -385,6 +425,7 @@ html.projector .fv-panel .strength-figure svg { max-height: 470px; }
     <button id="lesson-knee" type="button" aria-pressed="false">Kne · muskelutveksling</button>
     <a id="strength-link" class="strength-link" href="#styrkefaktorer" hidden>Styrkefaktorer ↓</a>
     <a id="fv-link" class="strength-link" href="#kraft-hastighet" hidden>Kraft–hastighetstest ↓</a>
+    <a id="hs-link" class="strength-link" href="#hypertrofi-styrke" hidden>Hypertrofi og styrke ↓</a>
   </nav>
   <div class="transport">
     <div class="playback-controls">
@@ -907,6 +948,130 @@ html.projector .fv-panel .strength-figure svg { max-height: 470px; }
       </ol>
       <p>Kraft–hastighetskurven gjelder full aktivering. Hos godt trente menn økte elektrisk stimulering lagt oppå viljestyrt innsats det eksentriske momentet med 21–24 %. Viljestyrt moment var altså om lag 81–83 % av momentet med stimulering. Standardverdien 82 % bygger på dette. Stimuleringen gir ikke nødvendigvis full aktivering. <a href="https://doi.org/10.1111/j.1748-1716.1990.tb08971.x">Westing mfl. (1990)</a></p>
       <p>Modellen antar at testhastigheten holdes i hele bevegelsen. I et dynamometer går en del av bevegelsen med til å nå og bremse testhastigheten. Velg da et avlesningsvindu der hastigheten er konstant.</p>
+    </details>
+  </section>
+  <section id="hypertrofi-styrke" class="panel strength-panel hs-panel" aria-labelledby="hs-heading" hidden>
+    <div class="panel-heading">
+      <div>
+        <h2 id="hs-heading">Hypertrofi og styrke: hvor ofte spriker målingene?</h2>
+        <p>En simulert treningsstudie der hver deltaker får målt endringen i muskeltverrsnitt og i styrke. Modellen skiller vekst som gir kraft, andre tilpasninger og målefeil.</p>
+      </div>
+      <button id="hs-reset" type="button">Tilbake til oppsettet</button>
+    </div>
+    <div class="hs-model-line" aria-label="Modellen">
+      <p><span>Målt endring i tverrsnitt</span> <code>ΔH = x + e<sub>H</sub></code></p>
+      <p><span>Målt endring i styrke</span> <code>ΔS = β·x + n + e<sub>S</sub></code></p>
+      <p class="fv-hint"><code>x</code> er vekst som kan gi kraft, <code>β</code> hvor mye av den som blir styrke, <code>n</code> alle andre tilpasninger (aktivering, spesifikk kraft, arkitektur, antagonister og teknikk i testøvelsen), og <code>e</code> målefeil og variasjon over tid. Endringene er i prosent.</p>
+    </div>
+    <div class="strength-grid">
+      <div class="strength-inputs">
+        <fieldset class="fv-fieldset">
+          <legend>Datagrunnlag</legend>
+          <div class="fv-select-row">
+            <label for="hs-preset">Oppsett</label>
+            <select id="hs-preset"></select>
+          </div>
+          <p class="fv-hint" id="hs-preset-note"></p>
+        </fieldset>
+        <fieldset class="fv-fieldset">
+          <legend>Målt endring i treningsgruppen</legend>
+          <div id="hs-measured"></div>
+        </fieldset>
+        <fieldset class="fv-fieldset">
+          <legend>Målefeil og variasjon over tid</legend>
+          <div id="hs-noise"></div>
+          <p class="fv-hint">Standardavviket for endringen i en kontrollgruppe som ikke trener. Det rommer både målefeil og biologisk variasjon gjennom perioden.</p>
+        </fieldset>
+        <fieldset class="fv-fieldset">
+          <legend>Hvordan veksten virker</legend>
+          <div id="hs-mechanism"></div>
+          <p class="fv-hint">β = 1 betyr at 1 % mer kraftgivende tverrsnitt gir 1 % mer styrke. Vekst gjennom økt pennasjon gir om lag 0,9 i Styrkefaktorer, fordi en mindre del av fiberkraften virker langs senen. Er en del av den målte veksten ikke økt fysiologisk tverrsnitt, for eksempel lengre fascikler, eller ikke mer kontraktilt materiale, blir β mindre.</p>
+          <p class="fv-hint hs-master-only">Samvariasjon betyr at de som vokser mest, også får mest av de andre tilpasningene. Da kan målingene henge sammen selv om veksten ikke gir styrke.</p>
+        </fieldset>
+        <fieldset class="fv-fieldset">
+          <legend>Studien</legend>
+          <div id="hs-study"></div>
+          <button id="hs-redraw" type="button">Ny studie med nye deltakere</button>
+        </fieldset>
+      </div>
+      <div class="strength-results">
+        <p class="fv-warning" id="hs-warning" role="status" hidden></p>
+        <figure class="strength-figure">
+          <figcaption><strong>Én simulert studie</strong><span class="fv-axis-note" id="hs-study-note"></span></figcaption>
+          <svg id="hs-scatter" viewBox="0 0 420 270" role="img" aria-labelledby="hs-scatter-desc"></svg>
+          <p id="hs-scatter-desc" class="fv-legend-text"></p>
+          <div class="fv-key">
+            <span class="hs-key-same">Samme retning</span>
+            <span class="hs-key-strength">Sterkere uten målt vekst</span>
+            <span class="hs-key-size">Målt vekst uten å bli sterkere</span>
+            <span class="fv-key-fit">Regresjonslinje i studien</span>
+          </div>
+        </figure>
+        <h3 class="hs-numbers-heading">Forventet blant alle som trener slik</h3>
+        <div class="fv-profile" id="hs-numbers" role="group" aria-label="Forventet blant alle som trener slik"></div>
+        <figure class="strength-figure">
+          <figcaption><strong>Hva skaper spredningen i styrkeendring?</strong><span class="fv-axis-note">Andel av variansen</span></figcaption>
+          <div class="hs-bar" id="hs-variance" aria-hidden="true"></div>
+          <div class="fv-key" id="hs-variance-key"></div>
+        </figure>
+        <figure class="strength-figure">
+          <figcaption><strong>Korrelasjonen i mange like studier</strong><span class="fv-axis-note" id="hs-dist-note"></span></figcaption>
+          <svg id="hs-dist" viewBox="0 0 420 270" role="img" aria-labelledby="hs-dist-desc"></svg>
+          <p id="hs-dist-desc" class="fv-legend-text"></p>
+          <div class="fv-key">
+            <span class="hs-key-ns">Ikke signifikant (p ≥ 0,05)</span>
+            <span class="hs-key-expected">Forventet korrelasjon</span>
+            <span class="hs-key-this">Denne studien</span>
+          </div>
+        </figure>
+      </div>
+    </div>
+    <section class="fv-tasks" aria-labelledby="hs-tasks-heading">
+      <h3 id="hs-tasks-heading">Oppgaver</h3>
+      <p>Start med oppsettet fra Räntilä mfl. (2025), og trykk «Tilbake til oppsettet» mellom oppgavene. Svar før du åpner fasiten.</p>
+      <div id="hs-task-list">
+        <article class="fv-task">
+          <h4>1. Hvor sterk sammenheng kan vi vente?</h4>
+          <p class="fv-task-question">I standardoppsettet gir hver prosent vekst én prosent styrke. Hvor sterk korrelasjon venter modellen likevel mellom målt endring i tverrsnitt og i styrke? Hvor ofte vil en studie med 20 deltakere ikke finne en signifikant sammenheng?</p>
+          <details class="hs-answer"><summary>Fasit</summary><p>r = 0,51. I 36 % av studiene med 20 deltakere blir korrelasjonen ikke signifikant. Veksten står for bare 34 % av spredningen i styrkeendring. Andre tilpasninger står for 53 % og målefeil og variasjon over tid for 13 %. En svak korrelasjon er derfor ikke bevis mot at veksten gir styrke.</p></details>
+        </article>
+        <article class="fv-task">
+          <h4>2. Perfekte målinger</h4>
+          <p class="fv-task-question">Sett begge målefeilene til 0. Hvor sterk blir korrelasjonen? Hvorfor blir den ikke 1?</p>
+          <details class="hs-answer"><summary>Fasit</summary><p>r = 0,67. Andre tilpasninger varierer fortsatt mellom personene og står nå for 56 % av spredningen i styrkeendring. Selv perfekte målinger av tverrsnitt og styrke kan ikke skille veksten fra resten.</p></details>
+        </article>
+        <article class="fv-task">
+          <h4>3. Sterkere uten målt vekst</h4>
+          <p class="fv-task-question">Hvor stor andel blir sterkere uten målt vekst med Räntilä-oppsettet? Bytt til Ahtiainen-oppsettet. Hva skjer, og hvorfor?</p>
+          <details class="hs-answer"><summary>Fasit</summary><p>2,1 % med Räntilä og 20 % med Ahtiainen. Ahtiainen-dataene har mindre gjennomsnittlig vekst (4,8 %) i forhold til spredningen (6,1 %), så mange måles uten vekst. Andelen sier mest om hvor stor veksten er i forhold til spredningen, og lite om hvorvidt veksten gir styrke.</p></details>
+        </article>
+        <article class="fv-task">
+          <h4>4. Hvor mange deltakere trengs?</h4>
+          <p class="fv-task-question">Hvor mange deltakere trengs for å finne sammenhengen i 80 % av studiene? Hva om bare halvparten av veksten blir styrke (β = 0,5)?</p>
+          <details class="hs-answer"><summary>Fasit</summary><p>29 deltakere med β = 1. Med β = 0,5 faller forventet korrelasjon til 0,25, og det trengs 120 deltakere. Med 20 deltakere blir korrelasjonen da ikke signifikant i 81 % av studiene. En vanlig korrelasjonsstudie kan knapt skille β = 0,5 fra β = 1.</p></details>
+        </article>
+        <article class="fv-task hs-master-only">
+          <h4>5. Sammenheng uten årsak</h4>
+          <p class="fv-task-question">Sett β = 0, slik at veksten ikke gir styrke, og samvariasjonen til 0,5. Hvor sterk blir korrelasjonen?</p>
+          <details class="hs-answer"><summary>Fasit</summary><p>r = 0,41. Målingene henger sammen fordi de som vokser mest, også får mest av de andre tilpasningene. Verken en svak eller en sterk korrelasjon avgjør altså om veksten gir styrke. Til det trengs design der veksten varierer uavhengig av resten, eller målinger av mekanismene hver for seg.</p></details>
+        </article>
+      </div>
+    </section>
+    <details class="strength-method">
+      <summary>Beregningsgrunnlag og kilder</summary>
+      <ol>
+        <li>Alle størrelser er normalfordelte. Prosentendringene legges sammen som om de var logaritmiske endringer, og gjennomsnittet i kontrollgruppen er ikke trukket fra.</li>
+        <li>Spredningen i vekst som gir kraft er <code>σ<sub>x</sub><sup>2</sup> = SD<sub>H</sub><sup>2</sup> − s<sub>H</sub><sup>2</sup></code>, der <code>SD<sub>H</sub></code> er standardavviket i treningsgruppen og <code>s<sub>H</sub></code> i kontrollgruppen. Det er samme regnestykke som standardavviket for individuell respons hos Räntilä mfl. (2025).</li>
+        <li>Spredningen i andre tilpasninger <code>σ<sub>n</sub></code> er det som gir riktig total spredning i styrkeendring: <code>SD<sub>S</sub><sup>2</sup> = β<sup>2</sup>σ<sub>x</sub><sup>2</sup> + σ<sub>n</sub><sup>2</sup> + 2βρσ<sub>x</sub>σ<sub>n</sub> + s<sub>S</sub><sup>2</sup></code>, der <code>ρ</code> er samvariasjonen mellom <code>x</code> og <code>n</code>.</li>
+        <li>Forventet korrelasjon er <code>r = (βσ<sub>x</sub><sup>2</sup> + ρσ<sub>x</sub>σ<sub>n</sub>) / (SD<sub>H</sub> · SD<sub>S</sub>)</code>. Uten målefeil deles det på <code>σ<sub>x</sub></code> og <code>√(SD<sub>S</sub><sup>2</sup> − s<sub>S</sub><sup>2</sup>)</code> i stedet.</li>
+        <li>Andelene med ulikt fortegn regnes fra den todimensjonale normalfordelingen. Andelen som havner over medianen på det ene målet og under på det andre, er <code>1/2 − arcsin(r)/π</code>.</li>
+        <li>Sannsynligheten for at en studie ikke finner en signifikant korrelasjon (tosidig, 5 %) og antall deltakere for 80 % styrke er regnet med Fishers z-transformasjon. Kurven over korrelasjonen i mange studier bruker den samme tilnærmingen.</li>
+        <li>Den simulerte studien trekker deltakere fra den samme fordelingen. p-verdien er fra t-testen for Pearsons korrelasjon. «Ny studie» trekker nye deltakere. Når du endrer en glidebryter, beholdes deltakerne, så du ser hvordan de samme personene flytter seg.</li>
+      </ol>
+      <p><strong>Räntilä mfl. (2025):</strong> 10 uker styrketrening hos utrente (20 trente og 27 kontroller). Tverrsnittet av vastus lateralis ble målt med ultralyd, og styrken som 1RM i beinpress delt på kroppsmasse ved start. Vastus lateralis økte 16,0 ± 8,4 % hos de som trente og 1,5 ± 4,1 % i kontrollgruppen. 1RM økte 21,7 ± 12,6 % og 2,9 ± 4,5 %. Studien rapporterer ikke korrelasjonen mellom endring i tverrsnitt og i styrke. <a href="https://doi.org/10.1002/ejsc.70095">Räntilä mfl. (2025)</a></p>
+      <p><strong>Ahtiainen mfl. (2016):</strong> samlede data fra 287 utrente, 19–78 år, med 72 kontroller. Hos de som trente, økte muskelstørrelsen 4,8 ± 6,1 % og styrken 21,1 ± 11,5 %. Målefeilen i dette oppsettet er lånt fra kontrollgruppen hos Räntilä mfl. og er ikke hentet fra Ahtiainen mfl. <a href="https://doi.org/10.1007/s11357-015-9870-1">Ahtiainen mfl. (2016)</a></p>
+      <p>Om svak korrelasjon mellom endringer i størrelse og styrke betyr at veksten ikke bidrar, er omstridt. <a href="https://doi.org/10.1007/s40279-019-01106-9">Loenneke mfl. (2019)</a> mener at veksten ikke bidrar. <a href="https://doi.org/10.1007/s40279-019-01107-8">Taber mfl. (2019)</a> mener at økt myofibrillært protein er en medvirkende årsak, og at hvor mye veksten bidrar i forhold til alle andre faktorer, påvirker korrelasjonen man observerer. Panelet viser regnestykket bak den siste påstanden. Det avgjør ikke hvor stor β er.</p>
+      <p>Tverrsnittet er målt på ett sted i én muskel, mens beinpress er en flerleddsøvelse. Det som ikke fanges av tverrsnittet, havner i <code>n</code>. Knemodellen i de andre panelene beskriver kneekstensjon, ikke beinpress.</p>
     </details>
   </section>
   <template id="strength-slider-template">
@@ -1705,6 +1870,7 @@ function updateLessonDetails() {
   id("tendon-math").hidden = lesson !== "tendon";
   id("knee-math").hidden = lesson !== "knee";
   id("kraft-hastighet").classList.toggle("fv-advanced", advanced);
+  id("hypertrofi-styrke").classList.toggle("hs-advanced", advanced);
 }
 
 function setLevel(advanced) {
@@ -3821,6 +3987,8 @@ function setLesson(name) {
   id("styrkefaktorer").hidden = !knee;
   id("fv-link").hidden = !knee;
   id("kraft-hastighet").hidden = !knee;
+  id("hs-link").hidden = !knee;
+  id("hypertrofi-styrke").hidden = !knee;
   for (const [i, selector] of plotSelectors.entries()) {
     selector.replaceChildren();
     if (i === 1) selector.add(new Option("Én graf", ""));
@@ -3916,12 +4084,427 @@ id("scenario").addEventListener("change", () => { renderGraphs(); showParams(); 
 for (const name of Object.keys(lessons)) {
   id("lesson-" + name).addEventListener("click", () => setLesson(name));
 }
+// Hypertrofi og styrke: hvor ofte spriker målt endring i tverrsnitt og i styrke?
+// Modell: ΔH = x + e_H og ΔS = β·x + n + e_S, alle normalfordelte. Se Beregningsgrunnlag i panelet.
+
+// Komplementær feilfunksjon (Numerical Recipes, relativ feil under 1,2e-7).
+function hsErfc(x) {
+  const z = Math.abs(x);
+  const t = 1 / (1 + 0.5 * z);
+  const r = t * Math.exp(-z * z - 1.26551223 + t * (1.00002368 + t * (0.37409196 + t * (0.09678418
+    + t * (-0.18628806 + t * (0.27886807 + t * (-1.13520398 + t * (1.48851587
+    + t * (-0.82215223 + t * 0.17087277)))))))));
+  return x >= 0 ? r : 2 - r;
+}
+const hsPhi = (x) => 0.5 * hsErfc(-x / Math.SQRT2);
+const hsNormalDensity = (x) => Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
+const hsZ975 = 1.959963984540054;
+const hsZ80 = 0.8416212335729143;
+
+// P(Z₁ ≤ h, Z₂ ≤ k) for to standardiserte normalfordelte variabler med korrelasjon r (Simpsons regel).
+function hsBivariateNormal(h, k, r) {
+  if (r > 1 - 1e-12) return hsPhi(Math.min(h, k));
+  if (r < -1 + 1e-12) return Math.max(0, hsPhi(h) + hsPhi(k) - 1);
+  const low = -9, high = Math.min(h, 9);
+  if (high <= low) return 0;
+  const steps = 2000, width = (high - low) / steps, root = Math.sqrt(1 - r * r);
+  let sum = 0;
+  for (let i = 0; i <= steps; i++) {
+    const z = low + i * width;
+    const weight = i === 0 || i === steps ? 1 : i % 2 ? 4 : 2;
+    sum += weight * hsNormalDensity(z) * hsPhi((k - r * z) / root);
+  }
+  return sum * width / 3;
+}
+
+// Tosidig p-verdi for Pearsons r fra t-fordelingen, via den regulariserte ufullstendige betafunksjonen.
+function hsLogGamma(x) {
+  const coefficients = [76.18009172947146, -86.50532032941677, 24.01409824083091,
+    -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  const tmp = x + 5.5 - (x + 0.5) * Math.log(x + 5.5);
+  let series = 1.000000000190015, y = x;
+  for (const c of coefficients) series += c / ++y;
+  return -tmp + Math.log(2.5066282746310005 * series / x);
+}
+function hsBetaFraction(a, b, x) {
+  const tiny = 1e-300;
+  let c = 1, d = 1 - (a + b) * x / (a + 1);
+  if (Math.abs(d) < tiny) d = tiny;
+  d = 1 / d;
+  let h = d;
+  for (let m = 1; m <= 500; m++) {
+    const m2 = 2 * m;
+    let aa = m * (b - m) * x / ((a + m2 - 1) * (a + m2));
+    d = 1 + aa * d; if (Math.abs(d) < tiny) d = tiny;
+    c = 1 + aa / c; if (Math.abs(c) < tiny) c = tiny;
+    d = 1 / d; h *= d * c;
+    aa = -(a + m) * (a + b + m) * x / ((a + m2) * (a + m2 + 1));
+    d = 1 + aa * d; if (Math.abs(d) < tiny) d = tiny;
+    c = 1 + aa / c; if (Math.abs(c) < tiny) c = tiny;
+    d = 1 / d;
+    const delta = d * c;
+    h *= delta;
+    if (Math.abs(delta - 1) < 1e-13) break;
+  }
+  return h;
+}
+function hsRegularizedBeta(x, a, b) {
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const front = Math.exp(hsLogGamma(a + b) - hsLogGamma(a) - hsLogGamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+  return x < (a + 1) / (a + b + 2) ? front * hsBetaFraction(a, b, x) / a : 1 - front * hsBetaFraction(b, a, 1 - x) / b;
+}
+function hsCorrelationP(r, n) {
+  if (Math.abs(r) >= 1) return 0;
+  const df = n - 2;
+  return hsRegularizedBeta(df / (df + r * r * df / (1 - r * r)), df / 2, 0.5);
+}
+
+// Seedet tilfeldighetsgenerator og standardnormale trekk (Box–Muller), så en studie kan gjentas.
+function hsRandom(seed) {
+  let state = seed >>> 0;
+  return () => {
+    state = (state + 0x6D2B79F5) >>> 0;
+    let t = state;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hsStandardNormals(seed, count) {
+  const random = hsRandom(seed);
+  const values = [];
+  while (values.length < count) {
+    const u = 1 - random(), v = random();
+    const radius = Math.sqrt(-2 * Math.log(u));
+    values.push(radius * Math.cos(2 * Math.PI * v), radius * Math.sin(2 * Math.PI * v));
+  }
+  return values.slice(0, count);
+}
+
+function hypertrophyStrengthModel({sizeMean, sizeSd, strengthMean, strengthSd, sizeNoise, strengthNoise, beta, rho, n}) {
+  const varX = sizeSd ** 2 - sizeNoise ** 2;
+  if (varX < 0) return {error: "size"};
+  const sx = Math.sqrt(varX);
+  const rest = strengthSd ** 2 - strengthNoise ** 2 - beta ** 2 * varX;
+  if (rest < -1e-9) return {error: "strength"};
+  // σn fra SD_S² = β²σx² + σn² + 2βρσxσn + s_S²
+  const sn = Math.max(0, -beta * rho * sx + Math.sqrt(Math.max(0, rest + beta ** 2 * rho ** 2 * varX)));
+  const covariance = beta * varX + rho * sx * sn;
+  const r = Math.min(1, covariance / (sizeSd * strengthSd));
+  const trueStrengthSd = Math.sqrt(Math.max(0, strengthSd ** 2 - strengthNoise ** 2));
+  const rTrue = sx > 0 && trueStrengthSd > 0 ? Math.min(1, covariance / (sx * trueStrengthSd)) : NaN;
+  const h = -sizeMean / sizeSd, k = -strengthMean / strengthSd;
+  const bothDown = hsBivariateNormal(h, k, r);
+  const z = Math.atanh(Math.min(r, 0.9999999));
+  const scale = Math.sqrt(n - 3);
+  const power = hsPhi(z * scale - hsZ975) + hsPhi(-z * scale - hsZ975);
+  const total = strengthSd ** 2;
+  return {
+    sx, sn, r, rTrue,
+    strongerWithoutGrowth: Math.max(0, hsPhi(h) - bothDown),
+    growthWithoutStronger: Math.max(0, hsPhi(k) - bothDown),
+    oppositeHalves: 0.5 - Math.asin(r) / Math.PI,
+    notSignificant: 1 - power,
+    needed: z > 1e-9 ? Math.ceil(((hsZ975 + hsZ80) / z) ** 2 + 3) : Infinity,
+    shares: {
+      growth: beta ** 2 * varX / total,
+      together: 2 * beta * rho * sx * sn / total,
+      other: sn ** 2 / total,
+      noise: strengthNoise ** 2 / total
+    }
+  };
+}
+
+const hsPresets = [
+  {key: "rantila", label: "Räntilä mfl. 2025: 10 uker, vastus lateralis og beinpress",
+    note: "Tverrsnitt av vastus lateralis med ultralyd og 1RM i beinpress etter 10 uker. 20 utrente trente og 27 var kontroller. Målefeilen er standardavviket i kontrollgruppen.",
+    values: {sizeMean: 16.0, sizeSd: 8.4, strengthMean: 21.7, strengthSd: 12.6, sizeNoise: 4.1, strengthNoise: 4.5, beta: 1, rho: 0, n: 20}},
+  {key: "ahtiainen", label: "Ahtiainen mfl. 2016: samlede data, 287 deltakere",
+    note: "Muskelstørrelse og styrke fra samlede treningsstudier med 287 utrente, hvorav 72 kontroller. Antall deltakere er satt til de 215 som trente. Målefeilen er lånt fra Räntilä mfl. (2025).",
+    values: {sizeMean: 4.8, sizeSd: 6.1, strengthMean: 21.1, strengthSd: 11.5, sizeNoise: 4.1, strengthNoise: 4.5, beta: 1, rho: 0, n: 215}}
+];
+const hsSliderSpecs = [
+  {key: "sizeMean", group: "hs-measured", label: "Tverrsnitt, gjennomsnitt", min: -5, max: 40, step: 0.1, digits: 1, unit: " %"},
+  {key: "sizeSd", group: "hs-measured", label: "Tverrsnitt, standardavvik", min: 0.5, max: 25, step: 0.1, digits: 1, unit: " %"},
+  {key: "strengthMean", group: "hs-measured", label: "Styrke, gjennomsnitt", min: -5, max: 60, step: 0.1, digits: 1, unit: " %"},
+  {key: "strengthSd", group: "hs-measured", label: "Styrke, standardavvik", min: 0.5, max: 30, step: 0.1, digits: 1, unit: " %"},
+  {key: "sizeNoise", group: "hs-noise", label: "Tverrsnitt", min: 0, max: 15, step: 0.1, digits: 1, unit: " %"},
+  {key: "strengthNoise", group: "hs-noise", label: "Styrke", min: 0, max: 15, step: 0.1, digits: 1, unit: " %"},
+  {key: "beta", group: "hs-mechanism", label: "Del av veksten som blir styrke (β)", min: 0, max: 1, step: 0.01, digits: 2, unit: ""},
+  {key: "rho", group: "hs-mechanism", label: "Samvariasjon med andre tilpasninger (ρ)", min: 0, max: 0.8, step: 0.01, digits: 2, unit: "", master: true},
+  {key: "n", group: "hs-study", label: "Deltakere", min: 5, max: 300, step: 1, digits: 0, unit: ""}
+];
+const hsMaxParticipants = 300;
+
+function hsPlot(svg, {xMin, xMax, yMin, yMax, xLabel, yLabel, yTickLabels = true, xTicks}) {
+  const left = 58, right = 408, top = 14, bottom = 222;
+  const X = (x) => left + (right - left) * (x - xMin) / (xMax - xMin);
+  const Y = (y) => bottom - (bottom - top) * (y - yMin) / (yMax - yMin);
+  svg.replaceChildren();
+  const add = (name, attributes, text) => {
+    const node = svgElement(name, attributes, text);
+    svg.append(node);
+    return node;
+  };
+  const clip = svg.id + "-flate";
+  const clipPath = svgElement("clipPath", {id: clip});
+  clipPath.append(svgElement("rect", {x: left, y: top, width: right - left, height: bottom - top}));
+  add("defs", {}).append(clipPath);
+  if (yTickLabels) {
+    for (const tick of niceTicks(yMin, yMax)) {
+      add("line", {x1: left, x2: right, y1: Y(tick), y2: Y(tick), stroke: "#dbe6e9"});
+      add("text", {x: left - 7, y: Y(tick) + 4, "text-anchor": "end", class: "fv-tick"}, fmt(tick, Number.isInteger(tick) ? 0 : 1));
+    }
+  }
+  for (const tick of xTicks ?? niceTicks(xMin, xMax, 2)) {
+    add("text", {x: X(tick), y: bottom + 17, "text-anchor": "middle", class: "fv-tick"}, fmt(tick, Number.isInteger(tick) ? 0 : 1));
+  }
+  if (xMin < 0 && xMax > 0) add("line", {x1: X(0), x2: X(0), y1: top, y2: bottom, stroke: "#9db0b8"});
+  if (yMin < 0 && yMax > 0) add("line", {x1: left, x2: right, y1: Y(0), y2: Y(0), stroke: "#9db0b8"});
+  add("line", {x1: left, x2: right, y1: bottom, y2: bottom, stroke: "#627b87"});
+  add("text", {x: (left + right) / 2, y: 258, "text-anchor": "middle", class: "fv-axis"}, xLabel);
+  add("text", {x: 14, y: (top + bottom) / 2, transform: `rotate(-90 14 ${(top + bottom) / 2})`,
+    "text-anchor": "middle", class: "fv-axis"}, yLabel);
+  return {X, Y, add, clip, left, right, top, bottom};
+}
+
+function hsPercent(value) {
+  const percent = 100 * value;
+  return fmt(percent, percent < 9.95 ? 1 : 0) + " %";
+}
+
+function setupHypertrophyStrength() {
+  const section = id("hypertrofi-styrke");
+  const state = {preset: hsPresets[0], values: {...hsPresets[0].values}, seed: 1};
+  let normals = hsStandardNormals(state.seed, 2 * hsMaxParticipants);
+
+  for (const preset of hsPresets) id("hs-preset").add(new Option(preset.label, preset.key));
+
+  const controls = hsSliderSpecs.map((spec) => {
+    const control = id("strength-slider-template").content.firstElementChild.cloneNode(true);
+    if (spec.master) control.classList.add("hs-master-only");
+    const input = control.querySelector("input");
+    input.id = "hs-" + spec.key;
+    input.min = spec.min;
+    input.max = spec.max;
+    input.step = spec.step;
+    control.querySelector("label").htmlFor = input.id;
+    control.querySelector("label").textContent = spec.label;
+    const reference = control.querySelector("small");
+    const output = control.querySelector("output");
+    id(spec.group).append(control);
+    input.addEventListener("input", () => {
+      state.values[spec.key] = input.valueAsNumber;
+      render();
+    });
+    return {spec, input, reference, output};
+  });
+
+  function showControls() {
+    for (const {spec, input, reference, output} of controls) {
+      const value = state.values[spec.key];
+      input.value = value;
+      const text = fmt(value, spec.digits) + spec.unit;
+      output.textContent = text;
+      input.setAttribute("aria-valuetext", text);
+      const presetValue = state.preset.values[spec.key];
+      reference.textContent = "Oppsett " + fmt(presetValue, spec.digits) + spec.unit;
+      reference.hidden = Math.abs(value - presetValue) < 1e-9;
+    }
+  }
+
+  function applyPreset(preset) {
+    state.preset = preset;
+    state.values = {...preset.values};
+    if (!advancedLevel()) state.values.rho = 0;
+    id("hs-preset").value = preset.key;
+    id("hs-preset-note").textContent = preset.note;
+    render();
+  }
+
+  function study(values, model) {
+    const people = [];
+    const root = Math.sqrt(Math.max(0, 1 - model.r ** 2));
+    for (let i = 0; i < values.n; i++) {
+      const z1 = normals[2 * i], z2 = normals[2 * i + 1];
+      people.push([values.sizeMean + values.sizeSd * z1, values.strengthMean + values.strengthSd * (model.r * z1 + root * z2)]);
+    }
+    const mean = (index) => people.reduce((sum, person) => sum + person[index], 0) / people.length;
+    const mx = mean(0), my = mean(1);
+    let sxx = 0, syy = 0, sxy = 0;
+    for (const [x, y] of people) {
+      sxx += (x - mx) ** 2;
+      syy += (y - my) ** 2;
+      sxy += (x - mx) * (y - my);
+    }
+    const r = sxx > 0 && syy > 0 ? sxy / Math.sqrt(sxx * syy) : 0;
+    return {people, r, p: hsCorrelationP(r, people.length), slope: sxx > 0 ? sxy / sxx : 0, mx, my,
+      strongerWithoutGrowth: people.filter(([x, y]) => x <= 0 && y > 0).length,
+      growthWithoutStronger: people.filter(([x, y]) => x > 0 && y <= 0).length};
+  }
+
+  function drawScatter(values, sample) {
+    const range = (mean, sd) => {
+      const low = Math.min(0, mean - 3.2 * sd), high = Math.max(0, mean + 3.2 * sd);
+      const step = roundedStep(high - low);
+      return [Math.floor(low / step) * step, Math.ceil(high / step) * step];
+    };
+    const [xMin, xMax] = range(values.sizeMean, values.sizeSd);
+    const [yMin, yMax] = range(values.strengthMean, values.strengthSd);
+    const plot = hsPlot(id("hs-scatter"), {xMin, xMax, yMin, yMax,
+      xLabel: "Målt endring i tverrsnitt (%)", yLabel: "Målt endring i styrke (%)"});
+    // Kvadranter med ulikt fortegn
+    const x0 = plot.X(Math.max(xMin, Math.min(xMax, 0))), y0 = plot.Y(Math.max(yMin, Math.min(yMax, 0)));
+    if (x0 > plot.left && y0 > plot.top) {
+      plot.add("rect", {x: plot.left, y: plot.top, width: x0 - plot.left, height: y0 - plot.top, fill: "#fbf0e4", class: "hs-quadrant-strength"});
+    }
+    if (x0 < plot.right && y0 < plot.bottom) {
+      plot.add("rect", {x: x0, y: y0, width: plot.right - x0, height: plot.bottom - y0, fill: "#f1ebf6", class: "hs-quadrant-size"});
+    }
+    const lineX = [xMin, xMax];
+    plot.add("polyline", {points: lineX.map((x) => `${plot.X(x).toFixed(1)},${plot.Y(sample.my + sample.slope * (x - sample.mx)).toFixed(1)}`).join(" "),
+      fill: "none", stroke: "#0c6b75", "stroke-width": 2, "stroke-dasharray": "6 4", "clip-path": `url(#${plot.clip})`, class: "hs-regression"});
+    for (const [x, y] of sample.people) {
+      const kind = x <= 0 && y > 0 ? "strength" : x > 0 && y <= 0 ? "size" : "same";
+      plot.add("circle", {cx: plot.X(x).toFixed(1), cy: plot.Y(y).toFixed(1), r: values.n > 120 ? 2.6 : 3.8,
+        class: "hs-person hs-person-" + kind, "clip-path": `url(#${plot.clip})`});
+    }
+  }
+
+  function drawDistribution(values, model, sample) {
+    const n = values.n;
+    const scale = Math.sqrt(n - 3);
+    const center = Math.atanh(Math.min(model.r, 0.9999999));
+    const critical = Math.tanh(hsZ975 / scale);
+    const density = (r) => scale * hsNormalDensity((Math.atanh(r) - center) * scale) / (1 - r * r);
+    const points = [];
+    for (let i = 0; i <= 400; i++) {
+      const r = -0.999 + 1.998 * i / 400;
+      points.push([r, density(r)]);
+    }
+    const yMax = 1.1 * Math.max(...points.map(([, y]) => y));
+    const plot = hsPlot(id("hs-dist"), {xMin: -1, xMax: 1, yMin: 0, yMax, yTickLabels: false,
+      xLabel: "Korrelasjon i studien (r)", yLabel: "Hyppighet", xTicks: [-1, -0.5, 0, 0.5, 1]});
+    const band = points.filter(([r]) => Math.abs(r) < critical);
+    if (band.length) {
+      const polygon = [[band[0][0], 0], ...band, [band.at(-1)[0], 0]];
+      plot.add("polygon", {points: polygon.map(([x, y]) => `${plot.X(x).toFixed(1)},${plot.Y(y).toFixed(1)}`).join(" "),
+        fill: "#e4f0f1", stroke: "none", class: "hs-nonsignificant"});
+    }
+    plot.add("polyline", {points: points.map(([x, y]) => `${plot.X(x).toFixed(1)},${plot.Y(y).toFixed(1)}`).join(" "),
+      fill: "none", stroke: "#345565", "stroke-width": 2, "clip-path": `url(#${plot.clip})`});
+    plot.add("line", {x1: plot.X(model.r), x2: plot.X(model.r), y1: plot.top, y2: plot.bottom, stroke: "#0c6b75",
+      "stroke-width": 2, "stroke-dasharray": "6 4", class: "hs-expected"});
+    plot.add("circle", {cx: plot.X(sample.r), cy: plot.bottom, r: 5.5, fill: "#8c5428", stroke: "white", "stroke-width": 1.5, class: "hs-this-study"});
+    id("hs-dist-note").textContent = "Studier med " + n + " deltakere";
+    id("hs-dist-desc").textContent = "Med " + n + " deltakere ligger korrelasjonen i " + hsPercent(model.notSignificant)
+      + " av studiene i det skraverte feltet, der den ikke er signifikant (|r| < " + fmt(critical, 2) + ").";
+  }
+
+  function drawVariance(model) {
+    const parts = [
+      {key: "growth", label: "Vekst"},
+      {key: "together", label: "Samvariasjon"},
+      {key: "other", label: "Andre tilpasninger"},
+      {key: "noise", label: "Målefeil og variasjon"}
+    ].filter(({key}) => key !== "together" || model.shares.together > 1e-9);
+    id("hs-variance").replaceChildren(...parts.map(({key}) => {
+      const span = document.createElement("span");
+      span.className = "hs-share-" + key;
+      span.style.width = (100 * model.shares[key]).toFixed(3) + "%";
+      return span;
+    }));
+    id("hs-variance-key").replaceChildren(...parts.map(({key, label}) => {
+      const span = document.createElement("span");
+      span.className = "hs-share-" + key;
+      span.textContent = label + " " + hsPercent(model.shares[key]);
+      return span;
+    }));
+  }
+
+  function card(label, value, note) {
+    const box = document.createElement("div");
+    const title = document.createElement("span");
+    title.textContent = label;
+    const strong = document.createElement("strong");
+    strong.textContent = value;
+    box.append(title, strong);
+    if (note) {
+      const small = document.createElement("small");
+      small.textContent = note;
+      box.append(small);
+    }
+    return box;
+  }
+
+  function render() {
+    showControls();
+    const values = state.values;
+    const model = hypertrophyStrengthModel(values);
+    const warning = id("hs-warning");
+    section.classList.toggle("hs-invalid", Boolean(model.error));
+    if (model.error) {
+      warning.hidden = false;
+      warning.textContent = model.error === "size"
+        ? "Spredningen i kontrollgruppen kan ikke være større enn i treningsgruppen. Senk målefeilen for tverrsnitt, eller øk standardavviket for tverrsnitt."
+        : "Spredningen i styrkeendring er mindre enn det veksten og målefeilen alene gir. Øk standardavviket for styrke, eller senk β eller målefeilen for styrke.";
+      return;
+    }
+    warning.hidden = true;
+    const sample = study(values, model);
+    drawScatter(values, sample);
+    drawDistribution(values, model, sample);
+    drawVariance(model);
+    const significant = sample.p < 0.05;
+    id("hs-study-note").textContent = values.n + " deltakere";
+    id("hs-scatter-desc").textContent = "I denne studien er r = " + fmt(sample.r, 2) + " (p " + (sample.p < 0.001 ? "< 0,001" : "= " + fmt(sample.p, 3))
+      + ", " + (significant ? "signifikant" : "ikke signifikant") + "). " + sample.strongerWithoutGrowth + " av " + values.n
+      + " ble sterkere uten målt vekst, og " + sample.growthWithoutStronger + " fikk målt vekst uten å bli sterkere.";
+    id("hs-scatter").setAttribute("data-r", sample.r);
+    id("hs-scatter").setAttribute("data-p", sample.p);
+    id("hs-numbers").replaceChildren(
+      card("Forventet korrelasjon", "r = " + fmt(model.r, 2), Number.isFinite(model.rTrue) ? "Uten målefeil: r = " + fmt(model.rTrue, 2) : ""),
+      card("Sterkere uten målt vekst", hsPercent(model.strongerWithoutGrowth), "Målt vekst ≤ 0, styrke > 0"),
+      card("Målt vekst uten å bli sterkere", hsPercent(model.growthWithoutStronger), "Styrke ≤ 0, målt vekst > 0"),
+      card("Over medianen på det ene målet, under på det andre", hsPercent(model.oppositeHalves), "Ingen sammenheng gir 50 %"),
+      card("Studier uten signifikant korrelasjon", hsPercent(model.notSignificant), "Med " + values.n + " deltakere"),
+      card("Deltakere for å finne sammenhengen i 80 % av studiene",
+        Number.isFinite(model.needed) ? (model.needed > 100000 ? "Over 100 000" : fmt(model.needed, 0)) : "Ingen sammenheng", "")
+    );
+    section.dataset.model = JSON.stringify({r: model.r, rTrue: model.rTrue, strongerWithoutGrowth: model.strongerWithoutGrowth,
+      growthWithoutStronger: model.growthWithoutStronger, oppositeHalves: model.oppositeHalves,
+      notSignificant: model.notSignificant, needed: Number.isFinite(model.needed) ? model.needed : null, shares: model.shares});
+  }
+
+  id("hs-preset").addEventListener("change", () => applyPreset(hsPresets.find(({key}) => key === id("hs-preset").value)));
+  id("hs-reset").addEventListener("click", () => {
+    state.seed = 1;
+    normals = hsStandardNormals(state.seed, 2 * hsMaxParticipants);
+    applyPreset(state.preset);
+  });
+  id("hs-redraw").addEventListener("click", () => {
+    state.seed += 1;
+    normals = hsStandardNormals(state.seed, 2 * hsMaxParticipants);
+    render();
+  });
+  // Samvariasjonen vises bare på masternivå. Går man tilbake til førsteår, settes den til 0.
+  id("beginner").addEventListener("click", () => {
+    if (state.values.rho !== 0) {
+      state.values.rho = 0;
+      render();
+    }
+  });
+  applyPreset(hsPresets[0]);
+}
+
 setupStrengthComparison();
 setupForceVelocityTest();
+setupHypertrophyStrength();
 {
   // #kraft-hastighet?arm=3.85&kons=0,60,120 … åpner kneet med dette oppsettet i kraft–hastighetstesten.
   const link = /^#kraft-hastighet\?(.*)$/.exec(location.hash);
-  setLesson(["#styrkefaktorer", "#pennasjon", "#kraft-hastighet"].includes(location.hash) || link ? "knee" : "elbow");
+  setLesson(["#styrkefaktorer", "#pennasjon", "#kraft-hastighet", "#hypertrofi-styrke"].includes(location.hash) || link ? "knee" : "elbow");
   if (link) {
     const query = new URLSearchParams(link[1]);
     if (query.get("nivaa") === "master") setLevel(true);
