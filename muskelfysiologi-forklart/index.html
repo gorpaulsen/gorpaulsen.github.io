@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Muskelfysiologi forklart v31 | Albue og kne</title>
+<title>Muskelfysiologi forklart v32 | Albue og kne</title>
 <style>:root {
   color-scheme: light;
   --ink: #173142;
@@ -4528,9 +4528,11 @@ function setupHypertrophyStrength() {
       "stroke-width": 2, "stroke-dasharray": "6 4", class: "hs-expected"});
     plot.add("circle", {cx: plot.X(sample.r), cy: plot.bottom, r: 5.5, fill: "#8c5428", stroke: "white", "stroke-width": 1.5, class: "hs-this-study"});
     id("hs-dist-note").textContent = "Studier med " + n + " deltakere";
-    id("hs-dist-desc").textContent = "Med " + n + " deltakere ligger korrelasjonen i " + hsPercent(model.notSignificant)
-      + " av studiene i det skraverte feltet, der den ikke er signifikant (|r| < " + fmt(critical, 2) + ")."
-      + (pointMass ? " Forventet korrelasjon er 1, så alle studier gir r = 1." : "");
+    id("hs-dist-desc").textContent = pointMass
+      ? "Med " + n + " deltakere og forventet korrelasjon 1 er korrelasjonen 1 i alle studier, så alle blir signifikante. "
+        + "Fordelingen vises derfor som en strek ved r = 1, ikke som en kurve."
+      : "Med " + n + " deltakere ligger korrelasjonen i " + hsPercent(model.notSignificant)
+        + " av studiene i det skraverte feltet, der den ikke er signifikant (|r| < " + fmt(critical, 2) + ").";
   }
 
   function drawVariance(model) {
