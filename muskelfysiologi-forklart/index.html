@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Muskelfysiologi forklart v26 | Albue og kne</title>
+<title>Muskelfysiologi forklart v27 | Albue og kne</title>
 <style>:root {
   color-scheme: light;
   --ink: #173142;
@@ -406,6 +406,9 @@ html.projector .fv-panel .strength-figure svg { max-height: 470px; }
 .hs-answer p { margin: 6px 0 0; }
 .hs-invalid .strength-results figure, .hs-invalid .strength-results #hs-numbers, .hs-invalid .hs-numbers-heading { opacity: .35; }
 #hs-scatter, #hs-dist { max-height: 330px; }
+@media (max-width: 560px) {
+  .hs-model-line p span { display: block; min-width: 0; }
+}
 </style>
 </head>
 <body>
@@ -961,7 +964,7 @@ html.projector .fv-panel .strength-figure svg { max-height: 470px; }
     <div class="hs-model-line" aria-label="Modellen">
       <p><span>Målt endring i tverrsnitt</span> <code>ΔH = x + e<sub>H</sub></code></p>
       <p><span>Målt endring i styrke</span> <code>ΔS = β·x + n + e<sub>S</sub></code></p>
-      <p class="fv-hint"><code>x</code> er vekst som kan gi kraft, <code>β</code> hvor mye av den som blir styrke, <code>n</code> alle andre tilpasninger (aktivering, spesifikk kraft, arkitektur, antagonister og teknikk i testøvelsen), og <code>e</code> målefeil og variasjon over tid. Endringene er i prosent.</p>
+      <p class="fv-hint"><code>x</code> er den sanne endringen i det målte tverrsnittet, <code>β</code> hvor mye av den som blir styrke, <code>n</code> alt annet som endrer styrken (aktivering, spesifikk kraft, arkitektur, antagonister, teknikk i testøvelsen og vekst som tverrsnittet ikke fanger), og <code>e</code> målefeil og variasjon over tid. Endringene er i prosent.</p>
     </div>
     <div class="strength-grid">
       <div class="strength-inputs">
@@ -1033,12 +1036,12 @@ html.projector .fv-panel .strength-figure svg { max-height: 470px; }
         <article class="fv-task">
           <h4>1. Hvor sterk sammenheng kan vi vente?</h4>
           <p class="fv-task-question">I standardoppsettet gir hver prosent vekst én prosent styrke. Hvor sterk korrelasjon venter modellen likevel mellom målt endring i tverrsnitt og i styrke? Hvor ofte vil en studie med 20 deltakere ikke finne en signifikant sammenheng?</p>
-          <details class="hs-answer"><summary>Fasit</summary><p>r = 0,51. I 36 % av studiene med 20 deltakere blir korrelasjonen ikke signifikant. Veksten står for bare 34 % av spredningen i styrkeendring. Andre tilpasninger står for 53 % og målefeil og variasjon over tid for 13 %. En svak korrelasjon er derfor ikke bevis mot at veksten gir styrke.</p></details>
+          <details class="hs-answer"><summary>Fasit</summary><p>r = 0,51. I 37 % av studiene med 20 deltakere blir korrelasjonen ikke signifikant. Veksten slik tverrsnittet av vastus lateralis fanger den, står for 34 % av spredningen i styrkeendring. Alt annet står for 53 %, og målefeil og variasjon over tid for 13 %. En moderat korrelasjon, eller en som ikke er signifikant, er derfor ikke bevis mot at veksten gir styrke. Merk at tallet er usikkert: med konfidensintervallet fra Räntilä mfl. kan forventet r ligge mellom omtrent 0,09 og 0,67.</p></details>
         </article>
         <article class="fv-task">
           <h4>2. Perfekte målinger</h4>
-          <p class="fv-task-question">Sett begge målefeilene til 0. Hvor sterk blir korrelasjonen? Hvorfor blir den ikke 1?</p>
-          <details class="hs-answer"><summary>Fasit</summary><p>r = 0,67. Andre tilpasninger varierer fortsatt mellom personene og står nå for 56 % av spredningen i styrkeendring. Selv perfekte målinger av tverrsnitt og styrke kan ikke skille veksten fra resten.</p></details>
+          <p class="fv-task-question">Kortet «Forventet korrelasjon» viser også korrelasjonen uten målefeil. Hvor sterk er den, og hvorfor blir den ikke 1? Sett deretter begge målefeilene til 0 med glidebryterne. Hvorfor blir svaret et annet?</p>
+          <details class="hs-answer"><summary>Fasit</summary><p>Uten målefeil er r = 0,62. Alt annet som endrer styrken, varierer fortsatt mellom personene og står for 61 % av den sanne spredningen i styrkeendring. Selv perfekte målinger kan ikke skille veksten fra resten. Med glidebryterne på 0 blir r = 0,67, fordi hele den målte spredningen da tolkes som ekte. Det er en annen gruppe personer, ikke den samme gruppen målt uten feil.</p></details>
         </article>
         <article class="fv-task">
           <h4>3. Sterkere uten målt vekst</h4>
@@ -1060,16 +1063,16 @@ html.projector .fv-panel .strength-figure svg { max-height: 470px; }
     <details class="strength-method">
       <summary>Beregningsgrunnlag og kilder</summary>
       <ol>
-        <li>Alle størrelser er normalfordelte. Prosentendringene legges sammen som om de var logaritmiske endringer, og gjennomsnittet i kontrollgruppen er ikke trukket fra.</li>
-        <li>Spredningen i vekst som gir kraft er <code>σ<sub>x</sub><sup>2</sup> = SD<sub>H</sub><sup>2</sup> − s<sub>H</sub><sup>2</sup></code>, der <code>SD<sub>H</sub></code> er standardavviket i treningsgruppen og <code>s<sub>H</sub></code> i kontrollgruppen. Det er samme regnestykke som standardavviket for individuell respons hos Räntilä mfl. (2025).</li>
+        <li>Alle størrelser er normalfordelte. Prosentendringene legges sammen som om de var logaritmiske endringer, og gjennomsnittet i kontrollgruppen er ikke trukket fra. β er den samme for alle. Ulik β mellom personer havner i <code>n</code>.</li>
+        <li>Spredningen i den sanne endringen i det målte tverrsnittet er <code>σ<sub>x</sub><sup>2</sup> = SD<sub>H</sub><sup>2</sup> − s<sub>H</sub><sup>2</sup></code>, der <code>SD<sub>H</sub></code> er standardavviket i treningsgruppen og <code>s<sub>H</sub></code> i kontrollgruppen. Det er samme regnestykke som standardavviket for individuell respons hos Räntilä mfl. (2025).</li>
         <li>Spredningen i andre tilpasninger <code>σ<sub>n</sub></code> er det som gir riktig total spredning i styrkeendring: <code>SD<sub>S</sub><sup>2</sup> = β<sup>2</sup>σ<sub>x</sub><sup>2</sup> + σ<sub>n</sub><sup>2</sup> + 2βρσ<sub>x</sub>σ<sub>n</sub> + s<sub>S</sub><sup>2</sup></code>, der <code>ρ</code> er samvariasjonen mellom <code>x</code> og <code>n</code>.</li>
         <li>Forventet korrelasjon er <code>r = (βσ<sub>x</sub><sup>2</sup> + ρσ<sub>x</sub>σ<sub>n</sub>) / (SD<sub>H</sub> · SD<sub>S</sub>)</code>. Uten målefeil deles det på <code>σ<sub>x</sub></code> og <code>√(SD<sub>S</sub><sup>2</sup> − s<sub>S</sub><sup>2</sup>)</code> i stedet.</li>
         <li>Andelene med ulikt fortegn regnes fra den todimensjonale normalfordelingen. Andelen som havner over medianen på det ene målet og under på det andre, er <code>1/2 − arcsin(r)/π</code>.</li>
-        <li>Sannsynligheten for at en studie ikke finner en signifikant korrelasjon (tosidig, 5 %) og antall deltakere for 80 % styrke er regnet med Fishers z-transformasjon. Kurven over korrelasjonen i mange studier bruker den samme tilnærmingen.</li>
+        <li>En korrelasjon er signifikant når p &lt; 0,05 (tosidig) i t-testen for Pearsons r. Den samme grensen brukes for den simulerte studien, det skraverte feltet og sannsynligheten for at en studie ikke finner en signifikant korrelasjon. Fordelingen av korrelasjonen i mange studier er tilnærmet med Fishers z-transformasjon. Antall deltakere for 80 % er det minste antallet der minst 80 % av studiene blir signifikante.</li>
         <li>Den simulerte studien trekker deltakere fra den samme fordelingen. p-verdien er fra t-testen for Pearsons korrelasjon. «Ny studie» trekker nye deltakere. Når du endrer en glidebryter, beholdes deltakerne, så du ser hvordan de samme personene flytter seg.</li>
       </ol>
-      <p><strong>Räntilä mfl. (2025):</strong> 10 uker styrketrening hos utrente (20 trente og 27 kontroller). Tverrsnittet av vastus lateralis ble målt med ultralyd, og styrken som 1RM i beinpress delt på kroppsmasse ved start. Vastus lateralis økte 16,0 ± 8,4 % hos de som trente og 1,5 ± 4,1 % i kontrollgruppen. 1RM økte 21,7 ± 12,6 % og 2,9 ± 4,5 %. Studien rapporterer ikke korrelasjonen mellom endring i tverrsnitt og i styrke. <a href="https://doi.org/10.1002/ejsc.70095">Räntilä mfl. (2025)</a></p>
-      <p><strong>Ahtiainen mfl. (2016):</strong> samlede data fra 287 utrente, 19–78 år, med 72 kontroller. Hos de som trente, økte muskelstørrelsen 4,8 ± 6,1 % og styrken 21,1 ± 11,5 %. Målefeilen i dette oppsettet er lånt fra kontrollgruppen hos Räntilä mfl. og er ikke hentet fra Ahtiainen mfl. <a href="https://doi.org/10.1007/s11357-015-9870-1">Ahtiainen mfl. (2016)</a></p>
+      <p><strong>Räntilä mfl. (2025):</strong> 10 uker styrketrening hos utrente (20 trente, 19 med tverrsnitt, og 27 kontroller). Tverrsnittet av vastus lateralis ble målt med ultralyd, og styrken som 1RM i beinpress delt på kroppsmasse ved start. Vastus lateralis økte 16,0 ± 8,4 % hos de som trente og 1,5 ± 4,1 % i kontrollgruppen. 1RM økte 21,7 ± 12,6 % og 2,9 ± 4,5 %. Studien rapporterer ikke korrelasjonen mellom endring i tverrsnitt og i styrke, så modellens forventning kan ikke sjekkes mot den. Variansen i individuell respons i tverrsnitt var 5,11 cm<sup>2</sup> med 95 %-konfidensintervall 0,95–9,28 cm<sup>2</sup>. Skalert til prosent svarer nedre grense til en målefeil for tverrsnitt på 7,8 % og r ≈ 0,09, og øvre grense til ingen målefeil og r ≈ 0,67. Skaleringen er en tilnærming. <a href="https://doi.org/10.1002/ejsc.70095">Räntilä mfl. (2025)</a></p>
+      <p><strong>Ahtiainen mfl. (2016):</strong> samlede data fra utrente, 19–78 år: 287 som trente og 72 kontroller. Muskelstørrelsen ble målt med ultralyd, MR eller som muskeltykkelse i de ulike studiene. Hos de som trente, økte muskelstørrelsen 4,8 ± 6,1 % og styrken 21,1 ± 11,5 %. Målefeilen i dette oppsettet er lånt fra kontrollgruppen hos Räntilä mfl. og er ikke hentet fra Ahtiainen mfl. <a href="https://doi.org/10.1007/s11357-015-9870-1">Ahtiainen mfl. (2016)</a></p>
       <p>Om svak korrelasjon mellom endringer i størrelse og styrke betyr at veksten ikke bidrar, er omstridt. <a href="https://doi.org/10.1007/s40279-019-01106-9">Loenneke mfl. (2019)</a> mener at veksten ikke bidrar. <a href="https://doi.org/10.1007/s40279-019-01107-8">Taber mfl. (2019)</a> mener at økt myofibrillært protein er en medvirkende årsak, og at hvor mye veksten bidrar i forhold til alle andre faktorer, påvirker korrelasjonen man observerer. Panelet viser regnestykket bak den siste påstanden. Det avgjør ikke hvor stor β er.</p>
       <p>Tverrsnittet er målt på ett sted i én muskel, mens beinpress er en flerleddsøvelse. Det som ikke fanges av tverrsnittet, havner i <code>n</code>. Knemodellen i de andre panelene beskriver kneekstensjon, ikke beinpress.</p>
     </details>
@@ -4098,8 +4101,6 @@ function hsErfc(x) {
 }
 const hsPhi = (x) => 0.5 * hsErfc(-x / Math.SQRT2);
 const hsNormalDensity = (x) => Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
-const hsZ975 = 1.959963984540054;
-const hsZ80 = 0.8416212335729143;
 
 // P(Z₁ ≤ h, Z₂ ≤ k) for to standardiserte normalfordelte variabler med korrelasjon r (Simpsons regel).
 function hsBivariateNormal(h, k, r) {
@@ -4132,7 +4133,7 @@ function hsBetaFraction(a, b, x) {
   if (Math.abs(d) < tiny) d = tiny;
   d = 1 / d;
   let h = d;
-  for (let m = 1; m <= 500; m++) {
+  for (let m = 1; m <= 5000; m++) {
     const m2 = 2 * m;
     let aa = m * (b - m) * x / ((a + m2 - 1) * (a + m2));
     d = 1 + aa * d; if (Math.abs(d) < tiny) d = tiny;
@@ -4158,6 +4159,36 @@ function hsCorrelationP(r, n) {
   if (Math.abs(r) >= 1) return 0;
   const df = n - 2;
   return hsRegularizedBeta(df / (df + r * r * df / (1 - r * r)), df / 2, 0.5);
+}
+// Minste |r| som gir p < 0,05 (tosidig) med n deltakere, fra t-testen. Samme grense brukes i hele panelet.
+const hsCriticalCache = new Map();
+function hsCriticalR(n) {
+  if (!hsCriticalCache.has(n)) {
+    let low = 0, high = 1;
+    for (let i = 0; i < 60; i++) {
+      const mid = (low + high) / 2;
+      if (hsCorrelationP(mid, n) > 0.05) low = mid; else high = mid;
+    }
+    hsCriticalCache.set(n, (low + high) / 2);
+  }
+  return hsCriticalCache.get(n);
+}
+// Sannsynligheten for at en studie med n deltakere ikke finner signifikant korrelasjon, når den sanne er r.
+// Fordelingen av korrelasjonen i studien er tilnærmet med Fishers z-transformasjon.
+function hsNotSignificant(r, n) {
+  const center = Math.atanh(Math.min(r, 0.9999999)), scale = Math.sqrt(n - 3), limit = Math.atanh(hsCriticalR(n));
+  return hsPhi((limit - center) * scale) - hsPhi((-limit - center) * scale);
+}
+// Minste antall deltakere som finner korrelasjonen i minst 80 % av studiene.
+function hsNeededParticipants(r) {
+  if (!(r > 1e-9)) return Infinity;
+  let low = 4, high = 1000000;
+  if (1 - hsNotSignificant(r, high) < 0.8) return Infinity;
+  while (low < high) {
+    const mid = Math.floor((low + high) / 2);
+    if (1 - hsNotSignificant(r, mid) >= 0.8) high = mid; else low = mid + 1;
+  }
+  return low;
 }
 
 // Seedet tilfeldighetsgenerator og standardnormale trekk (Box–Muller), så en studie kan gjentas.
@@ -4196,17 +4227,14 @@ function hypertrophyStrengthModel({sizeMean, sizeSd, strengthMean, strengthSd, s
   const rTrue = sx > 0 && trueStrengthSd > 0 ? Math.min(1, covariance / (sx * trueStrengthSd)) : NaN;
   const h = -sizeMean / sizeSd, k = -strengthMean / strengthSd;
   const bothDown = hsBivariateNormal(h, k, r);
-  const z = Math.atanh(Math.min(r, 0.9999999));
-  const scale = Math.sqrt(n - 3);
-  const power = hsPhi(z * scale - hsZ975) + hsPhi(-z * scale - hsZ975);
   const total = strengthSd ** 2;
   return {
     sx, sn, r, rTrue,
     strongerWithoutGrowth: Math.max(0, hsPhi(h) - bothDown),
     growthWithoutStronger: Math.max(0, hsPhi(k) - bothDown),
     oppositeHalves: 0.5 - Math.asin(r) / Math.PI,
-    notSignificant: 1 - power,
-    needed: z > 1e-9 ? Math.ceil(((hsZ975 + hsZ80) / z) ** 2 + 3) : Infinity,
+    notSignificant: hsNotSignificant(r, n),
+    needed: hsNeededParticipants(r),
     shares: {
       growth: beta ** 2 * varX / total,
       together: 2 * beta * rho * sx * sn / total,
@@ -4218,11 +4246,14 @@ function hypertrophyStrengthModel({sizeMean, sizeSd, strengthMean, strengthSd, s
 
 const hsPresets = [
   {key: "rantila", label: "Räntilä mfl. 2025: 10 uker, vastus lateralis og beinpress",
-    note: "Tverrsnitt av vastus lateralis med ultralyd og 1RM i beinpress etter 10 uker. 20 utrente trente og 27 var kontroller. Målefeilen er standardavviket i kontrollgruppen.",
+    note: "Tverrsnitt av vastus lateralis med ultralyd og 1RM i beinpress etter 10 uker. 20 utrente trente (19 med tverrsnitt), og 27 var kontroller. "
+      + "Målefeilen er standardavviket i kontrollgruppen. Standardavvikene er usikre med så få deltakere. Med 95 %-konfidensintervallet for variansen "
+      + "i individuell respons i tverrsnitt ligger forventet korrelasjon mellom omtrent 0,09 og 0,67.",
     values: {sizeMean: 16.0, sizeSd: 8.4, strengthMean: 21.7, strengthSd: 12.6, sizeNoise: 4.1, strengthNoise: 4.5, beta: 1, rho: 0, n: 20}},
-  {key: "ahtiainen", label: "Ahtiainen mfl. 2016: samlede data, 287 deltakere",
-    note: "Muskelstørrelse og styrke fra samlede treningsstudier med 287 utrente, hvorav 72 kontroller. Antall deltakere er satt til de 215 som trente. Målefeilen er lånt fra Räntilä mfl. (2025).",
-    values: {sizeMean: 4.8, sizeSd: 6.1, strengthMean: 21.1, strengthSd: 11.5, sizeNoise: 4.1, strengthNoise: 4.5, beta: 1, rho: 0, n: 215}}
+  {key: "ahtiainen", label: "Ahtiainen mfl. 2016: samlede data, 287 som trente",
+    note: "Samlede treningsstudier med 287 utrente som trente og 72 kontroller. Muskelstørrelsen ble målt på ulike måter i studiene (ultralyd, MR eller muskeltykkelse), "
+      + "og periodene var ulike. Målefeilen er lånt fra Räntilä mfl. (2025) og passer derfor dårligere her.",
+    values: {sizeMean: 4.8, sizeSd: 6.1, strengthMean: 21.1, strengthSd: 11.5, sizeNoise: 4.1, strengthNoise: 4.5, beta: 1, rho: 0, n: 287}}
 ];
 const hsSliderSpecs = [
   {key: "sizeMean", group: "hs-measured", label: "Tverrsnitt, gjennomsnitt", min: -5, max: 40, step: 0.1, digits: 1, unit: " %"},
@@ -4376,7 +4407,7 @@ function setupHypertrophyStrength() {
     const n = values.n;
     const scale = Math.sqrt(n - 3);
     const center = Math.atanh(Math.min(model.r, 0.9999999));
-    const critical = Math.tanh(hsZ975 / scale);
+    const critical = hsCriticalR(n);
     const density = (r) => scale * hsNormalDensity((Math.atanh(r) - center) * scale) / (1 - r * r);
     const points = [];
     for (let i = 0; i <= 400; i++) {
@@ -4404,7 +4435,7 @@ function setupHypertrophyStrength() {
 
   function drawVariance(model) {
     const parts = [
-      {key: "growth", label: "Vekst"},
+      {key: "growth", label: "Vekst i målt tverrsnitt"},
       {key: "together", label: "Samvariasjon"},
       {key: "other", label: "Andre tilpasninger"},
       {key: "noise", label: "Målefeil og variasjon"}
@@ -4449,6 +4480,9 @@ function setupHypertrophyStrength() {
       warning.textContent = model.error === "size"
         ? "Spredningen i kontrollgruppen kan ikke være større enn i treningsgruppen. Senk målefeilen for tverrsnitt, eller øk standardavviket for tverrsnitt."
         : "Spredningen i styrkeendring er mindre enn det veksten og målefeilen alene gir. Øk standardavviket for styrke, eller senk β eller målefeilen for styrke.";
+      for (const key of ["hs-scatter", "hs-dist", "hs-numbers", "hs-variance", "hs-variance-key"]) id(key).replaceChildren();
+      for (const key of ["hs-scatter-desc", "hs-dist-desc", "hs-study-note", "hs-dist-note"]) id(key).textContent = "";
+      delete section.dataset.model;
       return;
     }
     warning.hidden = true;
