@@ -1,0 +1,2 @@
+# Kopier til .dev.vars lokalt; filen skal ikke committes.
+OPENAI_API_KEY=sett_inn_lokal_testnokkel

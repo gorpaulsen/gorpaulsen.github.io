@@ -65,4 +65,18 @@
     archiveSearch?.addEventListener('input', applyArchiveFilters);
     applyArchiveFilters();
   }
+
+  // Chatbotten injiseres fra felles site.js, slik at den fungerer i alle
+  // rot- og artikkelsider som allerede benytter nettstedets felles script.
+  const siteScriptUrl = document.currentScript?.src;
+  if (siteScriptUrl && !document.querySelector('script[data-niv-chatbot]')) {
+    const chatStyle = document.createElement("link");
+    chatStyle.rel = "stylesheet";
+    chatStyle.href = new URL("chatbot.css", siteScriptUrl).href;
+    document.head.append(chatStyle);
+    const chatScript = document.createElement("script");
+    chatScript.src = new URL("chatbot.js", siteScriptUrl).href;
+    chatScript.dataset.nivChatbot = "true";
+    document.head.append(chatScript);
+  }
 })();

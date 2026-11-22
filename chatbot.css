@@ -1,0 +1,39 @@
+/* Pilotens stil følger nettsidens eksisterende grønne/elfenbensfargede profil. */
+.niv-chat,.niv-chat *{box-sizing:border-box}
+.niv-chat{font-family:var(--font-sans,'DM Sans',Arial,sans-serif);color:var(--ink,#1e312c)}
+.niv-chat-launcher{position:fixed;right:26px;bottom:24px;z-index:70;display:flex;align-items:center;gap:11px;border:1px solid #345f4c;border-radius:999px;padding:12px 20px;background:#193b32;color:#fff;box-shadow:0 8px 25px #102e2740;font-size:13px;font-weight:700;cursor:pointer}
+.niv-chat-launcher>span:first-child{display:grid;place-items:center;border:1px solid #bad5b6;border-radius:50%;width:25px;height:25px;font-size:18px;font-family:Georgia,serif}
+.niv-chat-launcher:hover,.niv-chat-submit:hover{background:#315d4c}
+.niv-chat-panel{position:fixed;right:24px;bottom:88px;z-index:71;width:min(440px,calc(100vw - 30px));max-height:min(750px,calc(100dvh - 110px));display:flex;flex-direction:column;overflow:hidden;border:1px solid #cbd9cd;border-radius:18px;background:#fffefa;box-shadow:0 18px 60px #0a211d45}
+.niv-chat-panel[hidden]{display:none}
+.niv-chat-head{background:#193b32;color:white;padding:20px 20px 17px;display:flex;justify-content:space-between;gap:15px;align-items:start}
+.niv-chat-eyebrow{font-size:10px;letter-spacing:.13em;color:#c1d5bd;margin:0 0 7px}
+.niv-chat-head h2{font-family:var(--font-display,Georgia,serif);font-weight:400;font-size:26px;line-height:1.1;margin:0;color:#fff}
+.niv-chat-close{border:0;background:transparent;color:#fff;font-size:29px;line-height:1;cursor:pointer;padding:0 2px}
+.niv-chat-status{font-size:11px;line-height:1.4;background:#edf3e7;border-bottom:1px solid #d9e6d7;color:#435e47;padding:11px 18px}
+.niv-chat-messages{display:flex;flex-direction:column;gap:12px;overflow-y:auto;min-height:100px;max-height:290px;padding:18px 16px 8px;scrollbar-width:thin;overscroll-behavior:contain}
+.niv-chat-bubble{font-size:13px;line-height:1.65;padding:12px 14px;border-radius:12px;background:#f1f5ed;align-self:flex-start;max-width:96%;overflow-wrap:anywhere}
+.niv-chat-bubble-user{align-self:flex-end;background:#e2ebdc}
+.niv-chat-bubble p{font-size:inherit;line-height:inherit;margin:0}
+.niv-chat-bubble-label{font-size:10px;letter-spacing:.025em;display:block;color:#567463;margin-bottom:6px}
+.niv-chat-bubble .niv-chat-source-heading{font-weight:700;font-size:11px;margin-top:10px}
+.niv-chat-bubble ul{margin:6px 0 0;padding-left:18px}
+.niv-chat-bubble li{margin:4px 0}
+.niv-chat-bubble a{color:#215640;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.niv-chat-bubble small{font-size:10px;color:#52695a}
+.niv-chat-examples{display:flex;gap:7px;flex-wrap:wrap;padding:10px 16px 13px}
+.niv-chat-example{background:transparent;border:1px solid #c6d6c8;border-radius:9px;padding:8px 9px;color:#28533b;font-size:11px;text-align:left;line-height:1.4;cursor:pointer}
+.niv-chat-example:hover{background:#e9f1e5}
+.niv-chat-form{padding:14px 17px 17px;border-top:1px solid #e1e7df;background:#fdfefb;display:flex;flex-direction:column;gap:9px}
+.niv-chat-modes{border:0;margin:0;padding:0;display:flex;gap:15px;align-items:center}
+.niv-chat-modes legend{font-size:11px;color:#5a6f61;font-weight:700;padding:0;margin:0 0 5px}
+.niv-chat-modes label{font-size:12px;display:inline-flex;align-items:center;gap:5px;color:#3d5445;cursor:pointer}
+.niv-chat-modes input{accent-color:#193b32}
+.niv-chat-question-label{font-size:11px;font-weight:700;color:#405744}
+.niv-chat-form textarea{width:100%;font:inherit;line-height:1.55;font-size:13px;resize:vertical;min-height:57px;max-height:130px;border:1px solid #b7cbbb;background:#fff;border-radius:9px;padding:10px 11px;color:#1e312c}
+.niv-chat-form textarea:focus-visible,.niv-chat-launcher:focus-visible,.niv-chat-close:focus-visible,.niv-chat-example:focus-visible,.niv-chat-submit:focus-visible{outline:3px solid #92b96d;outline-offset:2px}
+.niv-chat-submit{background:#193b32;color:white;border:0;border-radius:9px;cursor:pointer;font-weight:700;font-size:12px;padding:10px 12px}
+.niv-chat-submit:disabled{opacity:.55;cursor:wait}
+.niv-chat-privacy{color:#627265;font-size:10px;line-height:1.5;margin:0}
+@media(max-width:620px){.niv-chat-launcher{right:12px;bottom:12px;padding:10px 13px}.niv-chat-panel{right:8px;bottom:68px;width:calc(100vw - 16px);max-height:calc(100dvh - 84px)}.niv-chat-head{padding:15px}.niv-chat-messages{max-height:29dvh}.niv-chat-examples{padding:8px 12px}.niv-chat-form{padding:10px 12px}.niv-chat-bubble{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.niv-chat *{scroll-behavior:auto}}
