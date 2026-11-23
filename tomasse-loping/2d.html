@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="nb">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M2 – to masser i 2D: løpsmekanikk (eksperimentell)</title>
+<style>
+:root{color-scheme:light dark;--bg:#fbfcfb;--fg:#192824;--muted:#51615c;--panel:#eff3f1;--border:#d1dad5;--a:#126c64;--b:#b0652f;--bad:#a43b31}
+@media(prefers-color-scheme:dark){:root{--bg:#17201e;--fg:#e9f0ed;--muted:#bac9c3;--panel:#273631;--border:#485b53;--a:#71d6bd;--b:#ffc189;--bad:#ff8e83}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 system-ui,sans-serif}main{max-width:1040px;margin:auto;padding:24px min(4vw,28px) 60px}h1{font-size:clamp(24px,3.3vw,33px);margin:18px 0 8px;line-height:1.2}h2{font-size:20px;margin:28px 0 12px}p{max-width:90ch}nav{display:flex;gap:11px 20px;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:14px}a{color:inherit;text-underline-offset:3px}
+.note{padding:13px 16px;background:var(--panel);border-left:3px solid var(--a);border-radius:6px}
+.muted,.small{color:var(--muted)}.small{font-size:12px}.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px}label{display:block;font-size:13px;color:var(--muted)}label strong{color:var(--fg);font-variant-numeric:tabular-nums;white-space:nowrap}input[type=range]{width:100%;accent-color:var(--a)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.card{border:1px solid var(--border);border-radius:8px;padding:10px 13px}.card b{font-size:20px;display:block;font-variant-numeric:tabular-nums}
+.columns{display:grid;grid-template-columns:1.1fr 1fr;gap:23px}@media(max-width:780px){.columns{grid-template-columns:1fr}main{padding:16px 14px 45px}}
+svg{display:block;width:100%;height:auto}.chart{border:1px solid var(--border);border-radius:8px;padding:7px;min-width:0}
+.legend{display:flex;gap:12px 18px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin:8px 0}.legend span:before{content:"";display:inline-block;width:18px;border-top:3px solid var(--a);margin-right:5px;vertical-align:middle}.legend span.b:before{border-color:var(--b)}.legend span.c:before{border-top-style:dotted;border-color:var(--fg)}
+button{border:1px solid var(--border);background:var(--panel);border-radius:6px;color:var(--fg);padding:7px 13px;cursor:pointer;font:inherit}
+button:hover{filter:brightness(.95)}.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.statline{margin-top:9px;font-size:13px;color:var(--muted)}.warn{border-left:3px solid var(--bad);padding:8px 11px;background:var(--panel);margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;border-bottom:1px solid var(--border);padding:7px 6px}th:last-child,td:last-child{text-align:right}
+code{overflow-wrap:anywhere}.paper{max-width:85ch}
+</style></head>
+<body><main>
+<nav><a href="../hoppemodell-loping/">Opprinnelig fjærbeinmodell (M0)</a><a href="./">1D-landingsmodellen (M1)</a><a href="README-M2.md">M2 metode og tester</a></nav>
+<h1>M2 · Tomassemodell i to dimensjoner</h1>
+<p class="muted">Eksperimentell, dynamisk modell av én overkroppsmasse og én distal masse. Viser standfase, styrt beinsving og ny landing med eksplisitt impuls- og energiregnskap.</p>
+<p class="note"><strong>Viktig:</strong> Dette er ikke to anatomiske løpsbein. Den samme distale massen resirkuleres mellom steg. Svingtiden <em>velges</em> og foten føres fram av en aktuator; modellen har derfor ikke predikert beinsving. Kraftspissen ved kollisjon er representert som <strong>støtimpuls (N·s)</strong>, ikke som en kontinuerlig GRF-topp (N). Ingen fysiologiske skadegrenser eller maksimalfart beregnes.</p>
+
+<h2>Inngangsparametere</h2>
+<div class="controls">
+<label>Horisontal fart ved start <strong id="v-bodyVX"></strong><input data-p="bodyVX" min="2.5" max="8" step="0.1" type="range"></label>
+<label>Beinstivhet <strong id="v-legStiffness"></strong><input data-p="legStiffness" min="10000" max="35000" step="1000" type="range"></label>
+<label>Distal masseandel <strong id="v-distalFraction"></strong><input data-p="distalFraction" min="0.04" max="0.14" step="0.01" type="range"></label>
+<label>Startposisjon, kroppens massepunkt <strong id="v-bodyZ"></strong><input data-p="bodyZ" min="0.82" max="0.96" step="0.01" type="range"></label>
+<label>Svingtid (styrt, ikke predikert) <strong id="v-swingDuration"></strong><input data-p="swingDuration" min="0.18" max="0.35" step="0.01" type="range"></label>
+<label>Fremre fotplassering <strong id="v-swingAhead"></strong><input data-p="swingAhead" min="0.1" max="0.6" step="0.02" type="range"></label>
+<label>Fotens vertikale landingshastighet <strong id="v-landingV"></strong><input data-p="landingV" min="0.4" max="2.2" step="0.1" type="range"></label>
+<label>Statisk friksjonskoeffisient <strong id="v-mu"></strong><input data-p="mu" min="0.2" max="1.2" step="0.05" type="range"></label>
+</div>
+<p class="small">Stivhet og svingkontrollerens parametere er illustrative og ikke tilpasset løperdata. Fast totalkroppsmasse: 75 kg; simuleringstid: 0,75 s. Endring av en parameter er en følsomhetsanalyse, ikke en biologisk intervensjon.</p>
+
+<h2>Beregnet forløp</h2>
+<div class="cards">
+<div class="card"><span>Støttefasens høyeste vertikalkraft</span><b id="peak">–</b></div>
+<div class="card"><span>Fraspark / nye landinger</span><b id="events-count">–</b></div>
+<div class="card"><span>Samlede tap inkl. kollisjon</span><b id="losses">–</b></div>
+<div class="card"><span>Aktuatorarbeid (+ / −)</span><b id="work">–</b></div>
+</div>
+<p id="valid" class="statline"></p>
+<div class="columns">
+<section><h2>Grunnreaksjonskraft i standfasen</h2>
+<div class="chart"><svg id="grf" viewBox="0 0 640 345" role="img" aria-label="Vertikale og horisontale bakkereaksjonskrefter over tid, samt tidspunkt for diskrete landingsimpulser"></svg></div>
+<div class="legend"><span>Vertikal støtte (BW)</span><span class="b">Horisontal støtte (BW)</span><span class="c">Landing: impuls, ikke krafttopp</span></div>
+<p class="small">De loddrette impulsmarkørene viser bare når en kollisjon oppstår. Deres høyde representerer <em>ikke</em> den ukjente krafttoppen i et tidsutstrakt fotisett.</p>
+</section>
+<section><h2>Baner for de to massene</h2>
+<div class="chart"><svg id="paths" viewBox="0 0 640 345" role="img" aria-label="Baner for kroppens massepunkt og den distale fotmassen i sagittalplanet"></svg></div>
+<div class="legend"><span>Kropp</span><span class="b">Distal masse</span></div>
+<div class="toolbar"><button id="play" type="button">Spill av</button><button id="reset" type="button">Standardverdier</button></div>
+<label>Tidspunkt <strong id="tlabel">0 ms</strong><input id="time" type="range" min="0" max="750" value="0" step="1"></label>
+<p class="statline" id="position">–</p>
+</section></div>
+
+<h2>Registrerte hendelser</h2>
+<table><thead><tr><th>Fase</th><th>Tid</th><th>Mekanisk observasjon</th></tr></thead><tbody id="event-body"></tbody></table>
+<h2>Numeriske kontroller</h2>
+<p id="checks" class="statline"></p>
+<p class="small paper">Overført impuls oppfyller <em>Δpₓ=∫Fₓdt+ΣJₓ</em> og <em>Δpᵧ=∫Fᵧdt+ΣJᵧ−mgT</em>. Energitesten benytter <em>mekanisk energi + dissipasjonsenergi − aktuatorarbeid</em>. Tapskontoen omfatter arbeid i intern demper og fullstendig uelastisk støt ved landing. Støttefasen antar at foten står fast: et varsel vises hvis beregnet statisk friksjonsbehov overstiger μ·N. Ingen glidefase er implementert.</p>
+<p class="small paper">For et metodisk sammenligningsgrunnlag: Clark &amp; Weyand (2014), DOI <a href="https://doi.org/10.1152/japplphysiol.00174.2014">10.1152/japplphysiol.00174.2014</a>, og Clark, Ryan &amp; Weyand (2017), DOI <a href="https://doi.org/10.1242/jeb.138057">10.1242/jeb.138057</a>. M2 løser ikke deres ligningssystem og er ennå ikke empirisk validert.</p>
+</main>
+<script type="module">
+import {defaults2D,simulate2D} from './model2d.mjs';
+const $=id=>document.getElementById(id);
+const fmt=(x,n=2)=>Number(x).toLocaleString('nb-NO',{minimumFractionDigits:n,maximumFractionDigits:n});
+const pFmt={bodyVX:v=>fmt(v,1)+' m/s',legStiffness:v=>fmt(v/1000,0)+' kN/m',
+ distalFraction:v=>fmt(100*v,0)+' %',bodyZ:v=>fmt(v,2)+' m',
+ swingDuration:v=>fmt(v*1000,0)+' ms',swingAhead:v=>fmt(v,2)+' m',
+ landingV:v=>fmt(v,1)+' m/s',mu:v=>fmt(v,2)};
+let p=defaults2D(),result=null,tMs=0,raf=null,playing=false;
+document.querySelectorAll('input[data-p]').forEach(el=>{
+ el.addEventListener('input',()=>{p[el.dataset.p]=+el.value;refresh();});
+});
+const line=(points,X,Y)=>points.map((v,i)=>(i?'L':'M')+fmtRaw(X(v))+','+fmtRaw(Y(v))).join(' ');
+const fmtRaw=x=>Number(x).toFixed(2);
+function chart(){
+ const rows=result.series,groundEvents=result.events.filter(x=>x.type==='touchdown'),
+ ymin=Math.min(-1.2,...rows.map(r=>r.grfX/(p.mass*p.g)))*1.05,
+ ymax=Math.max(3.2,result.summary.peakBW*1.12),W=565,H=266,left=51,top=20;
+ const X=t=>left+W*t/p.duration,Y=v=>top+H*(ymax-v)/(ymax-ymin),xs=[];
+ for(let i=0;i<6;i++){const v=ymin+(ymax-ymin)*i/5;
+  xs.push('<line x1="'+left+'" x2="'+(left+W)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="currentColor" opacity=".1"/>');
+  xs.push('<text x="45" y="'+(Y(v)+4)+'" fill="currentColor" font-size="12" text-anchor="end">'+fmt(v,1)+'</text>');
+ }
+ for(let i=0;i<=5;i++){const t=p.duration*i/5;
+  xs.push('<text x="'+X(t)+'" y="310" text-anchor="middle" fill="currentColor" font-size="12">'+fmt(t*1000,0)+'</text>');}
+ xs.push('<text x="52" y="12" fill="currentColor" font-size="12">BW</text><text x="614" y="337" text-anchor="end" fill="currentColor" font-size="12">ms</text>');
+ xs.push('<path d="'+line(rows,r=>X(r.t),r=>Y(r.grfZ/(p.mass*p.g)))+'" stroke="var(--a)" stroke-width="2.3" fill="none"/>');
+ xs.push('<path d="'+line(rows,r=>X(r.t),r=>Y(r.grfX/(p.mass*p.g)))+'" stroke="var(--b)" stroke-width="1.7" fill="none"/>');
+ for(const e of groundEvents){
+   xs.push('<line x1="'+X(e.t)+'" x2="'+X(e.t)+'" y1="'+top+'" y2="'+(top+H)+'" stroke="currentColor" stroke-dasharray="3 4" opacity=".7"/>');}
+ $('grf').innerHTML=xs.join('');
+}
+function scene(){
+ const rows=result.series,i=Math.max(0,Math.min(rows.length-1,Math.round(tMs/(1000*p.dt*p.sampleEvery)))),
+ r=rows[i],allx=rows.flatMap(v=>[v.footX,v.bodyX]),allz=rows.flatMap(v=>[v.footZ,v.bodyZ]);
+ const xmin=Math.min(...allx)-.2,xmax=Math.max(...allx)+.2,zmin=Math.min(-.02,...allz)-.05,zmax=Math.max(1.2,...allz)+.1;
+ const L=43,T=20,W=560,H=275,X=x=>L+W*(x-xmin)/(xmax-xmin),Y=z=>T+H*(zmax-z)/(zmax-zmin);
+ const pts=[];
+ pts.push('<line x1="'+L+'" y1="'+Y(0)+'" x2="'+(L+W)+'" y2="'+Y(0)+'" stroke="currentColor" stroke-width="2"/>');
+ pts.push('<path d="'+line(rows,v=>X(v.bodyX),v=>Y(v.bodyZ))+'" fill="none" stroke="var(--a)" stroke-width="2" opacity=".6"/>');
+ pts.push('<path d="'+line(rows,v=>X(v.footX),v=>Y(v.footZ))+'" fill="none" stroke="var(--b)" stroke-width="2" opacity=".7"/>');
+ if(r.mode==='stance')pts.push('<line x1="'+X(r.footX)+'" y1="'+Y(r.footZ)+'" x2="'+X(r.bodyX)+'" y2="'+Y(r.bodyZ)+'" stroke="var(--a)" stroke-dasharray="6 4" stroke-width="2"/>');
+ pts.push('<circle cx="'+X(r.bodyX)+'" cy="'+Y(r.bodyZ)+'" r="10" fill="var(--a)"/>');
+ pts.push('<circle cx="'+X(r.footX)+'" cy="'+Y(r.footZ)+'" r="6.5" fill="var(--b)"/>');
+ pts.push('<text x="43" y="337" font-size="12" fill="currentColor">x (m), z (m) · y = 0 er bakken</text>');
+ $('paths').innerHTML=pts.join('');
+ $('tlabel').textContent=fmt(tMs,0)+' ms';
+ $('position').textContent=(r.mode==='stance'?'Standfase':'Svevfase')+
+ ' · kropp z='+fmt(r.bodyZ,2)+' m · fot x='+fmt(r.footX,2)+' m';
+}
+function refresh(){
+ if(raf)cancelAnimationFrame(raf);playing=false;$('play').textContent='Spill av';
+ result=simulate2D(p);document.querySelectorAll('input[data-p]').forEach(el=>{
+   el.value=p[el.dataset.p];$('v-'+el.dataset.p).textContent=pFmt[el.dataset.p](p[el.dataset.p]);});
+ const s=result.summary;
+ $('peak').textContent=fmt(s.peakBW,2)+' BW';
+ $('events-count').textContent=s.toeoffs+' / '+s.touchdowns;
+ $('losses').textContent=fmt(s.dissipation,1)+' J';
+ $('work').textContent='+'+fmt(s.positiveActuatorWork,0)+' / −'+fmt(s.negativeActuatorWork,0)+' J';
+ $('valid').textContent=s.invalid
+ ?'OBS: '+s.invalid+' – denne parameterkombinasjonen tilfredsstiller ikke de valgte kontaktantakelsene.'
+ :'Ingen automatisk påviste brudd på statisk friksjon eller positiv normalkraft. Dette er ikke empirisk validering.';
+ $('valid').className=s.invalid?'warn':'statline';
+ $('checks').textContent='Energiregnskap |max ΔE| = '+fmt(s.maxEnergyError,5)+' J. Impulsbalanse i x: '+
+ fmt(s.impulseResidualX,4)+' N·s, i y: '+fmt(s.impulseResidualY,4)+
+ ' N·s. Støtimpulser inkludert i impulsbalansen; plastisk kollisjonstap inkludert i energibalansen.';
+ $('event-body').innerHTML=result.events.map(e=>'<tr><td>'+
+ (e.type==='initial_stance'?'Innledende standfase':e.type==='toeoff'?'Fraspark':'Landing')+
+ '</td><td>'+fmt(e.t*1000,1)+' ms</td><td>'+
+ (e.type==='touchdown'?'Vertikal impuls '+fmt(e.impulseY,2)+' N·s; tap '+fmt(e.impactLoss,2)+' J':
+ e.type==='toeoff'?'Foten frigjøres; styrt svev starter':'Initial fotkontakt er en gitt starttilstand')+
+ '</td></tr>').join('');
+ $('time').max=Math.round(p.duration*1000);
+ tMs=Math.min(tMs,p.duration*1000);$('time').value=Math.round(tMs);
+ chart();scene();
+}
+$('time').addEventListener('input',e=>{tMs=+e.target.value;scene();});
+$('reset').addEventListener('click',()=>{p=defaults2D();tMs=0;refresh();});
+$('play').addEventListener('click',()=>{
+ if(playing){playing=false;cancelAnimationFrame(raf);$('play').textContent='Spill av';return;}
+ playing=true;$('play').textContent='Pause';const origin=performance.now(),start=tMs;
+ function tick(now){if(!playing)return;
+ tMs=(start+(now-origin)*.8)%(p.duration*1000+1);$('time').value=Math.round(tMs);scene();
+ raf=requestAnimationFrame(tick);}
+ raf=requestAnimationFrame(tick);
+});
+refresh();
+</script></body></html>
