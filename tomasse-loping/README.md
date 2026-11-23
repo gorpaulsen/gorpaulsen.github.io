@@ -34,8 +34,9 @@ La `z1, v1` beskrive den distale massen og `z2, v2` den øvre massen. Positiv re
 ```
 m1 = alpha*m                  m2 = (1-alpha)*m
 C = max(0, l0-(z2-z1))        P = max(0, -z1)
-Fleg = kleg*C + 1(C>0)*cleg*max(0,v1-v2)
-Fground = kground*P + 1(P>0)*cground*max(0,-v1)
+delta = 0.005 m (kontinuerlig aktivering av viskøs motstand)
+Fleg = kleg*C + cleg*max(0,v1-v2)*C/(C+delta)
+Fground = kground*P + cground*max(0,-v1)*P/(P+delta)
 
 m1*a1 = Fground-Fleg-m1*g
 m2*a2 = Fleg-m2*g
@@ -52,7 +53,7 @@ Fground - m*g = m1*a1 + m2*a2.
 ```
 E = (m1*v1²+m2*v2²)/2 + g*(m1*z1+m2*z2)
   + kleg*C²/2 + kground*P²/2 + Ediss
-dEdiss/dt = 1(C>0)*cleg*max(0,v1-v2)² + 1(P>0)*cground*max(0,-v1)²
+dEdiss/dt = cleg*max(0,v1-v2)²*C/(C+delta) + cground*max(0,-v1)²*P/(P+delta)
 ```
 
 Cumulative dissipation and elastic energy are tracked so `E(t) ≈ E(0)` is a numerical conservation test. Potential energy includes arbitrary zero; the physically relevant quantity is the difference `E(t)-E(0)`.
@@ -65,11 +66,11 @@ Et standardscenario benytter 75 kg, distal masseandel 8 %, `kleg=16 kN/m`, `kgro
 
 For standardscenario:
 - første vertikale bakkekontakt ved ca. 23,7 ms
-- maksimal vertikal bakkekraft ca. 3,92 × kroppsvekt (BW)
-- akkumulert disipasjon ved 300 ms ca. 42,2 J
-- maksimalt energibalanseavvik ca. 0,00023 J
-- numerisk impulsbalanseavvik ca. −0,028 N·s
-- reduksjon av tidssteg fra 0,10 til 0,05 ms endrer beregnet topp med ca. 0,7 %
+- maksimal vertikal bakkekraft ca. 3,85 × kroppsvekt (BW)
+- akkumulert disipasjon ved 300 ms ca. 44,3 J
+- maksimalt energibalanseavvik ca. 0,00005 J
+- numerisk impulsbalanseavvik ca. +0,0006 N·s
+- reduksjon av tidssteg fra 0,10 til 0,05 ms endrer beregnet topp med under 0,001 %
 
 **Dette er genererte modellverdier, ikke målte sprintdata.** Et meget lite energiregnskapsavvik er bare en numerisk konsistenskontroll og ikke en empirisk validering.
 
