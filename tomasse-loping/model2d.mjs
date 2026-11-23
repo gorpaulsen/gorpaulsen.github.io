@@ -118,8 +118,12 @@ export function simulate2D(options={}){
    const Jx=-mf*hit[2],Jy=-mf*hit[3],collisionLoss=0.5*mf*(hit[2]**2+hit[3]**2);
    // Reconfigure leg slack at touchdown: no spring energy is created on engagement.
    const newRest=Math.min(p.restLength,Math.hypot(hit[4]-hit[0],hit[5]));
+   const impactFrictionUsage=Math.abs(Jx)/(p.mu*Jy+1e-12);
+   if(Jy<0&&!invalid)invalid='negative_impact_normal_impulse';
+   if(impactFrictionUsage>1.001&&!invalid)invalid='impact_friction_limit_exceeded';
    events.push({type:'touchdown',t:hitT,footX:hit[0],footVX:hit[2],
-     footVZ:hit[3],impactLoss:collisionLoss,impulseX:Jx,impulseY:Jy,restLength:newRest});
+     footVZ:hit[3],impactLoss:collisionLoss,impulseX:Jx,impulseY:Jy,
+     impactFrictionUsage,restLength:newRest});
    hit[1]=0;hit[2]=0;hit[3]=0;hit[8]+=collisionLoss;hit[14]+=collisionLoss;
    hit[12]+=Jx;hit[13]+=Jy;
    rest=newRest;mode='stance';sw=null;touchdowns++;
