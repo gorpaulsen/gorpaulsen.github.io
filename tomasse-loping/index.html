@@ -61,9 +61,9 @@ code{font-size:13px;overflow-wrap:anywhere}.status{color:var(--sub);font-size:13
 <p>La <em>m₁</em> være distal masse og <em>m₂</em> resten av kroppen. Positiv vertikal retning er oppover. Fjæren mellom massene kan bare skyve når den er komprimert; bakken kan bare skyve oppover ved inntrengning i kontaktfjæren. Dermed gjelder</p>
 <p><strong>m₁ z̈₁ = F<sub>bakke</sub> − F<sub>bein</sub> − m₁g</strong><br>
 <strong>m₂ z̈₂ = F<sub>bein</sub> − m₂g</strong>.</p>
-<p><strong>F<sub>bakke</sub> = k<sub>g</sub>[−z₁]₊ + c<sub>g</sub>[−v₁]₊ I(z₁&lt;0)</strong><br>
-<strong>F<sub>bein</sub> = k<sub>l</sub>[l₀ − (z₂−z₁)]₊ + c<sub>l</sub>[v₁−v₂]₊ I(l₀ − z₂+z₁&gt;0)</strong>.</p>
-<p class="hint">Her betyr [x]₊ = max(0,x), I er indikatorfunksjon, og kontaktfjæren har en numerisk inntrengningsdybde som <em>ikke</em> er fysisk synking av foten i underlaget. Dempingen er aktiv bare under lukking/kompresjon. Resultatene beregnes med RK4 og 0,1 ms tidssteg.</p>
+<p><strong>F<sub>bakke</sub> = k<sub>g</sub>P + c<sub>g</sub>[−v₁]₊ P/(P+δ)</strong><br>
+<strong>F<sub>bein</sub> = k<sub>l</sub>C + c<sub>l</sub>[v₁−v₂]₊ C/(C+δ)</strong>.</p>
+<p class="hint">Her betyr [x]₊ = max(0,x), P=[−z₁]₊, C=[l₀−(z₂−z₁)]₊ og δ=0,005 m er en numerisk overgangslengde som sikrer kontinuerlig aktivering av dempingen ved første kompresjon. Kontaktfjærens inntrengningsdybde er <em>ikke</em> fysisk synking av foten i underlaget. Dempingen er dissipativ og aktiv bare ved lukking/kompresjon. Resultatene beregnes med RK4 og 0,1 ms tidssteg.</p>
 <h2>Hva må demonstreres før denne modellen kan brukes som løpemodell?</h2>
 <ol>
 <li>At masse- og kraftbalansen samt energibokføringen holder, også når tidssteget halveres.</li>
