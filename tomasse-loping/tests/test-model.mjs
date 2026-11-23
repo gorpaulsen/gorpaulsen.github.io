@@ -5,6 +5,12 @@ const close=(a,b,tolerance,label)=>assert.ok(Math.abs(a-b)<=tolerance,`${label}:
 const d=defaults();
 assert.equal(d.distalFraction,0.08);
 assert.equal(d.mass,75);
+assert.ok(d.dampingOnset>0,'continuous damping activation length must be positive');
+const f0=forces([0,-2,d.restLength,-0.7,0],d);
+const fPen=forces([-1e-7,-2,d.restLength-1e-7,-0.7,0],d);
+assert.equal(f0.ground,0);
+assert.ok(fPen.ground<1,'ground reaction engages continuously at zero compression');
+
 
 const two=simulateTwo(d),one=simulateOne(d),s=summarize(two);
 assert.equal(two.rows.length,Math.round(d.duration/d.dt)+1);
