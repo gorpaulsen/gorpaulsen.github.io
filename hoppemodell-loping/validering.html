@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="nb">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Empirisk kontroll – Hoppemodell for løping</title>
+<style>
+:root{color-scheme:light dark;--bg:#fbfcfb;--fg:#1b2929;--sub:#566362;--line:#cfd8d5;--panel:#edf1ef}
+@media(prefers-color-scheme:dark){:root{--bg:#171e1e;--fg:#eaf2f0;--sub:#c1d0ca;--line:#445553;--panel:#273535}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.62 system-ui,sans-serif}
+main{max-width:860px;padding:28px min(5vw,32px) 70px;margin:auto}h1{font-size:clamp(25px,4vw,34px);line-height:1.2}h2{font-size:23px;margin-top:36px}
+a{color:inherit;text-underline-offset:3px}nav{display:flex;gap:20px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:16px}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:12px 0}th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right}th:first-child,td:first-child{text-align:left}th{font-weight:650}
+.scroll{overflow-x:auto}caption{text-align:left;margin:8px 0;color:var(--sub);font-size:13px}
+p.note,footer{color:var(--sub);font-size:14px}.callout{background:var(--panel);border-radius:8px;padding:15px 18px}
+code{overflow-wrap:anywhere}li{margin-bottom:7px}
+</style></head>
+<body><main>
+<nav><a href="./">Til den publiserte løpemodellen</a><a href="../">Til modelloversikten</a><a href="../hoppemodell-loping-test/">Forsøksversjon (tydeligere begreper)</a></nav>
+<h1>Empirisk kontroll av fjærbeinmodellen for løping</h1>
+<p class="note">Analyseversjon 23. november 2026 · Gjelder den numeriske modellen slik den forelå med GitHub-blob <code>61ebb35d37b3c5de86648fad82143c3d135f6aab</code>. Beregningskoden på hovedsiden er ikke justert på grunnlag av disse analysene.</p>
+<div class="callout"><strong>Hva kan konkluderes?</strong> Fjærbeinmodellen gjenskaper hovedtendensen med kortere kontakttid og større toppkraft ved økende fart. Ujustert modell har systematiske avvik. Én kalibrert effektiv stivhet forbedrer prediksjoner ved nye hastigheter hos samme løpere, men modellen er ikke validert som prediktor for individuell maksimalfart, akillessenebelastning, løpsøkonomi eller skadefare.</div>
+
+<h2>1. Kontroller ved 2,5–4,5 m/s: Fukuchi mfl. (2017)</h2>
+<p>Åpne kraftregistreringer fra 28 løpere, tre hastigheter per løper (84 deltaker–hastighet-observasjoner). I analysen ble 7 170 steg undersøkt. Primærutvalget ble sammenlignet med en uendret beinstivhet på 14,4 kN/m, modellert med <em>hver løpers faktiske kroppsmasse</em>. Kontakt er definert som vertikal kraft over 50 N i både måling og modell.</p>
+<div class="scroll"><table><caption>Gruppemiddel. BW betyr kroppsvekt. «Målt toppkraft» er middelverdien av de enkelte deltakernes toppkrefter, ikke toppen i en gruppegjennomsnittskurve.</caption>
+<thead><tr><th>Fart</th><th>Målt kontakt</th><th>Modellkontakt</th><th>Målt toppkraft</th><th>Modell toppkraft</th></tr></thead>
+<tbody>
+<tr><td>2,5 m/s</td><td>270,6 ms</td><td>240,0 ms</td><td>2,339 BW</td><td>2,527 BW</td></tr>
+<tr><td>3,5 m/s</td><td>225,2 ms</td><td>205,2 ms</td><td>2,590 BW</td><td>2,785 BW</td></tr>
+<tr><td>4,5 m/s</td><td>196,3 ms</td><td>179,9 ms</td><td>2,763 BW</td><td>3,043 BW</td></tr>
+</tbody></table></div>
+<p>Ujustert modell undervurderer kontakttiden med omtrent 16–31 ms og overvurderer vertikal toppkraft med 0,19–0,28 BW. Verdiene er betinget av valg av kontaktterskel, svingtidskurve og faste anatomiske parametere.</p>
+
+<h2>2. Separat kalibrering ved 2,5 m/s</h2>
+<p>En <em>effektiv modellstivhet</em> ble estimert for hver deltaker ved bare å tilpasse målt kontakttid ved 2,5 m/s. De individuelle parameterne ble deretter holdt uendret ved de to høyere hastighetene.</p>
+<div class="scroll"><table><caption>Test ved hastigheter som ikke ble brukt i parameterestimeringen.</caption>
+<thead><tr><th>Utfall</th><th>3,5 m/s</th><th>4,5 m/s</th></tr></thead><tbody>
+<tr><td>Kontakttid, MAE</td><td>6,04 ms</td><td>7,72 ms</td></tr>
+<tr><td>Kontakttid, korrelasjon</td><td>0,919</td><td>0,801</td></tr>
+<tr><td>Vertikal toppkraft, MAE</td><td>0,123 BW</td><td>0,158 BW</td></tr>
+<tr><td>Stegfrekvens, modell minus målt</td><td>−0,179 Hz</td><td>−0,260 Hz</td></tr>
+</tbody></table></div>
+<p>Median tilpasset stivhet var 11,49 kN/m. Dette er <strong>en kalibreringsparameter</strong>, ikke en direkte måling av biologisk beinstivhet. En test ved nye hastigheter hos samme personer er ikke det samme som validering i et nytt utvalg. Svingtidskurven påvirker frekvensprediksjonen.</p>
+
+<h2>3. Sprint: nyttige samsvar i nøkkeltall, strukturell feil i kraftkurven</h2>
+<p>Ved 8,33 m/s fant Willer mfl. (2024) omtrent 111 ms kontakttid, 3,28 BW vertikal toppkraft og 3,97 Hz stegfrekvens. Sprintmodusen i modellen med studiens gjennomsnittsmasse 64,4 kg og den <em>eksternt valgte</em> svingtiden 373 ms gir 117 ms støttefase ved 0 N, 3,37 BW og 4,08 Hz. Kontaktdefinisjonene er ikke harmonisert her. Dette er derfor en eksplorativ sammenligning av gruppedata, ikke individuell sprintvalidering.</p>
+<p>Clark og Weyand (2014) rapporterte ved maksimal sprint gjennomsnittlig vertikalkraft på 2,65 BW i første og 1,71 BW i andre halvdel av kontakten. En symmetrisk fjærbeinmodell gir like halvgjennomsnitt. Den kan følgelig treffe gjennomsnittskraft eller kontakttid, men likevel beskrive <em>når</em> kraften utvikles feil. Problemet kan ikke fjernes ved å endre én beinstivhetsparameter.</p>
+<p>Kadlec mfl. (2024) har en relevant sprintfartstudie med 28 sprintere og 24 fotballspillere. Data på individnivå og hele kraftkurver trengs for en strengere kontroll.</p>
+
+<h2>4. Hva modellens senevariabler ikke forteller</h2>
+<p>En idealisert senekomponent beregnes fra aksialkraft, en fast kraftutveksling, senestivhet og hvilelengde. Den er ikke en måling av akillessenen. En referanseverdi på 9 % er <strong>ikke</strong> etablert som universell skadeterskel. Resultater for den idealiserte senekomponenten kan ikke alene brukes til kliniske råd eller individuell belastningsstyring.</p>
+<p>Modellen mangler energikostnad for muskelaktivering, fascikkelkinematikk og metabolsk omsetning. Den kan derfor ikke beregne løpsøkonomi eller predikere treningseffekter.</p>
+
+<h2>5. Metode, avgrensninger og videre arbeid</h2>
+<ol>
+<li>Et enkelt steg ble identifisert med terskel på 50 N i kraftdata fra instrumentert tredemølle. Kontaktterskel påvirker kontakttid og bør undersøkes systematisk ved 20, 50 og 100 N.</li>
+<li>Datakilden var et offentlig GitHub-speil av Fukuchi-råfilene. Kryptografisk kontroll mot Figshare-originalene er ennå ikke utført.</li>
+<li>Personen, ikke det gjentatte steget, var statistisk analyseenhet.</li>
+<li>Første prioritet: målte og predikerte hele kraftkurver, inkl. bremse-/skyveimpuls og krafttoppens tidspunkt, på individnivå. Andre prioritet: uavhengig testutvalg og senemålinger.</li>
+<li>Valg av maksimalkraft i den publiserte siden fungerer som et etterfølgende kriterium for å godta en simulert bevegelse. Det er <strong>ikke</strong> en modell av en fysiologisk maksimal løpshastighet.</li>
+</ol>
+
+<h2>Kilder</h2>
+<ul>
+<li><a href="https://doi.org/10.7717/peerj.3298">Fukuchi, Fukuchi & Duarte (2017)</a> · <a href="https://doi.org/10.6084/m9.figshare.4543435">Datasett på Figshare</a></li>
+<li><a href="https://github.com/miltoncandela/rnn-force-prediction/tree/b6a855f7356d40854a2e75c43ffd5f2762b00caf/MDPI/data">Offentlig rådata-speil (GitHub, låst revisjon)</a></li>
+<li><a href="https://doi.org/10.1111/sms.14690">Willer mfl. (2024)</a></li>
+<li><a href="https://doi.org/10.1152/japplphysiol.00174.2014">Clark & Weyand (2014)</a></li>
+<li><a href="https://doi.org/10.1111/sms.14763">Kadlec mfl. (2024)</a></li>
+<li><a href="https://doi.org/10.1038/s41598-021-84847-w">Kharazi mfl. (2021), akillessene</a></li>
+<li><a href="https://github.com/gorpaulsen/gorpaulsen.github.io/blob/main/hoppemodell-loping/index.html">Modellens kildekode</a></li>
+</ul>
+<footer>Metodenotat knyttet til undervisningsmodell – oppdatert 23.11.2026. Ikke publisert fagfellevurdert valideringsstudie.</footer>
+</main></body></html>
