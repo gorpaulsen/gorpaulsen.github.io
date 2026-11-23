@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hoppemodell for løping – testversjon</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --background: #fbfcfb; --foreground: #1b2929; --muted: #ebefed; --muted-foreground: #566362;
+      --border: #cfd8d5; --primary: #1b2929; --primary-foreground: #fff;
+      --popover: #fff; --popover-foreground: #1b2929;
+      --viz-series-1: #24323c; --viz-series-2: #a64b12; --viz-series-3: #167360;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: #171e1e; --foreground: #eaf2f0; --muted: #293535; --muted-foreground: #b2c3c1;
+        --border: #445553; --primary: #eaf2f0; --primary-foreground: #192222;
+        --popover: #263131; --popover-foreground: #eaf2f0;
+        --viz-series-1: #dce7f2; --viz-series-2: #ffad72; --viz-series-3: #79d5bb;
+      }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.5; font-family: system-ui, sans-serif; background: var(--background); color: var(--foreground); }
+    main { max-width: 880px; margin: 0 auto; padding: 22px min(5vw,32px) 32px; }
+    h2 { font-size: clamp(22px, 3vw, 28px); line-height: 1.2; font-weight: 620; }
+    h3 { font-size: 17px; font-weight: 610; }
+    .nav { display: flex; flex-wrap: wrap; gap: 6px 12px; border-bottom: 1px solid var(--border); margin: 0 0 18px; }
+    .nav button { background: transparent; border: none; border-bottom: 2px solid transparent; font: inherit; color: var(--muted-foreground); padding: 8px 5px; }
+    .nav button[aria-selected="true"] { color: var(--foreground); border-color: var(--foreground); }
+    .text-small { font-size: 13px; }
+    .text-muted { color: var(--muted-foreground); }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+    .sr-only { position: absolute; height: 1px; width: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .viz-controls { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: end; }
+    .form-label { display: block; font-size: 13px; color: var(--muted-foreground); }
+    .form-select, .btn { font: inherit; font-size: 14px; color: var(--foreground); border: 1px solid var(--border); border-radius: 6px; background: var(--background); padding: 5px 8px; }
+    .form-label .form-select { display: block; max-width: 100%; }
+    .form-check { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; }
+    .form-range { width: 100%; accent-color: var(--primary); margin: 2px 0 7px; }
+    .btn-primary { color: var(--primary-foreground); background: var(--primary); border-color: var(--primary); }
+    :disabled { opacity: .55; }
+    button:not(:disabled), select:not(:disabled) { cursor: pointer; }
+    a { color: var(--foreground); text-underline-offset: .18em; }
+    hr { margin: 15px 0; border: 0; border-top: 1px solid var(--border); }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main>
+    <section id="side-loping"><div id="hs-loping">
+  <style>
+    #hs-loping { color: var(--foreground); position: relative; max-width: 760px; margin-inline: auto; }
+    #hs-loping h2 { margin: 0 0 8px; }
+    #hs-loping .lop-linje { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 12px; }
+    #hs-loping .lop-kontroller { margin-block: 8px; }
+    #hs-loping figure { margin: 0; min-width: 0; }
+    #hs-loping figcaption { font-weight: 500; }
+    #hs-loping svg { display: block; width: 100%; }
+    #hs-loping svg text { fill: var(--foreground); font-size: 12px; }
+    #hs-loping .lop-par { display: grid; gap: 12px 20px; }
+    #hs-loping .lop-aksial { grid-column: 1 / -1; }
+    #hs-loping .lop-parametre { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 16px; margin-block: 12px; }
+    #hs-loping .lop-parametre .tabular-nums { white-space: nowrap; }
+    #hs-loping .lop-fartsgrenser { display: grid; justify-items: start; gap: 5px; }
+    #hs-loping [hidden] { display: none !important; }
+    #hs-loping .lop-legend { margin-top: 7px; }
+    #hs-loping .lop-legend button { display: inline-flex; align-items: center; gap: 5px; min-height: 34px; background: transparent; border: 0; padding: 0; color: var(--foreground); font: inherit; }
+    #hs-loping .lop-legend button[aria-pressed="false"] { opacity: .6; text-decoration: line-through; }
+    #hs-loping .lop-prov { display: inline-block; width: 18px; border-top: 2px solid var(--viz-series-1); }
+    #hs-loping .lop-prov-ref { border-top: 2px dashed var(--viz-series-2); }
+    #hs-loping .lop-maal { width: 100%; border-collapse: collapse; margin-block: 10px; }
+    #hs-loping .lop-maal th, #hs-loping .lop-maal td { padding: 4px 8px 4px 0; border-bottom: 1px solid var(--border); text-align: right; }
+    #hs-loping .lop-maal th { font-weight: 500; }
+    #hs-loping .lop-maal th:first-child { text-align: left; }
+    #hs-loping .lop-maal th:last-child, #hs-loping .lop-maal td:last-child { padding-right: 0; }
+    #hs-loping .lop-over-referanse { display: block; font-weight: 600; }
+    #hs-loping .lop-tips { pointer-events: none; position: absolute; z-index: 2; padding: 5px 8px; max-width: min(270px, 100%); border: 1px solid var(--border); border-radius: 6px; background: var(--popover); color: var(--popover-foreground); }
+    @media (min-width: 592px) {
+      #hs-loping .lop-par { grid-template-columns: repeat(2, minmax(250px, 1fr)); }
+      #hs-loping .lop-parametre { grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); }
+    }
+    @media (pointer: coarse) { #hs-loping .lop-legend button { min-height: 44px; } }
+  </style>
+
+  <h2>Hoppemodell for løping – testversjon</h2>
+  <p class="text-small text-muted"><strong>Forsøk:</strong> Beregningskoden og standardparameterne er identiske med hovedmodellen. Bare brukerbegreper og avgrensningstekster er endret. <a href="../hoppemodell-loping/">Hovedmodellen</a> · <a href="../hoppemodell-loping/validering.html">Empirisk kontroll</a>.</p>
+  <div class="viz-controls lop-kontroller">
+    <label class="form-label">Fart
+      <select class="form-select" data-lop="fart"></select>
+    </label>
+    <label class="form-label">Sammenlign med
+      <select class="form-select" data-lop="referanse"></select>
+    </label>
+    <label class="form-label">Svingtid
+      <select class="form-select" data-lop="svingmodus">
+        <option value="kurve" selected>Mellomdistansekurve</option>
+        <option value="sprint">Sprint · 373 ms</option>
+      </select>
+    </label>
+  </div>
+  <div class="lop-parametre">
+    <label class="form-label">Masse <span class="tabular-nums" data-lop="masseverdi"></span>
+      <input class="form-range" data-lop="masse" type="range" min="45" max="110" step="1">
+    </label>
+    <label class="form-label">Beinstivhet <span class="tabular-nums" data-lop="stivhetverdi"></span>
+      <input class="form-range" data-lop="stivhet" type="range" min="8" max="36" step="0.1">
+    </label>
+    <label class="form-label">Svingtidsjustering <span class="tabular-nums" data-lop="svingjusteringverdi"></span>
+      <input class="form-range" data-lop="svingjustering" type="range" min="-75" max="75" step="5" aria-label="Justering av valgt svingtid" aria-describedby="hs-lop-svingtid">
+    </label>
+    <label class="form-label">Maksimalkraft <span class="tabular-nums" data-lop="makskraftverdi"></span>
+      <input class="form-range" data-lop="makskraft" type="range" min="1" max="7" step="0.05" aria-describedby="hs-lop-kraftvilkar">
+    </label>
+  </div>
+  <div class="text-small text-muted" id="hs-lop-svingtid">Justeringen flytter den valgte svingtiden ved begge farter i grafene og avspillingen.</div>
+  <div class="sr-only" id="hs-lop-kraftvilkar">Maksimalkraften gjelder aksialkraften langs beinet.</div>
+  <div class="lop-fartsgrenser lop-kontroller">
+    <div class="lop-linje" role="status">
+      <span>Høyeste fart innen valgt kraftgrense med <span data-lop="kortsvingtid"></span> svingtid</span>
+      <strong class="tabular-nums" data-lop="toppfart"></strong>
+    </div>
+    <div class="lop-linje" role="status">
+      <span>Høyeste fart innen valgt kraftgrense og svingtid</span>
+      <strong class="tabular-nums" data-lop="vanligtoppfart"></strong>
+    </div>
+    <button class="btn" type="button" data-lop="velgtoppfart">Velg raskeste steg</button>
+  </div>
+  <div class="text-small text-muted">Den korte svingtiden er et gruppesnitt ved individuell toppfart. At et modellsteg tilfredsstiller kraftgrensen, innebærer ikke at en person faktisk kan løpe i den hastigheten. <a href="https://doi.org/10.1152/jappl.2000.89.5.1991" target="_blank" rel="noopener noreferrer">Weyand mfl. (2000)</a></div>
+  <div class="text-small" data-lop="losning" role="status" hidden></div>
+  <div class="text-small" data-lop="sprintvarsel" role="status" hidden></div>
+  <svg data-lop="bevegelse" height="228" role="img" aria-label="Modellen beveger seg forover. Foten står stille mot bakken i kontakt. Pilen viser kraften fra bakken."></svg>
+  <div class="lop-linje lop-kontroller">
+    <button class="btn btn-primary" type="button" data-lop="spill">Spill fire steg</button>
+    <label class="form-check"><span class="form-check-label">Avspillingshastighet</span>
+      <select class="form-select" data-lop="tempo"><option value="0.25">0,25 ×</option><option value="0.5">0,5 ×</option><option value="1" selected>1 ×</option></select>
+    </label>
+  </div>
+  <label class="form-label" for="hs-lop-tid">Tid <span data-lop="tidtekst" class="tabular-nums"></span></label>
+  <input id="hs-lop-tid" class="form-range" data-lop="tid" type="range" min="0" step="any">
+  <div class="text-small tabular-nums" data-lop="fase"></div>
+  <div class="sr-only" data-lop="status" role="status"></div>
+
+  <div class="lop-legend lop-linje text-small" data-lop="legend" aria-label="Farter i grafene">
+    <button type="button" aria-pressed="true" data-lop="legend0"><span class="lop-prov" aria-hidden="true"></span><span data-lop="navn0"></span></button>
+    <button type="button" aria-pressed="true" data-lop="legend1"><span class="lop-prov lop-prov-ref" aria-hidden="true"></span><span data-lop="navn1"></span></button>
+  </div>
+  <div class="lop-par" data-lop="grafer">
+    <figure class="lop-aksial">
+      <figcaption>Kraft langs beinet</figcaption>
+      <svg data-lop="aksial" height="164" role="img" aria-label="Krav til kraft langs beinet ved de valgte fartene."></svg>
+    </figure>
+    <figure>
+      <figcaption>Vertikal kraft fra bakken</figcaption>
+      <svg data-lop="vertikal" height="164" role="img" aria-label="Vertikal bakkekraft gjennom steget ved de to valgte fartene"></svg>
+    </figure>
+    <figure>
+      <figcaption>Horisontal kraft fra bakken</figcaption>
+      <svg data-lop="horisontal" height="164" role="img" aria-label="Horisontal bakkekraft. Negativ kraft bremser og positiv kraft skyver framover."></svg>
+    </figure>
+  </div>
+  <table class="lop-maal text-small tabular-nums">
+    <thead><tr><th scope="col">Mål per steg</th><th scope="col" data-lop="kolonne0"></th><th scope="col" data-lop="kolonne1"></th></tr></thead>
+    <tbody data-lop="maal"></tbody>
+  </table>
+  <p class="text-small text-muted"><span data-lop="senereferanse"></span> er en sammenligningsverdi fra publisert forskning, IKKE en biologisk skadeterskel. Resultatene avhenger av hvilken del av senen som undersøkes og hvordan tøyningen beregnes. <a href="https://doi.org/10.1038/s41598-021-84847-w" target="_blank" rel="noopener noreferrer">Kharazi mfl. (2021)</a></p>
+  <p class="text-small text-muted">Svingtid er tiden fra avspark til neste landing på samme bein. Standardkurven bygger på 11 mannlige mellomdistanseløpere. Ved 2,5 m/s gir standardmodellen 2,59 Hz stegfrekvens. Fukuchi mfl. målte 2,69 Hz hos 28 regelmessige løpere. <a href="https://doi.org/10.1111/sms.14690" target="_blank" rel="noopener noreferrer">Willer mfl. (2024)</a> · <a href="https://doi.org/10.7717/peerj.3298" target="_blank" rel="noopener noreferrer">Fukuchi mfl. (2017)</a></p>
+  <p class="text-small text-muted">Fartslista går til 13,0 m/s. Over 7,0 m/s er modellen ikke sammenholdt med målte kraftforløp. Sprintere legger mer av kraften tidlig i kontakten enn en passiv fjærmodell gir. Bolts høyeste fart i verdensrekordløpet i Berlin var 12,32 m/s. <a href="https://doi.org/10.1152/japplphysiol.00174.2014" target="_blank" rel="noopener noreferrer">Clark og Weyand (2014)</a> · <a href="https://doi.org/10.3390/bioengineering10111254" target="_blank" rel="noopener noreferrer">Štuhec mfl. (2023)</a></p>
+  <p class="text-small text-muted">Kraftstigningen viser hvor raskt aksialkraften øker i kontaktfasen.</p>
+  <div class="text-small text-muted" data-lop="forutsetninger"></div>
+  <div class="lop-tips tooltip text-small tabular-nums" data-lop="tips" role="tooltip" hidden></div>
+
+  <script type="application/json" id="hs-lop-data">{"g":9.81,"beinLengde":1.0,"utveksling":0.5555555555555556,"seneStivhet":192413.7931034483,"seneHvilelengde":0.29,"seneOvergang":0.005219999999999999,"kuletetthet":1000.0,"fart":[2.5,2.6,2.7,2.8,2.9,3.0,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8,3.9,4.0,4.1,4.2,4.3,4.4,4.5,4.6,4.7,4.8,4.9,5.0,5.1,5.2,5.3,5.4,5.5,5.6,5.7,5.8,5.9,6.0,6.1,6.2,6.3,6.4,6.5,6.6,6.7,6.8,6.9,7.0,7.1,7.2,7.3,7.4,7.5,7.6,7.7,7.8,7.9,8.0,8.1,8.2,8.3,8.4,8.5,8.6,8.7,8.8,8.9,9.0,9.1,9.2,9.3,9.4,9.5,9.6,9.7,9.8,9.9,10.0,10.1,10.2,10.3,10.4,10.5,10.6,10.7,10.8,10.9,11.0,11.1,11.2,11.3,11.4,11.5,11.6,11.7,11.8,11.9,12.0,12.1,12.2,12.3,12.4,12.5,12.6,12.7,12.8,12.9,13.0],"seneArealMM2":62.0,"svingprofil":[[2.78,0.512],[3.89,0.512],[5.0,0.509],[6.11,0.473],[7.22,0.441]],"kortSvingtid":0.373,"seneToyningReferanse":9.0,"hoyesteMalteFart":12.32,"standard":{"masse":75.0,"stivhet":14.4,"svingjustering":0,"makskraft":4.5}}</script>
+  <script>
+    (() => {
+      const root = document.getElementById('hs-loping');
+      const finn = key => root.querySelector('[data-lop="' + key + '"]');
+      const data = JSON.parse(root.querySelector('#hs-lop-data').textContent);
+      function svingtidVedFart(fart, profil) {
+  const i=profil.findIndex(([v])=>v>=fart);
+  if (i===0) return profil[0][1];
+  if (i<0) return profil.at(-1)[1];
+  const [fartLav,tidLav]=profil[i-1];
+  const [fartHoy,tidHoy]=profil[i];
+  return tidLav+(tidHoy-tidLav)*(fart-fartLav)/(fartHoy-fartLav);
+}
+
+function simulerLopssteg(fart, valg, modell) {
+  if (!(fart>=modell.fart[0] && fart<=modell.fart.at(-1))) return null;
+  const {masse, stivhet} = valg;
+  const svingtid=valg.svingtid ?? (svingtidVedFart(fart,modell.svingprofil)+(valg.svingjustering??0));
+  if (!(svingtid>0 && Number.isFinite(svingtid))) return null;
+  const {g, beinLengde, utveksling, seneStivhet, seneHvilelengde, seneOvergang} = modell;
+  const serie = utveksling*seneStivhet/stivhet - 1/utveksling;
+  const omvendtUtveksling = 1/utveksling;
+  const overgangBein = seneOvergang*(omvendtUtveksling+serie/2);
+  const delsteg = 384;
+
+  function seneforlengelse(q) {
+    if (q < overgangBein) {
+      return 2*q/(omvendtUtveksling+Math.sqrt(omvendtUtveksling**2+2*serie*q/seneOvergang));
+    }
+    return (q+serie*seneOvergang/2)/(omvendtUtveksling+serie);
+  }
+
+  function stotte(svevandel, fartstillegg, lagre=false) {
+    if (svevandel<=0 || svevandel>=1 || fartstillegg<-.005 || fartstillegg>.60) return null;
+    // Svingtid for ett bein er kontakttiden på motsatt bein pluss de to svevfasene.
+    const svev = svingtid*svevandel/2;
+    const halvTid = (svingtid-2*svev)/2;
+    const tid = 2*halvTid+svev;
+    const lengde = fart*tid;
+    const dt = halvTid/delsteg;
+    const vxStart = fart*(1+fartstillegg);
+    const xStart = (lengde-vxStart*svev)/2;
+    if (xStart<=0 || xStart>=.999*beinLengde) return null;
+    const yStart = Math.sqrt(beinLengde**2-xStart**2);
+    let x=-xStart, y=yStart, vx=vxStart, vy=-g*svev/2, f=0, ax=0, ay=-g;
+    let toppRfd=0, toppKraft=0;
+    const punkter = lagre ? [[0,0,y,0,0,0]] : null;
+    for (let i=1; i<=delsteg; i++) {
+      x += (vx+ax*dt/2)*dt;
+      y += (vy+ay*dt/2)*dt;
+      const l=Math.hypot(x,y);
+      if (y<=.35*beinLengde || l<.35*beinLengde) return null;
+      const strekk=seneforlengelse(Math.max(0,beinLengde-l));
+      const nyKraft=utveksling*seneStivhet*(strekk<seneOvergang
+        ? strekk*strekk/(2*seneOvergang) : strekk-seneOvergang/2);
+      const nyAx=nyKraft*x/(masse*l), nyAy=nyKraft*y/(masse*l)-g;
+      vx += (ax+nyAx)*dt/2;
+      vy += (ay+nyAy)*dt/2;
+      ax=nyAx;
+      ay=nyAy;
+      if(lagre){
+        if (nyKraft < f-0.001 || vx<=0) return null;
+        const stivhetsandel=Math.min(1,strekk/seneOvergang);
+        const tangent=utveksling*seneStivhet*stivhetsandel/(omvendtUtveksling+serie*stivhetsandel);
+        const forkortningsfart=-(x*vx+y*vy)/l;
+        toppRfd=Math.max(toppRfd,tangent*forkortningsfart);
+        toppKraft=Math.max(toppKraft,nyKraft);
+        punkter.push([i*dt,x+xStart,y,nyAx/g,(nyAy+g)/g,nyKraft/1000]);
+      }
+      f=nyKraft;
+    }
+    return {rest:[x,vy*tid/2],halvTid,svev,vxStart,xStart,yStart,punkter,
+      toppRfd,toppKraft};
+  }
+
+  function finnLosning(startA, startB) {
+    let a=startA, b=startB, h=stotte(a,b);
+    if (!h) return null;
+    const e=.0002;
+    for (let i=0; i<20; i++) {
+      const [x,y]=h.rest;
+      const avvik=Math.hypot(x,y);
+      if (avvik<2e-7) return stotte(a,b,true);
+      const ha=stotte(a+e,b), hb=stotte(a,b+e);
+      if (!ha || !hb) return null;
+      const [xa,ya]=ha.rest.map((v,j)=>(v-h.rest[j])/e);
+      const [xb,yb]=hb.rest.map((v,j)=>(v-h.rest[j])/e);
+      const det=xa*yb-xb*ya;
+      if (Math.abs(det)<1e-10) return null;
+      const da=(y*xb-x*yb)/det, db=(x*ya-y*xa)/det;
+      let neste=null;
+      for (let steg=1; steg>=1/128; steg/=2) {
+        const kandidat=stotte(a+steg*da,b+steg*db);
+        if (kandidat && Math.hypot(...kandidat.rest)<avvik) {
+          a+=steg*da;
+          b+=steg*db;
+          neste=kandidat;
+          break;
+        }
+      }
+      if (!neste) return null;
+      h=neste;
+    }
+    return null;
+  }
+
+  const anslag = Math.max(.015,Math.min(.68,1-.82*Math.PI*Math.sqrt(masse/stivhet)/svingtid));
+  let h=null;
+  for (const a of [anslag,.36,.16,.55,.07,.70]) {
+    h=finnLosning(a,.035);
+    if (h) break;
+  }
+  if (!h) return null;
+
+  const kontakt=2*h.halvTid;
+  const tid=kontakt+h.svev;
+  const lengde=fart*tid;
+  const punkter=h.punkter.filter((_,i)=>i%4===0);
+  const midt=punkter.at(-1);
+  midt[1]=h.xStart;
+  midt[3]=0;
+  const toppFy=Math.max(...punkter.map(r=>r[4]));
+  for (let i=punkter.length-2; i>=0; i--) {
+    const [s,x,y,fx,fy,aksial]=punkter[i];
+    punkter.push([kontakt-s,2*h.xStart-x,y,fx===0?0:-fx,fy,aksial]);
+  }
+  const vyStart=g*h.svev/2;
+  for (let i=1; i<=40; i++) {
+    const dt=h.svev*i/40;
+    punkter.push([kontakt+dt,2*h.xStart+h.vxStart*dt,h.yStart+vyStart*dt-g*dt*dt/2,0,0,0]);
+  }
+  const senekraft=h.toppKraft/utveksling;
+  const senestrekk=senekraft<seneStivhet*seneOvergang/2
+    ? Math.sqrt(2*senekraft*seneOvergang/seneStivhet)
+    : senekraft/seneStivhet+seneOvergang/2;
+  return {fart,tid,kontakt,svingtid,lengde,fotposisjon:h.xStart,punkter,toppFy,
+    gjennomsnittFy:tid/kontakt,
+    toppKraft:h.toppKraft,toppRfd:h.toppRfd,toppSene:senekraft,toppToyning:100*senestrekk/seneHvilelengde,
+    masse,kuleRadius:Math.cbrt(3*masse/(4*Math.PI*modell.kuletetthet))};
+}
+
+function overMaksimalkraft(steg, makskraft) {
+  return steg.toppKraft>makskraft+1e-6;
+}
+
+      const antall = 4;
+      const tid = finn('tid');
+      const bevegelse = finn('bevegelse');
+      const tips = finn('tips');
+      const farger = ['var(--viz-series-1)', 'var(--viz-series-2)'];
+      const format = [0,1,2].map(n => new Intl.NumberFormat('nb-NO',{minimumFractionDigits:n,maximumFractionDigits:n}));
+      const fortegn = new Intl.NumberFormat('nb-NO',{signDisplay:'exceptZero'});
+      const tall = (v,n=1) => format[n].format(v);
+      const km = fart => tall(3.6*fart) + ' km/t';
+      const skjult = new Set();
+      const seneReferanse = tall(data.seneToyningReferanse,0)+' %';
+      let steg, t, varighet, markorer = [], spillbart=false, vanligToppfart=null;
+      let vanligNokkel, vanligProfil, kortNokkel, kortProfil;
+      let bilde = null, sist = null, startet = false;
+
+      const valg = data.fart.map(fart => `<option value="${fart}">${km(fart)} · ${tall(fart)} m/s</option>`).join('');
+      finn('fart').innerHTML = valg;
+      finn('referanse').innerHTML = valg;
+      finn('fart').value = '4.5';
+      finn('referanse').value = '2.5';
+      const parametre = [
+        ['masse', 'kg', 0, 1], ['stivhet', 'kN/m', 1, 1000],
+        ['svingjustering', 'ms', 0, .001], ['makskraft', 'kN', 2, 1000],
+      ];
+      parametre.forEach(([k])=>{finn(k).value=data.standard[k];});
+      finn('kortsvingtid').textContent=tall(data.kortSvingtid*1000,0)+' ms';
+      finn('senereferanse').textContent=seneReferanse;
+      finn('forutsetninger').textContent = 'Symmetrisk modellsteg med forfotlanding og fast utveksling. '
+        +'Senetverrsnittet på '+tall(data.seneArealMM2,0)+' mm² og valgt beinstivhet holdes fast når massen endres.';
+
+      function avlest(h, sek) {
+        const r = h.punkter;
+        if (sek <= 0) return r[0];
+        if (sek >= r.at(-1)[0]) return r.at(-1);
+        let a=0, b=r.length-1;
+        while (b-a>1) {
+          const c=Math.floor((a+b)/2);
+          if (r[c][0]<=sek) a=c; else b=c;
+        }
+        const u=(sek-r[a][0])/(r[b][0]-r[a][0]);
+        return r[a].map((v,i)=>v+u*(r[b][i]-v));
+      }
+
+      function aktivtSteg() {
+        const n = Math.min(antall-1, Math.floor(t/steg[0].tid));
+        return [n, Math.min(steg[0].tid,t-n*steg[0].tid)];
+      }
+
+      function tegnHoppestokk(h, n, lokalt) {
+        const w = Math.max(240,Math.round(bevegelse.getBoundingClientRect().width));
+        const skalering = Math.min(140,(w/2-10)/h.fotposisjon), bakke=204, sentrum=w*.5;
+        const [,x,y,fx,fy] = avlest(h,lokalt);
+        const pos=n*h.lengde+x, radius=h.kuleRadius*skalering;
+        const X = v => sentrum+(v-pos)*skalering;
+        const Y = v => bakke-v*skalering;
+        const kuleY=Y(y);
+        const iKontakt = lokalt<=h.kontakt;
+        let fotX=X(n*h.lengde+h.fotposisjon), fotY=bakke;
+        if (!iKontakt) {
+          const f=(lokalt-h.kontakt)/(h.tid-h.kontakt);
+          const vinkel=Math.asin(h.fotposisjon/data.beinLengde)*(2*f-1);
+          const bein=Math.min(data.beinLengde*(1-.18*Math.sin(Math.PI*f)),y/Math.cos(vinkel));
+          fotX=sentrum+skalering*bein*Math.sin(vinkel);
+          fotY=Y(y-bein*Math.cos(vinkel));
+        }
+        const dy=fotY-kuleY, dx=fotX-sentrum, lengde=Math.hypot(dx,dy);
+        const fjær = Array.from({length:13},(_,i)=>{
+          const a=.38+.39*i/12;
+          const b=i===0||i===12?0:(i%2?5:-5);
+          return `${sentrum+a*dx-b*dy/lengde},${kuleY+a*dy+b*dx/lengde}`;
+        }).join(' ');
+        const bane = [n-1,n,n+1].flatMap(i=>h.punkter.map(([,a,b])=>`${X(i*h.lengde+a).toFixed(1)},${Y(b).toFixed(1)}`));
+        const streker = [];
+        for (let i=Math.ceil(2*(pos-sentrum/skalering)); X(i/2)<w; i++) {
+          const px=X(i/2);
+          if (px<24||px>w-24) continue;
+          streker.push(`<path d="M${px},${bakke} v6" stroke="var(--border)"/><text x="${px}" y="${bakke+19}" text-anchor="middle">${tall(i/2)} m</text>`);
+        }
+        bevegelse.setAttribute('viewBox',`0 0 ${w} 228`);
+        bevegelse.innerHTML=`
+          <defs>
+            <clipPath id="hs-lop-utsnitt"><rect width="${w}" height="204"/></clipPath>
+            <radialGradient id="hs-lop-kule" cx="32%" cy="25%"><stop offset="0" stop-color="var(--background)"/><stop offset="100%" stop-color="var(--muted)"/></radialGradient>
+            <marker id="hs-lop-pil" viewBox="0 0 10 10" markerWidth="5" markerHeight="5" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--viz-series-1)"/></marker>
+          </defs>
+          <polyline points="${bane.join(' ')}" stroke="var(--border)" stroke-dasharray="3 4" fill="none" clip-path="url(#hs-lop-utsnitt)"/>
+          <path d="M4 ${bakke} H${w-4}" stroke="var(--muted-foreground)"/>
+          ${streker.join('')}
+          <path d="M${sentrum},${kuleY} l${dx*.38},${dy*.38} M${sentrum+.77*dx},${kuleY+.77*dy} L${fotX},${fotY}" stroke="var(--muted-foreground)" stroke-width="2"/>
+          <polyline points="${fjær}" fill="none" stroke="var(--viz-series-1)" stroke-width="2" opacity="${iKontakt?1:.55}"/>
+          <circle cx="${fotX}" cy="${fotY}" r="4" fill="${iKontakt?'var(--foreground)':'var(--muted-foreground)'}"/>
+          ${fy>.02?`<path d="M${fotX},${fotY} l${21*fx},${-21*fy}" stroke="var(--viz-series-1)" stroke-width="2" marker-end="url(#hs-lop-pil)"/>`:''}
+          <circle cx="${sentrum}" cy="${kuleY}" r="${radius}" fill="url(#hs-lop-kule)" stroke="var(--foreground)" stroke-width="1.4"/>
+          <text x="${sentrum}" y="${kuleY+4}" text-anchor="middle">${tall(h.masse,0)} kg</text>`;
+      }
+
+      function tegnGraf(svg, indeks) {
+        const w=Math.max(240,Math.round(svg.getBoundingClientRect().width));
+        const positiv=indeks!==3, aksial=indeks===5, l=64, r=w-14, top=17, bunn=129;
+        const enhet=aksial?'kN':'kroppsvekter';
+        const tilfeller=steg.filter(Boolean);
+        const lengde=Math.max(...tilfeller.map(h=>h.tid));
+        const topp=Math.max(...tilfeller.flatMap(h=>h.punkter.map(p=>Math.abs(p[indeks]))));
+        const avrunding = positiv ? (topp>5?2:1) : .2;
+        const maks=Math.ceil(topp/avrunding)*avrunding;
+        const min=positiv?0:-maks, n=positiv?Math.round(maks/avrunding):4;
+        const X=s=>l+3+(r-l-6)*s/lengde;
+        const Y=f=>bunn-3-(bunn-top-6)*(f-min)/(maks-min);
+        const aktive=steg.map((h,i)=>[h,i]).filter(([h,i])=>h&&!skjult.has(i));
+        const kurve=h=>h.punkter.map(([t,_,__,...kraft],j)=>`${j?'L':'M'}${X(Math.min(t,h.tid)).toFixed(2)},${Y(kraft[indeks-3]).toFixed(2)}`).join(' ');
+        svg.setAttribute('viewBox',`0 0 ${w} 164`);
+        svg.innerHTML=`
+          <rect data-chart-frame="" x="${l}" y="${top}" width="${r-l}" height="${bunn-top}" fill="none" stroke="var(--border)"/>
+          ${Array.from({length:n+1},(_,i)=>{
+            const f=min+(maks-min)*i/n, y=Y(f);
+            return `<path d="M${l} ${y} H${r}" stroke="${f===0?'var(--muted-foreground)':'var(--border)'}"/><text x="${l-7}" y="${y+4}" text-anchor="end">${tall(f, positiv?0:2)}</text>`;
+          }).join('')}
+          <text data-axis="y" class="axis-title" x="${l}" y="12">Kraft (${enhet})</text>
+          ${[0,.1,.2,.3].filter(s=>s<=lengde).map((s,i)=>`<text x="${X(s)}" y="144" text-anchor="${i?'middle':'start'}">${tall(1000*s,0)}</text>`).join('')}
+          <text data-axis="x" class="axis-title" x="${(l+r)/2}" y="160" text-anchor="middle">Tid fra landing (ms)</text>
+          ${aktive.map(([h,i])=>`<path d="${kurve(h)}" fill="none" stroke="${farger[i]}" stroke-width="2" stroke-dasharray="${i?'5 3':'none'}"/>`).join('')}
+          <line data-chart-hover-guide="" y1="${top}" y2="${bunn}" stroke="var(--muted-foreground)" stroke-dasharray="2 3"/>
+          ${aktive.map(([,i])=>`<circle data-chart-hover-marker="${i}" r="2.7" stroke="${farger[i]}" fill="var(--background)" stroke-width="1.6"/>`).join('')}
+          <rect data-chart-hit="" data-chart-hover-overlay="cross-series" x="${l}" y="${top}" width="${r-l}" height="${bunn-top}" fill="var(--background)" fill-opacity="0" pointer-events="all"/>`;
+        const guide=svg.querySelector('[data-chart-hover-guide]');
+        const prikker=[...svg.querySelectorAll('[data-chart-hover-marker]')];
+        function marker(sek) {
+          guide.setAttribute('x1',X(sek)); guide.setAttribute('x2',X(sek));
+          prikker.forEach((p,i)=>{
+            const h=aktive[i][0];
+            p.setAttribute('opacity', sek<=h.tid ? 1 : 0);
+            p.setAttribute('cx',X(sek)); p.setAttribute('cy',Y(avlest(h,sek)[indeks]));
+          });
+        }
+        const treff=svg.querySelector('[data-chart-hit]');
+        function pek(e, fast) {
+          if (!fast && (e.pointerType==='touch'||bilde!==null)) return;
+          const x=e.clientX-svg.getBoundingClientRect().left;
+          const sek=Math.min(lengde,Math.max(0,(x-X(0))*lengde/(X(lengde)-X(0))));
+          if (fast && spillbart) {
+            const [stegnr]=aktivtSteg();
+            settTid(stegnr*steg[0].tid+Math.min(sek,steg[0].tid-1e-7));
+          }
+          markorer.forEach(f=>f(sek));
+          tips.innerHTML=`<div>${tall(sek*1000,0)} ms fra landing</div>` + aktive.filter(([h])=>sek<=h.tid)
+            .map(([h])=>`<div>${km(h.fart)} · ${tall(avlest(h,sek)[indeks],2)} ${enhet}</div>`).join('');
+          tips.hidden=false;
+          const b=root.getBoundingClientRect(), d=tips.getBoundingClientRect();
+          tips.style.left=Math.max(0,Math.min(b.width-d.width,e.clientX-b.left+8))+'px';
+          tips.style.top=Math.max(0,e.clientY-b.top-d.height-8)+'px';
+        }
+        treff.addEventListener('pointermove',e=>pek(e,false));
+        treff.addEventListener('pointerdown',e=>pek(e,true));
+        treff.addEventListener('pointerleave',e=>{if(e.pointerType!=='touch'){tips.hidden=true;vis();}});
+        return marker;
+      }
+
+      function tegnGrafer() {
+        markorer=steg.some(Boolean)
+          ? [tegnGraf(finn('aksial'),5),tegnGraf(finn('vertikal'),4),tegnGraf(finn('horisontal'),3)] : [];
+      }
+
+      function vis(lesOpp=false) {
+        if(!spillbart) {
+          markorer.forEach(f=>f(0));
+          return;
+        }
+        const [n,lokalt]=aktivtSteg(), h=steg[0];
+        tegnHoppestokk(h,n,lokalt);
+        const pos=n*h.lengde+avlest(h,lokalt)[1];
+        const fase=lokalt>h.kontakt?'Svev':lokalt<h.kontakt/2?'Bremsing':'Fraskyv';
+        const tekst=km(h.fart)+' · Steg '+(n+1)+' av '+antall+' · '+fase+' · '+tall(pos,2)+' m';
+        finn('fase').textContent=tekst;
+        if(lesOpp) finn('status').textContent=tekst;
+        finn('tidtekst').textContent=tall(t,2)+' / '+tall(varighet,2)+' s';
+        tid.value=t;
+        tid.setAttribute('aria-valuetext',tall(t,2)+' sekunder');
+        markorer.forEach(f=>f(lokalt));
+      }
+
+      function stopp() {
+        if(bilde!==null) cancelAnimationFrame(bilde);
+        bilde=null; sist=null;
+        finn('spill').textContent=!startet||t>=varighet?'Spill fire steg':'Fortsett';
+      }
+
+      function settTid(nyTid) {
+        t=nyTid; startet=true; stopp(); vis(true);
+      }
+
+      function animer(stempel) {
+        if(sist!==null) t=Math.min(varighet,t+(stempel-sist)*Number(finn('tempo').value)/1000);
+        sist=stempel;
+        vis(t>=varighet);
+        if(t<varighet) bilde=requestAnimationFrame(animer); else stopp();
+      }
+
+      function beregnFartsprofil(valg) {
+        return new Map(data.fart.map(v=>[v,simulerLopssteg(v,valg,data)]));
+      }
+
+      function fartsgrensetekst(fart, profil) {
+        if(fart===null){
+          return [...profil.values()].some(Boolean) ? 'Ingen fart innenfor kraftgrensen' : 'Ingen stegløsning med svev';
+        }
+        const modellgrense=fart===data.fart.at(-1)?' · Kraftgrensen nås ikke innenfor fartslista':'';
+        return km(fart)+' ('+tall(fart)+' m/s)'+modellgrense;
+      }
+
+      function senetoyningstekst(h) {
+        const verdi=tall(h.toppToyning,2)+' %';
+        return h.toppToyning>data.seneToyningReferanse
+          ? verdi+`<span class="lop-over-referanse">Over en sammenligningsverdi – ikke en skadeterskel</span>`
+          : verdi;
+      }
+
+      function oppsett() {
+        const fartsvalg=['fart','referanse'].map(k=>Number(finn(k).value));
+        const innstillinger=Object.fromEntries(parametre.map(([k,enhet,desimaler,skala])=>{
+          const kontroll=finn(k), v=Number(kontroll.value);
+          const verdi=k==='svingjustering'?(v===0?'±0':fortegn.format(v)):tall(v,desimaler);
+          const tekst=verdi+' '+enhet;
+          finn(k+'verdi').textContent=tekst;
+          kontroll.setAttribute('aria-valuetext',k==='svingjustering'&&v===0?'0 ms justering':tekst);
+          return [k,v*skala];
+        }));
+        const {masse,stivhet,svingjustering,makskraft}=innstillinger;
+        const svingmodus=finn('svingmodus').value;
+        const nyKortNokkel=[masse,stivhet].join('/');
+        const nyVanligNokkel=[masse,stivhet,svingjustering,svingmodus].join('/');
+        if(nyKortNokkel!==kortNokkel){
+          kortProfil=beregnFartsprofil({masse,stivhet,svingtid:data.kortSvingtid});
+          kortNokkel=nyKortNokkel;
+        }
+        if(nyVanligNokkel!==vanligNokkel){
+          vanligProfil=beregnFartsprofil(svingmodus==='sprint'
+            ? {masse,stivhet,svingtid:data.kortSvingtid+svingjustering}
+            : {masse,stivhet,svingjustering});
+          vanligNokkel=nyVanligNokkel;
+        }
+        const overGrensen = h => overMaksimalkraft(h,makskraft);
+        const godkjent = h => h && !overGrensen(h);
+        const finnToppfart = profil => data.fart.findLast(v=>godkjent(profil.get(v))) ?? null;
+        const kortToppfart = finnToppfart(kortProfil);
+        vanligToppfart = finnToppfart(vanligProfil);
+        finn('toppfart').textContent=fartsgrensetekst(kortToppfart,kortProfil);
+        finn('vanligtoppfart').textContent=fartsgrensetekst(vanligToppfart,vanligProfil);
+        finn('velgtoppfart').disabled=vanligToppfart===null;
+        steg=fartsvalg.map(v=>vanligProfil.get(v));
+        fartsvalg.forEach((v,i)=>{
+          finn('navn'+i).textContent=km(v)+(steg[i]&&overGrensen(steg[i])?' · kravkurve':'');
+          finn('kolonne'+i).textContent=km(v);
+          finn('legend'+i).hidden=!steg[i];
+        });
+        const meldinger=fartsvalg.flatMap((v,i)=>{
+          const h=steg[i];
+          if(!h) return ['Fant ingen stegløsning med valgt svingtid og svev ved '+km(v)+'.'];
+          return overGrensen(h)?['Steget ved '+km(v)+' krever mer enn valgt maksimalkraft.']:[];
+        });
+        const varsel=finn('losning');
+        varsel.hidden=meldinger.length===0;
+        varsel.textContent=[...new Set(meldinger)].join(' ');
+        const [kurveSlutt, kurveSluttTid]=data.svingprofil.at(-1);
+        const raskest=Math.max(...fartsvalg);
+        const sprintvarsler=[];
+        if(svingmodus==='kurve' && raskest>kurveSlutt){
+          sprintvarsler.push('Over '+tall(kurveSlutt,2)+' m/s holdes svingtiden på '+tall(1000*kurveSluttTid,0)
+            +' ms, siste punkt i mellomdistansekurven. Velg «Sprint · 373 ms» for kort svingtid.');
+        }
+        if(svingmodus==='sprint'){
+          sprintvarsler.push('373 ms er gjennomsnittlig svingtid ved hver enkelts toppfart. Under egen toppfart er svingtiden lengre.');
+        }
+        if(raskest>7){
+          sprintvarsler.push('Over 7,0 m/s gir fjærmodellen et symmetrisk kraftforløp. Kraftforløp og toppkraft ved sprintfart er derfor usikre.');
+        }
+        if(raskest>data.hoyesteMalteFart){
+          sprintvarsler.push('Over '+tall(data.hoyesteMalteFart,2)+' m/s er farten høyere enn noen er målt til. Verdiene er framskriving.');
+        }
+        const sprintvarsel=finn('sprintvarsel');
+        sprintvarsel.hidden=sprintvarsler.length===0;
+        sprintvarsel.textContent=sprintvarsler.join(' ');
+        const maal = [
+          ['Steglengde',h=>tall(h.lengde,2)+' m'],
+          ['Stegfrekvens',h=>tall(1/h.tid,2)+' Hz'],
+          ['Kontakttid',h=>tall(h.kontakt*1000,0)+' ms'],
+          ['Svingtid per bein',h=>tall(h.svingtid*1000,0)+' ms'],
+          ['Svevtid',h=>tall((h.tid-h.kontakt)*1000,0)+' ms'],
+          ['Gjennomsnittlig vertikal støttekraft',h=>tall(h.gjennomsnittFy,2)+' BW'],
+          ['Topp vertikal kraft',h=>tall(h.toppFy,2)+' kroppsvekter'],
+          ['Topp aksialkraft',h=>tall(h.toppKraft/1000,2)+' kN'],
+          ['Største aksiale kraftstigning',h=>tall(h.toppRfd/1000)+' kN/s'],
+          ['Mot maksimalkraft',h=>overGrensen(h)?'Over grensen':'Innenfor'],
+          ['Beregnet kraft i idealisert senekomponent',h=>tall(h.toppSene/(h.masse*data.g),2)+' BW'],
+          ['Beregnet tøyning i idealisert senekomponent',senetoyningstekst],
+        ];
+        finn('maal').innerHTML=maal.map(([navn,f])=>`<tr><th scope="row">${navn}</th>${steg.map(h=>`<td>${h?f(h):'–'}</td>`).join('')}</tr>`).join('');
+        spillbart=Boolean(godkjent(steg[0]));
+        bevegelse.toggleAttribute('hidden',!spillbart);
+        finn('spill').disabled=!spillbart;
+        tid.disabled=!spillbart;
+        finn('tempo').disabled=!spillbart;
+        finn('grafer').hidden=finn('legend').hidden=!steg.some(Boolean);
+        varighet=antall*(steg[0]?.tid??0);
+        t=(steg[0]?.kontakt??0)*.24;
+        tid.max=varighet||1;
+        if(!spillbart){
+          tid.value=0;
+          finn('fase').textContent='';
+          finn('status').textContent='';
+          finn('tidtekst').textContent='–';
+        }
+        startet=false; tips.hidden=true; stopp(); tegnGrafer(); vis(true);
+      }
+
+      ['fart','referanse','svingmodus'].forEach(k=>finn(k).addEventListener('change',oppsett));
+      parametre.forEach(([k])=>finn(k).addEventListener('input',oppsett));
+      finn('velgtoppfart').addEventListener('click',()=>{
+        if(vanligToppfart===null) return;
+        finn('fart').value=String(vanligToppfart);
+        oppsett();
+      });
+      [0,1].forEach(i=>finn('legend'+i).addEventListener('click',()=>{
+        if(skjult.has(i)) skjult.delete(i); else skjult.add(i);
+        finn('legend'+i).setAttribute('aria-pressed',String(!skjult.has(i)));
+        tips.hidden=true; tegnGrafer(); vis();
+      }));
+      tid.addEventListener('input',()=>{tips.hidden=true;settTid(Number(tid.value));});
+      finn('spill').addEventListener('click',()=>{
+        if(!spillbart)return;
+        tips.hidden=true;
+        if(bilde!==null){stopp();vis(true);return;}
+        if(!startet||t>=varighet)t=0;
+        startet=true; finn('spill').textContent='Pause'; bilde=requestAnimationFrame(animer);
+      });
+      new ResizeObserver(()=>{
+        if(!root.getBoundingClientRect().width){stopp();return;}
+        tegnGrafer();vis();
+      }).observe(root);
+      oppsett();
+    })();
+  </script>
+</div>
+</section>
+  </main>
+</body>
+</html>
