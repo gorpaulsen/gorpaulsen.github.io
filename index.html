@@ -1,20 +1,146 @@
-<!DOCTYPE html>
-<html lang="no">
+<!doctype html>
+<html lang="nb">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Norsk idrettsvitenskap</title>
+  <meta name="description" content="Interaktive forsknings- og undervisningsmodeller i idrettsvitenskap: muskelfysiologi, styrke, hopp, løping, vevsbelastning og utholdenhet.">
+  <title>Interaktive modeller | Norsk idrettsvitenskap</title>
+  <style>
+    :root{color-scheme:light;--bg:#f7f8f7;--ink:#1b2b2b;--muted:#526461;--line:#dbe4df;--card:#fff;--accent:#176a5d;--accent2:#eaf4ef}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.57 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+    a{color:var(--accent);text-underline-offset:3px}
+    a:focus-visible{outline:3px solid #126eaf;outline-offset:4px;border-radius:3px}
+    .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+    header{background:#142d2a;color:#fff;padding:17px 0}
+    header .wrap{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+    .brand{font-weight:750;letter-spacing:.018em;color:#fff;text-decoration:none}
+    header nav{display:flex;gap:17px;flex-wrap:wrap;font-size:14px}
+    header nav a{color:#dcefe6}
+    .hero{padding:55px 0 44px;background:linear-gradient(155deg,#eef5f0 0%,#f7f8f7 70%)}
+    .eyebrow{color:#2e7667;font-size:13px;font-weight:750;letter-spacing:.11em;text-transform:uppercase;margin:0 0 9px}
+    h1{font-size:clamp(32px,5vw,53px);letter-spacing:-.045em;line-height:1.12;margin:0 0 17px}
+    .lead{max-width:790px;color:#3b504a;font-size:18px;margin:0 0 18px}
+    .note{font-size:14px;color:#496058;max-width:820px;margin:0}
+    main{padding:27px 0 60px}
+    section{padding-top:23px;scroll-margin-top:24px}
+    h2{font-size:clamp(22px,3.5vw,29px);letter-spacing:-.026em;line-height:1.3;margin:0 0 17px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:16px}
+    .model{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:23px 22px;display:flex;flex-direction:column;gap:11px;min-height:238px;box-shadow:0 2px 9px #122a2510}
+    .label{font-size:12px;color:#526761;font-weight:650;letter-spacing:.035em}
+    .model h3{font-size:21px;line-height:1.25;letter-spacing:-.02em;margin:0}
+    .model p{margin:0;color:#425650;font-size:15px;flex:1}
+    .links{display:flex;align-items:center;flex-wrap:wrap;gap:8px 17px;margin-top:5px;font-size:14px}
+    .links a:first-child{font-weight:750}
+    .caution{margin-top:35px;padding:20px 24px;border-left:4px solid #2e7766;background:var(--accent2);border-radius:0 9px 9px 0}
+    .caution h2{font-size:18px;margin:0 0 5px}
+    .caution p{margin:0;color:#304a41;font-size:14px}
+    footer{padding:25px 0 35px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+    footer .wrap{display:flex;gap:12px 24px;justify-content:space-between;flex-wrap:wrap}
+    @media(max-width:580px){.hero{padding:40px 0 30px}.model{min-height:0}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
 </head>
 <body>
-  <h1>Norsk idrettsvitenskap</h1>
-  <p>Velkommen til min side. Mer innhold kommer snart.</p>
-  <h2>Interaktive modeller</h2>
-  <ul>
-    <li><a href="muskelfysiologi-forklart/">Muskelfysiologi forklart</a> – muskelkraft ved albuefleksjon og kneekstensjon</li>
-    <li><a href="bobbert-hopp-og-kneboy/">Bobbert – hopp og knebøy</a> – muskelkrefter i hopp og knebøy</li>
-    <li><a href="hoppemodell-loping/">Hoppemodell for løping</a> – fjærbein, kontakttid og senetøyning (2,5–13,0 m/s; over 7,0 m/s er kraftforløpet ikke validert)</li>
-    <li><a href="hoppemodell-vevsbelastning/">Hoppemodell for vevsbelastning</a> – knokkel, sene og muskel hopp for hopp (forsøksversjon med utmattingsindekser for sene)</li>
-    <li><a href="utholdenhet/">Utholdenhetslaboratoriet</a> – kritisk effekt (CP–W′), funksjonsbevaring og trettbarhet</li>
-  </ul>
+  <header>
+    <div class="wrap">
+      <a class="brand" href="./">Norsk idrettsvitenskap</a>
+      <nav aria-label="Modellkategorier">
+        <a href="#muskel">Muskel og styrke</a>
+        <a href="#hopp">Hopp og løping</a>
+        <a href="#vev">Vevsbelastning</a>
+        <a href="#utholdenhet">Utholdenhet</a>
+      </nav>
+    </div>
+  </header>
+  <div class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Undervisning · Modellering · Forskning</p>
+      <h1>Interaktive modeller</h1>
+      <p class="lead">Utforsk hvordan mekaniske og fysiologiske antakelser påvirker beregnede resultater. Modellene er samlet etter tema, med egne versjoner, avgrensninger og dokumentasjon.</p>
+      <p class="note">Modellresultater må ikke forveksles med måledata eller individuelt validerte prediksjoner. Forskningsprototyper og visualiseringer av forhåndsberegnede resultater er merket særskilt.</p>
+    </div>
+  </div>
+  <main class="wrap">
+    <section id="muskel" aria-labelledby="muskel-tittel">
+      <h2 id="muskel-tittel">Muskelmekanikk og styrke</h2>
+      <div class="grid">
+        <article class="model">
+          <span class="label">Interaktiv undervisningsmodell · v36.1</span>
+          <h3>Muskelfysiologi forklart</h3>
+          <p>Utforsk muskelkraft, kraft–lengde- og kraft–hastighetsforhold, albuefleksjon og kneekstensjon. Inneholder eksempler om parameteridentifiserbarhet og måleusikkerhet.</p>
+          <div class="links"><a href="muskelfysiologi-forklart/">Åpne modellen</a></div>
+        </article>
+        <article class="model">
+          <span class="label">Geometrisk undervisningsmodell · v0.1.2</span>
+          <h3>Modellperson: styrke og leddmoment</h3>
+          <p>Se hvordan kroppsmål, leddvinkel, ytre belastning og momentarm påvirker beregnet leddmoment og ekvivalent senekraft. Idealisert todimensjonal geometri.</p>
+          <div class="links"><a href="modellperson/">Åpne modellen</a></div>
+        </article>
+        <article class="model">
+          <span class="label">Forskningsprototype · v1</span>
+          <h3>Hva måler vi når vi måler styrke?</h3>
+          <p>Undersøk om ulike kombinasjoner av muskelparametere kan gi samme observerte leddmoment, og hvordan måleusikkerhet påvirker tolkningen.</p>
+          <div class="links"><a href="styrke-identifiserbarhet/">Åpne prototypen</a></div>
+        </article>
+      </div>
+    </section>
+    <section id="hopp" aria-labelledby="hopp-tittel">
+      <h2 id="hopp-tittel">Hopp og løpsmekanikk</h2>
+      <div class="grid">
+        <article class="model">
+          <span class="label">Interaktiv muskel- og bevegelsesmodell · v12</span>
+          <h3>Bobbert: hopp og knebøy</h3>
+          <p>Undersøk muskelkraft, leddmoment og mekaniske forutsetninger ved vertikale hopp og knebøy i en idealisert muskel-skjelettmodell.</p>
+          <div class="links"><a href="bobbert-hopp-og-kneboy/">Åpne modellen</a></div>
+        </article>
+        <article class="model">
+          <span class="label">Forskningsmodell · beregnede resultater fra v0.7 og v0.8</span>
+          <h3>Jumpsim: knebøyhopp</h3>
+          <p>Utforsk kraft–hastighetsprofiler, starttilstander og parameterusikkerhet i lagrede simuleringer. Nye mekaniske simuleringer må kjøres i Python.</p>
+          <div class="links"><a href="jumpsim/">Se resultatene</a><a href="jumpsim/scenarier.html">Scenarioer</a></div>
+        </article>
+        <article class="model">
+          <span class="label">Fjærbeinmodell · mekanisk hypotese</span>
+          <h3>Hoppe–løpe-modellen</h3>
+          <p>Utforsk sammenhenger mellom løpshastighet, kontakttid, vertikal bakkekraft og modellert senetøyning. Ikke validert for individuell maksimalhastighet, løpsøkonomi eller skadefare.</p>
+          <div class="links"><a href="hoppemodell-loping/">Åpne modellen</a><a href="hoppemodell-loping/validering.html">Empirisk kontroll</a><a href="hoppemodell-loping-test/">Begrepstest</a></div>
+        </article>
+      </div>
+    </section>
+    <section id="vev" aria-labelledby="vev-tittel">
+      <h2 id="vev-tittel">Vevsbelastning og adaptasjon</h2>
+      <div class="grid">
+        <article class="model">
+          <span class="label">Eksperimentell undervisningsmodell · v4</span>
+          <h3>Hoppemodell for vevsbelastning</h3>
+          <p>Undersøk hvordan gjentatte hopp representeres som mekanisk belastning og antatte responser i knokkel, sene og muskel. Responser og utmattingsindekser er modellantakelser, ikke kliniske prediksjoner.</p>
+          <div class="links"><a href="hoppemodell-vevsbelastning/">Åpne modellen</a></div>
+        </article>
+      </div>
+    </section>
+    <section id="utholdenhet" aria-labelledby="utholdenhet-tittel">
+      <h2 id="utholdenhet-tittel">Utholdenhetsfysiologi</h2>
+      <div class="grid">
+        <article class="model">
+          <span class="label">Interaktiv undervisningsmodell · v5.9</span>
+          <h3>Utholdenhetslaboratoriet</h3>
+          <p>Arbeid med kritisk effekt (CP), W′, effekt–varighet, funksjonsbevaring og trettbarhet. Sammenlign modellforutsetninger og tolk alternative forklaringer.</p>
+          <div class="links"><a href="utholdenhet/">Åpne modellen</a></div>
+        </article>
+      </div>
+    </section>
+    <aside class="caution" aria-labelledby="begrensninger-tittel">
+      <h2 id="begrensninger-tittel">Hvordan modellene bør brukes</h2>
+      <p>Modellene kan illustrere mekaniske relasjoner, prøve hypoteser og synliggjøre følsomhet for valg av parametere. Numerisk korrekthet, empirisk samsvar og kausal forklaringskraft er ulike egenskaper. Dokumentasjon i hver modell angir hva som er kontrollert, og hva som ennå er uavklart.</p>
+    </aside>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span>Norsk idrettsvitenskap · Modelloversikt gjennomgått 23. november 2026</span>
+      <a href="https://github.com/gorpaulsen/gorpaulsen.github.io">Kildekode og publiserte versjoner på GitHub</a>
+    </div>
+  </footer>
 </body>
 </html>
