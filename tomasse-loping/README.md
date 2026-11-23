@@ -1,5 +1,7 @@
 # Tomassemodell for landing – M1 (eksperimentell)
 
+**Ny M2-prototype på samme utviklingsgren:** [2D-interaktiv visning](2d.html) · [M2-metodenotat](README-M2.md) · [beregningskjerne](model2d.mjs). M1-koden er bevart uendret.
+
 **Status: dynamisk, én-dimensjonal prototype. Ikke validert som løpe- eller sprintmodell.**
 
 Dette prosjektet ligger i `gorpaulsen/gorpaulsen.github.io` i egen utviklingsgren og er **ikke** en endring i den publiserte fjærbeinmodellen. Den er heller ikke en kopi av Clark, Ryan og Weyands tomassemodell fra 2017. Den studien dekomponerte målte vertikale kraftforløp i to overlappende masse-/impulsbidrag, gitt målte kontakt- og svevtider og distal akselerasjon. **Denne prototypen løser derimot bevegelseslikninger for to koblede masser.**
