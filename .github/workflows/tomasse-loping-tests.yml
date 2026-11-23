@@ -1,0 +1,24 @@
+name: Tomassemodell M1 – numeriske tester
+on:
+  pull_request:
+    paths:
+      - 'tomasse-loping/**'
+      - '.github/workflows/tomasse-loping-tests.yml'
+  push:
+    branches:
+      - 'feature/tomasse-loping-m1'
+    paths:
+      - 'tomasse-loping/**'
+      - '.github/workflows/tomasse-loping-tests.yml'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Kontroller dynamikk og numerikk
+        run: node tomasse-loping/tests/test-model.mjs
