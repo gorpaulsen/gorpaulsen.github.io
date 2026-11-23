@@ -72,6 +72,10 @@
     #hs-serie .hs-legend button { display: inline-flex; align-items: center; gap: 5px; min-height: 34px; background: transparent; border: 0; padding: 0; color: var(--foreground); font: inherit; }
     #hs-serie .hs-legend button[aria-pressed="false"] { opacity: .60; text-decoration: line-through; }
     #hs-serie .hs-prov { display: inline-block; width: 18px; border-top: 2px solid currentColor; }
+    #hs-serie .hs-forklaring { margin: 2px 0 6px; }
+    #hs-serie details.hs-om { margin: 4px 0 8px; }
+    #hs-serie details.hs-om summary { cursor: pointer; }
+    #hs-serie details.hs-om p { margin: 6px 0 0; }
     #hs-serie .hs-tabell { width: 100%; border-collapse: collapse; margin-top: 6px; }
     #hs-serie .hs-tabell th, #hs-serie .hs-tabell td { padding: 4px 6px; border-bottom: 1px solid var(--border); text-align: right; }
     #hs-serie .hs-tabell th:first-child, #hs-serie .hs-tabell td:first-child { text-align: left; }
@@ -94,6 +98,12 @@
       <select class="form-select" data-hs="pause"><option value="0">0 s</option><option value="30">30 s</option><option value="60">60 s</option></select>
     </label>
   </div>
+  <details class="hs-om text-small">
+    <summary>Hvorfor disse fallhøydene?</summary>
+    <p>Fallhøyden er høyden kulen faller før foten treffer bakken. Modellen er en stiv søyle med ett ledd i foten. Det finnes ikke kne eller hofte som kan ta opp energi, og derfor gir små fallhøyder store vevsbelastninger. Tallene kan ikke sammenlignes direkte med fallhøyden i et drop jump hos mennesker.</p>
+    <p>3 cm er referansehoppet. Alle doser, signaler og indekser er regnet relativt til dette hoppet. 3, 4,5 og 6 cm gir 8,7–10,5 % senetøyning og 1 300–1 600 µε i knokkelen. Begge deler ligger under innslagsnivåene for vedvarende svekkelse, som er 12 % og 4 000 µε. Ved 6 cm passerer senen så vidt grensen på 10 % for forbigående tap.</p>
+    <p>Overlasttesten trenger halvert knokkeltverrsnitt, fordi knokkelen med normalt tverrsnitt ikke når 4 000 µε selv ved 30 cm. Ved 16 cm og halvert tverrsnitt får alle tre vev vedvarende svekkelse: knokkelen får 4 700 µε og senen 14,6 %. Muskelen svekkes indirekte, fordi det forbigående tapet av F₀ gjør at den gir etter i bremsefasen. Mellom 6 og 16 cm finnes ingen fallhøyde der alle tre vev passerer innslagsnivåene.</p>
+  </details>
 
   <div class="hs-par">
     <svg class="hs-figur" data-hs="rigg" height="266" role="img" aria-label="Hoppestokk med kule, motor, senefjær og knokkel. Ringer viser signal og fylte sensormerker viser metning."></svg>
@@ -104,7 +114,7 @@
     <button class="btn btn-primary" type="button" data-hs="spill">Spill serien</button>
     <button class="btn" type="button" data-hs="neste">Neste hopp</button>
     <label class="form-check"><span class="form-check-label">Hastighet</span>
-      <select class="form-select" data-hs="fart"><option value="0.25">0,25 ×</option><option value="1" selected>1 ×</option><option value="5">5 ×</option><option value="20">20 ×</option></select>
+      <select class="form-select" data-hs="fart"><option value="0.01">0,01 ×</option><option value="0.02">0,02 ×</option><option value="0.05">0,05 ×</option><option value="0.1">0,1 ×</option><option value="0.25">0,25 ×</option><option value="0.5">0,5 ×</option><option value="1" selected>1 × (sanntid)</option><option value="5">5 ×</option><option value="20">20 ×</option></select>
     </label>
   </div>
   <label class="form-label" for="hs-tid">Tid <span class="tabular-nums" data-hs="tidtekst"></span></label>
@@ -117,14 +127,17 @@
     <figure>
       <figcaption>Akkumulert vevssignal</figcaption>
       <svg class="hs-figur" data-hs="signal" height="156" role="img" aria-label="Akkumulerte signalbidrag for knokkel, sene og muskel i modellenheter"></svg>
+      <p class="hs-forklaring text-small text-muted">Hvert trinn er ett hopp. Bidraget er hoppets mekaniske stimulus relativt til referansehoppet, ganget med vevets startsignal (knokkel 3, sene 1,6 og muskel 1) og følsomheten ved landing. Stimulusen er topptøyning i knokkel, ∫ε²dt i sene og ∫(F/F₀)²dt i muskel. Følsomheten faller med hvert hopp, mest i knokkel, og hentes inn med tidskonstant 60 s. Derfor flater knokkelkurven ut uten pauser. Modellenheter og illustrative valg.</p>
     </figure>
     <figure>
       <figcaption>Akkumulert spennings- og kraftdose</figcaption>
       <svg class="hs-figur" data-hs="dose" height="156" role="img" aria-label="Spenningsdose i knokkel og sene og relativ kraftdose i muskel, normalisert til referansehoppet"></svg>
+      <p class="hs-forklaring text-small text-muted">Dosen er tidsintegralet av kvadrert spenning i knokkel og sene og av kvadrert relativ kraft i muskel, regnet over kontakten. Den er delt på verdien i referansehoppet, så 1 betyr ett referansehopp. Dosen har verken følsomhet eller restitusjon og vokser derfor jevnt med antall hopp. Linjene ligger nesten oppå hverandre når vevene får omtrent samme relative økning. Kvadreringen er et valg.</p>
     </figure>
     <figure>
       <figcaption>Forbigående tap</figcaption>
       <svg class="hs-figur" data-hs="forbigaaende" height="156" role="img" aria-label="Forbigående tap av senemodul og muskelkapasitet, som avtar i pausene"></svg>
+      <p class="hs-forklaring text-small text-muted">Kortvarig nedgang i senens elastisitetsmodul og muskelens F₀. Nedgangen hentes inn mellom hoppene og i pausene, med tidskonstant 30 s for sene og 90 s for muskel. Senen påvirkes bare når topptøyningen er over 10 %. Muskelen påvirkes av kraftdosen i hvert hopp. Taket er 4 % for sene og 12 % for muskel. Knokkelen har ikke forbigående tap i modellen.</p>
     </figure>
     <figure>
       <figcaption>Vedvarende svekkelse i serien</figcaption>
@@ -133,11 +146,13 @@
         <div id="hs-skadestatus" class="text-small tabular-nums" data-hs="skadestatus" role="status"></div>
         <button class="btn" type="button" data-hs="overlast">Vis overlasttest</button>
       </div>
+      <p class="hs-forklaring text-small text-muted">Skadeleddet er et vedvarende tap av elastisitetsmodul i knokkel og sene og av F₀ i muskel. Det vokser med kvadratet av den relative overskridelsen over innslagsnivåene: 4 000 µε i knokkel, 12 % tøyning i sene og 8 J arbeid under forlengelse i muskel. Leddet mettes mot 14 % i knokkel og 16 % i sene og muskel. Det er null under innslagsnivåene og hentes ikke inn i løpet av serien.</p>
     </figure>
     <figure>
       <figcaption>Eksperimentelle utmattingsindekser, sene</figcaption>
       <svg class="hs-figur" data-hs="utmatting" height="156" role="img" aria-label="Akkumulerte relative utmattingsindekser for senen, toppbasert per syklus og tidsintegrert, i referansehopp"></svg>
       <div class="hs-legend text-small" data-hs="utmlegend" aria-label="Indekser i grafen"></div>
+      <p class="hs-forklaring text-small text-muted">Akkumulert relativt utmattingsbidrag i senen, der 1 betyr ett referansehopp. Heltrukket linje er (topptøyning / topptøyning i referansehoppet)<sup>9,288</sup> per hopp. Stiplet linje er ∫ε<sup>9,288</sup>dt over kontakten, relativt til referansehoppet. Den høye eksponenten gir store utslag for små endringer: 11 % høyere topptøyning ved 4,5 cm gir 2,65 ganger så stort bidrag.</p>
     </figure>
     <figure>
       <figcaption>Sene i ett hopp med uskadet materiale</figcaption>
