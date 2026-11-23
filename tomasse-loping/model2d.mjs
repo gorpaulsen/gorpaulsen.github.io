@@ -5,10 +5,10 @@
 export function defaults2D(){
  return {mass:75,distalFraction:0.08,g:9.81,restLength:1.0,
  legStiffness:20000,legDamping:140,onset:0.005,mu:0.9,
- swingDuration:0.25,swingAhead:0.46,swingHeight:0.13,landingV:1.0,
+ swingDuration:0.22,swingAhead:0.20,swingHeight:0.13,landingV:1.0,
  swingKx:1800,swingCx:160,swingKz:1900,swingCz:200,swingEnabled:true,
- footX:0.18,bodyX:0,bodyZ:0.9,bodyVX:5,bodyVZ:-0.5,
- dt:0.0001,duration:0.85,sampleEvery:5};
+ footX:0.18,bodyX:0,bodyZ:0.88,bodyVX:5,bodyVZ:-0.5,
+ dt:0.0001,duration:0.75,sampleEvery:5};
 }
 const pos=x=>Math.max(0,x);
 export function leg2D(q,p,mode,rest){
