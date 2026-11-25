@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Muskelfysiologi forklart v36.1 | Rådatakontrollert PCSA-usikkerhet</title>
+<title>Muskelfysiologi forklart v36.2 | Rådatakontrollert PCSA-usikkerhet</title>
 <style>:root {
   color-scheme: light;
   --ink: #173142;
@@ -435,7 +435,7 @@ html.projector .hs-dag-label { font-size: 14px; }
 .ident-table-wrap {overflow-x:auto;margin-top:12px;max-height:330px;overflow-y:auto}.ident-table-wrap table{border-collapse:collapse;width:100%;font-size:.78rem;white-space:nowrap}
 .ident-table-wrap th,.ident-table-wrap td{padding:5px 7px;border-bottom:1px solid var(--border);text-align:right}.ident-table-wrap th:first-child,.ident-table-wrap td:first-child{text-align:left}
 .ident-table-wrap thead{position:sticky;top:0;background:#fff}.ident-panel details summary{cursor:pointer;font-weight:650}
-@media(max-width:790px){.ident-columns{grid-template-columns:1fr}.ident-top{grid-template-columns:1fr}.ident-settings{grid-template-columns:1fr 1fr}}
+@media(max-width:790px){.ident-columns{grid-template-columns:minmax(0,1fr)}.ident-top{grid-template-columns:1fr}.ident-settings{grid-template-columns:1fr 1fr}}
 
 
 /* v35: protokolltilpasning og rang-/usikkerhetsanalyse, uten endring av v33-mekanikk */
@@ -462,6 +462,7 @@ html.projector .hs-dag-label { font-size: 14px; }
 #v36-empirical select, #v36-empirical input[type="number"] { padding:5px 6px; background:white; border:1px solid #bdcfd4; border-radius:6px; }
 #v36-empirical input[type="range"] { width:170px; vertical-align:middle; accent-color:#0c6b75; }
 #v36-empirical .v36-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(175px,1fr)); gap:10px; margin:12px 0; }
+#v36-empirical .v36-grid-par { grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
 #v36-empirical .v36-stat { border:1px solid #d8e5e7; background:white; border-radius:8px; padding:10px 12px; }
 #v36-empirical .v36-stat small { display:block; color:#536874; }
 #v36-empirical .v36-stat strong { display:block; font-size:1.21rem; margin-top:3px; }
@@ -1014,7 +1015,7 @@ html.projector .hs-dag-label { font-size: 14px; }
         <li>Oppgavenes fasit regnes av modellen med knedelens verdier og standardtesten. Pennasjonen i oppgave 4 er rundet til glidebryterens trinn (13,9°).</li>
         <li>Sensitivitetsanalysen kjører samme test på nytt med én parameter ganget med 0,9 eller 1,1 og resten uendret. Endringen er <code>100 · (y − y<sub>0</sub>) / y<sub>0</sub></code>, der <code>y<sub>0</sub></code> er utfallet ved utgangspunktet. Modellens største effekt er største verdi av avlest moment ganger <code>ω</code> i trinn på 5 °/s, som i figuren. Endring i pennasjon endrer også tykkelsen og fascikkellengden ved 90°, fordi tykkelsen beregnes fra dem. Analysen er lokal. Større endringer kan gi et annet mønster, fordi modellen ikke er lineær.</li>
       </ol>
-      <p>Kraft–hastighetskurven gjelder full aktivering. Hos godt trente menn økte elektrisk stimulering lagt oppå viljestyrt innsats det eksentriske momentet med 21–24 %. Viljestyrt moment var altså om lag 81–83 % av momentet med stimulering. Standardverdien 82 % bygger på dette. Stimuleringen gir ikke nødvendigvis full aktivering. <a href="https://doi.org/10.1111/j.1748-1716.1990.tb08971.x">Westing mfl. (1990)</a></p>
+      <p>Kraft–hastighetskurven gjelder full aktivering. Hos godt trente menn økte elektrisk stimulering lagt oppå viljestyrt innsats det eksentriske momentet med 21–24 %. Viljestyrt moment var altså om lag 81–83 % av momentet med stimulering. Standardverdien 82 % bygger på dette. Stimuleringen gir ikke nødvendigvis full aktivering. I samme studie lå viljestyrt eksentrisk moment på isometrisk nivå ved alle tre testede hastigheter (60, 180 og 360°/s). Med fast 82 % og kraft–hastighetskurven her havner modellen under isometrisk moment ved −60°/s, så den undervurderer trolig viljestyrt eksentrisk moment ved lave hastigheter. <a href="https://doi.org/10.1111/j.1748-1716.1990.tb08971.x">Westing mfl. (1990)</a></p>
       <p>Modellen antar at testhastigheten holdes i hele bevegelsen. I et dynamometer går en del av bevegelsen med til å nå og bremse testhastigheten. Velg da et avlesningsvindu der hastigheten er konstant.</p>
     </details>
   </section>
@@ -1221,7 +1222,7 @@ html.projector .hs-dag-label { font-size: 14px; }
           <dt>Senekraft</dt>
           <dd>Med null pennasjon overføres den påkrevde muskelkraften til senen. Kraften beregnes fra det indre momentet og momentarmen ved hvert tidspunkt.</dd>
           <dt>Ettergivelig sene</dt>
-          <dd>Den inverse De Groote–Fregly-kurven gir <code>ℓ<sub>t</sub>/ℓ<sub>slakk</sub></code> fra <code>F<sub>t</sub>/F<sub>0</sub></code>.</dd>
+          <dd>En eksponentiell senekurve, <code>F<sub>t</sub>/F<sub>0</sub> = 0,2·(e<sup>ln 6 · ε/ε<sub>0</sub></sup> − 1)</code>, gir <code>ℓ<sub>t</sub>/ℓ<sub>slakk</sub></code> fra <code>F<sub>t</sub>/F<sub>0</sub></code>. Den har samme tøyning ved F<sub>0</sub> (4,9 %) som De Groote–Fregly-kurven i OpenSim, men er null ved slakk lengde. Forskjellen er under 0,03 mm i eksemplene.</dd>
         </dl>
       </div>
       <div id="knee-math" hidden>
@@ -1232,7 +1233,7 @@ html.projector .hs-dag-label { font-size: 14px; }
           <dt>Modellert aktiveringskrav</dt>
           <dd><code>a<sub>krav</sub> = F<sub>krav</sub>/C(t)</code>, med <code>C(t) = F<sub>0</sub> · f<sub>L</sub> · f<sub>V</sub> · cos α</code> for modellmuskelen med fast tykkelse. Referansekraften gjelder hele modellmuskelen. Aktiv kraftkapasitet ved full aktivering er en modellstørrelse. Ved maksimale eksentriske forsøk oppnår utrente ofte lavere viljestyrt aktivering. <a href="https://doi.org/10.1007/s10439-016-1591-9">De Groote mfl. (2016)</a> · <a href="https://doi.org/10.1242/jeb.123158">Duchateau og Enoka (2016)</a></dd>
           <dt>Isometrisk momentkapasitet</dt>
-          <dd><code>M<sub>iso</sub> = r · F<sub>0</sub> · f<sub>L</sub> · cos α</code> ved full aktivering. Referansekraften <code>F<sub>0</sub></code> er en illustrativ modellverdi som setter skalaen for momentkapasiteten. Fascikkellengde og pennasjon varierer med knevinkelen. Målt maksimalt viljestyrt moment avhenger også av testvinkelen. Modellen bruker en fast effektiv momentarm på 3,5 cm. Regnet i forhold til momentet ved 60° gir den 0,75 ved 30° og 0,93 ved 90°. De Ruiter mfl. fant maksimal momentkapasitet som tilsvarer 0,60 og 0,78. Referanseverdiene til Šarabon mfl. viser samme mønster, med lavest moment i strakt knevinkel. I Rajagopal-modellen faller vastusmusklenes effektive momentarm fra om lag 4,4 cm ved 20° til 2,0 cm ved 90°. Med stiv sene og én modellmuskel stemte den vinkelavhengige armen dårligere med disse målingene, så den faste armen er beholdt. <a href="https://doi.org/10.3389/fphys.2021.767941">Šarabon mfl. (2021)</a> · <a href="https://www.physoc.org/abstracts/rate-of-torque-development-at-the-start-of-maximal-voluntary-and-electrically-induced-isometric-contractions-at-different-knee-angles/">de Ruiter mfl. (2004)</a> · <a href="https://github.com/opensim-org/opensim-models/blob/master/Models/Rajagopal/Rajagopal2016.osim">Rajagopal-modellen</a></dd>
+          <dd><code>M<sub>iso</sub> = r · F<sub>0</sub> · f<sub>L</sub> · cos α</code> ved full aktivering. Referansekraften <code>F<sub>0</sub></code> er en illustrativ modellverdi som setter skalaen for momentkapasiteten. Fascikkellengde og pennasjon varierer med knevinkelen. Målt maksimalt viljestyrt moment avhenger også av testvinkelen. Modellen bruker en fast effektiv momentarm på 3,5 cm. Regnet i forhold til momentet ved 60° gir den 0,75 ved 30° og 0,93 ved 90°. De Ruiter mfl. fant maksimal momentkapasitet som tilsvarer 0,60 og 0,78. Referanseverdiene til Šarabon mfl. viser samme mønster, med lavest moment i strakt knevinkel. I Rajagopal-modellen faller vastusmusklenes effektive momentarm fra om lag 4,4 cm ved 20° til 2,0 cm ved 90°. Med stiv sene og én modellmuskel stemte den vinkelavhengige armen dårligere med disse målingene, så den faste armen er beholdt. <a href="https://doi.org/10.3389/fphys.2021.767941">Šarabon mfl. (2021)</a> · <a href="https://www.physoc.org/abstracts/rate-of-torque-development-at-the-start-of-maximal-voluntary-and-electrically-induced-isometric-contractions-at-different-knee-angles/">de Ruiter mfl. (2004, konferanseabstrakt)</a> · <a href="https://github.com/opensim-org/opensim-models/blob/master/Models/Rajagopal/Rajagopal2016.osim">Rajagopal-modellen</a></dd>
           <dt>Dynamisk aktivering</dt>
           <dd><code>da/dt = (u(t − Δ) − a)/τ</code>. Modellen estimerer eksitasjonen <code>u</code> fra kraftbehovet langs den foreskrevne banen og begrenser den til 0–100 %. <code>Δ</code> er en justerbar illustrasjonsverdi før aktiveringen. Tidskonstanten <code>τ</code> styrer hvor raskt aktiveringen stiger eller faller. <a href="https://opensimconfluence.atlassian.net/wiki/spaces/OpenSim/pages/53090590">OpenSim om aktiveringsdynamikk</a></dd>
           <dt>Utviklet knestrekkerkraft</dt>
@@ -1257,7 +1258,7 @@ html.projector .hs-dag-label { font-size: 14px; }
   </section>
 <section id="identifiserbarhet" class="panel strength-panel ident-panel" aria-labelledby="ident-heading" hidden>
   <div class="panel-heading">
-    <div><h2 id="ident-heading">Parameterkompensasjon og identifiserbarhet (v36.1)</h2>
+    <div><h2 id="ident-heading">Parameterkompensasjon og identifiserbarhet (v36.2)</h2>
       <p>To ulike fysiologiske tilstander kan gi samme netto leddmoment. Sammenlign ett målepunkt, flere vinkler, flere hastigheter og usikre anatomiske målinger.</p></div>
     <button id="ident-reset" type="button">Nullstill eksemplet</button>
   </div>
@@ -1347,7 +1348,7 @@ html.projector .hs-dag-label { font-size: 14px; }
       </fieldset>
 
       <section id="v36-empirical" aria-labelledby="v36-heading">
-        <h3 id="v36-heading">Empiriske data og observasjonsmodell (v36.1)</h3>
+        <h3 id="v36-heading">Empiriske data og observasjonsmodell (v36.2)</h3>
         <p class="v36-lead">Tre uavhengige utvalg: Hug (quadriceps, n=21), Crouzier (triceps surae, n=20) og CARE (kne/albue, n=16). Her vises <strong>observerte metodedifferanser</strong> uten å utlede fysiologisk spesifikk kraft. Mekanikk og de illustrativt valgte momentfeilene ovenfor er uendret.</p>
         <div class="v36-controls">
           <label for="v36-source">Vis kilde og estimand: <select id="v36-source"><option value="hug">Hug 2015 · anatomi og VA</option><option value="crouzier">Crouzier 2018 · PCSA og EMG</option><option value="care">CARE 2025 · metodefølsomhet</option></select></label>
@@ -1356,9 +1357,9 @@ html.projector .hs-dag-label { font-size: 14px; }
         <div class="v36-scroll"><table aria-label="Kildespesifikke, observerte estimater"><thead id="v36-table-head"></thead><tbody id="v36-table-body"></tbody></table></div>
         <p id="v36-source-warning" class="v36-warning"></p>
         <h3>Avledet PCSA – illustrasjon av korrelert observatørvariasjon</h3>
-        <p class="v36-note">Fra Hugs individuelle operatørpar kan vi estimere korrelasjonen mellom volum- og fascikkeldifferanser: VL <strong>r = −0,18</strong> (95 % KI −0,58 til +0,29; n=20), VM <strong>r = +0,16</strong> (KI −0,29 til +0,56; n=21). Disse korrelasjonene kan brukes som anslag på feilkorrelasjon <code>ρ</code> bare under antakelser om operatørfeilenes uavhengighet og paringen av målingene. For <code>PCSA_proxy = V/ℓ_hvile</code> gir lineær feilforplantning <code>Var(ln PCSA) ≈ Var(ln V) + Var(ln ℓ) − 2·Cov(ln V,ln ℓ)</code>. ±1 er bare matematiske ekstremtilfeller, ikke empirisk støttede korrelasjoner.</p>
+        <p class="v36-note">Fra Hugs individuelle operatørpar kan vi estimere korrelasjonen mellom volum- og fascikkeldifferanser: VL <strong>r = −0,18</strong> (95 % KI −0,58 til +0,29; n=20), VM <strong>r = +0,16</strong> (KI −0,29 til +0,56; n=21). Operatør 1 er ulike personer for volum (DB) og fascikkellengde (FH), mens operatør 2 (CG) målte begge (Dryad-README; Hug mfl. 2015). Korrelasjonene er derfor ikke <code>ρ</code> for én operatør. Med uavhengige og like store feil hos de tre personene svarer VL-verdien r = −0,18 til <code>ρ</code> ≈ −0,36 for CG og <code>ρ</code> ≈ 0 for kombinasjonen DB/FH. For <code>PCSA_proxy = V/ℓ_hvile</code> gir lineær feilforplantning <code>Var(ln PCSA) ≈ Var(ln V) + Var(ln ℓ) − 2·Cov(ln V,ln ℓ)</code>. ±1 er bare matematiske ekstremtilfeller, ikke empirisk støttede korrelasjoner.</p>
         <div class="v36-controls">
-          <label for="v36-rho">Feilkorrelasjon, ρ (følsomhet; VL-estimat −0,18): <input id="v36-rho" type="range" min="-1" max="1" step="0.01" value="-0.18"></label>
+          <label for="v36-rho">Feilkorrelasjon ρ (følsomhet; se teksten om r = −0,18): <input id="v36-rho" type="range" min="-1" max="1" step="0.01" value="-0.18"></label>
           <strong id="v36-rho-label">0,00</strong>
         </div>
         <div class="v36-grid">
@@ -1366,14 +1367,14 @@ html.projector .hs-dag-label { font-size: 14px; }
           <div class="v36-stat"><small>VL fascikkellengde: enkeltoperatør SD*</small><strong id="v36-sd-length">–</strong></div>
           <div class="v36-stat"><small>PCSA-proxy: feilforplantet CV ved valgt ρ*</small><strong id="v36-sd-pcsa">–</strong></div>
         </div>
-        <div class="v36-grid" aria-label="Empiriske resultater fra direkte PCSA-beregning per operatør">
-          <div class="v36-stat"><small>VL: direkte per operatør, SD(diff)/√2</small><strong id="v36-direct-vl">3,35 %</strong></div>
-          <div class="v36-stat"><small>VM: direkte per operatør, SD(diff)/√2</small><strong id="v36-direct-vm">2,38 %</strong></div>
-          <div class="v36-stat"><small>VL: operatør 2 − 1, gjennomsnitt</small><strong id="v36-bias-vl">+3,01 %</strong></div>
-          <div class="v36-stat"><small>VM: operatør 2 − 1, gjennomsnitt</small><strong id="v36-bias-vm">+1,14 %</strong></div>
+        <div class="v36-grid v36-grid-par" aria-label="Empiriske resultater fra direkte PCSA-beregning, CG mot DB/FH">
+          <div class="v36-stat"><small>VL: CG mot DB/FH, SD(diff)/√2</small><strong id="v36-direct-vl">3,35 %</strong></div>
+          <div class="v36-stat"><small>VM: CG mot DB/FH, SD(diff)/√2</small><strong id="v36-direct-vm">2,38 %</strong></div>
+          <div class="v36-stat"><small>VL: CG − DB/FH, gjennomsnitt</small><strong id="v36-bias-vl">+3,01 %</strong></div>
+          <div class="v36-stat"><small>VM: CG − DB/FH, gjennomsnitt</small><strong id="v36-bias-vm">+1,14 %</strong></div>
         </div>
-        <p class="v36-note">VL: n=20, p=0,010 for gjennomsnittlig parvis PCSA-forskjell; VM: n=21, p=0,136. Differansene måler <strong>operatørforskjeller</strong>, ikke absolutt skjevhet mot sannheten. Kryssparing av volum og lengde fra ulike operatørnummer gir 2,80 % (VL) og 2,79 % (VM), betinget på valgt paring. Forutsetningene SD(diff)/√2 er like feilvarianser og uavhengige feil mellom operatører. Skanningsvariasjon, bildereferanse og absolutt metodevaliditet er ikke målt.</p>
-        <p class="v36-warning"><strong>Geometrisk kontra kontraktil lengde:</strong> Hugs fascikkellengde ble målt i hvile ved skanneposisjonen. Den er <strong>ikke</strong> modellens optimale fascikkellengde <code>ℓopt</code>. Volum/ℓ_hvile er en geometrisk proxy; når den brukes i en modell ved andre leddvinkler, kan forholdet til kontraktil PCSA og optimale lengdeforhold gi en tilstands-/vinkelavhengig skjevhet som ikke inngår i operatør-CV-en.</p>
+        <p class="v36-note">VL: n=20, p=0,010 for gjennomsnittlig parvis PCSA-forskjell; VM: n=21, p=0,136. Differansene måler <strong>operatørforskjeller</strong>, ikke absolutt skjevhet mot sannheten. Kryssparing av volum og lengde fra ulike operatørnummer gir 2,80 % (VL) og 2,79 % (VM), betinget på valgt paring. SD(diff)/√2 forutsetter at kombinasjonen DB/FH og CG har like store, uavhengige feil. Ifølge artikkelen analyserte operatørene de samme MR- og ultralydopptakene, så forskjellene gjelder analysen. Skanningsvariasjon, bildereferanse og absolutt metodevaliditet er ikke målt.</p>
+        <p class="v36-warning"><strong>Geometrisk kontra kontraktil lengde:</strong> Hugs fascikkellengde ble målt i hvile ved skanneposisjonen, med kneet bøyd 85–90°. Forfatterne behandlet den som optimal lengde fordi vinkelen er nær vinkelen for størst moment. Den er likevel <strong>ikke</strong> det samme som modellens optimale fascikkellengde <code>ℓopt</code>, fordi fasciklene forkortes under kontraksjon. Volum/ℓ_hvile er en geometrisk proxy; når den brukes i en modell ved andre leddvinkler, kan forholdet til kontraktil PCSA og optimale lengdeforhold gi en tilstands-/vinkelavhengig skjevhet som ikke inngår i operatør-CV-en.</p>
         <p class="v36-warning"><strong>Frivillig aktivering:</strong> I Hug hadde 17 av 20 VA ≥ 100 % minst én dag, og 7 av 20 begge dager. VA dag 2 − dag 1 = −1,20 (SD 4,36 prosentpoeng). En normalfordelt additiv målefeil for modellens faktiske aktivering <code>a</code> er ikke dokumentert; VA-proxyen viser sterk takeffekt og inneholder seleksjon ved valg av høyeste av tre forsøk.</p>
         <p class="v36-note">* Feilforplantning gir et følsomhetsscenario, ikke en ny estimert total-PCSA-usikkerhet. De empiriske direkte anslagene (3,35 og 2,38 %) er mer relevante for akkurat denne operatørkomponenten, men kan ikke brukes som fysiologisk PCSA-CV for en ekvivalent knestrekker. VL/VM er ikke hele quadriceps.</p>
         <div class="v36-controls"><label><input type="checkbox" id="v36-consent"> Jeg forstår at direkte VL-operatør-CV på 3,35 % <strong>ikke er total PCSA-usikkerhet</strong> og bare brukes som demonstrasjon</label><button id="v36-apply-pcsa" type="button" disabled>Sett direkte VL-operatør-CV (3,35 %) i illustrativ proxy</button></div>
@@ -1688,7 +1689,8 @@ function fmt(value, decimals = 2) {
       minimumFractionDigits: decimals, maximumFractionDigits: decimals
     }));
   }
-  return formatter.get(decimals).format(Math.abs(value) < 1e-10 ? 0 : value);
+  // Rettelse 8: verdier som avrundes til null, vises uten minustegn.
+  return formatter.get(decimals).format(Math.abs(value) < 0.5 * 10 ** -decimals ? 0 : value);
 }
 
 function msLabel(value) {
@@ -1788,7 +1790,7 @@ const lessons = {
   tendon: {
     title: "Albuebevegelse", subtitle: "Se hvordan muskel og sene deler lengden når albuen beveges.",
     topics: ["tendon_fascicle", "tendon_length", "tendon_force"], phases: ["Løft", "Hold", "Senk"],
-    footer: "Underarm og hånd er masseløse. Senetøyning beregnes med De Groote–Fregly-kurven."
+    footer: "Underarm og hånd er masseløse. Senetøyning beregnes med en eksponentiell kurve med samme tøyning ved F₀ som De Groote–Fregly-kurven."
   },
   knee: {
     title: "Sittende kneekstensjon", subtitle: "Følg pennasjonsvinkelen gjennom knestrekket. Velg kraftgrafen for å se virkningen av ankelvekten.",
@@ -2422,6 +2424,9 @@ function setupStrengthComparison() {
       entry.input.value = entry.defaultValue;
       delete entry.exact;
     }
+    // Rettelse 1: referansen har koblingen av, slik studentarket forutsetter.
+    id("strength-couple").checked = false;
+    id("strength-couple-note").hidden = true;
     setAnchor();
     activeFactor = controls[0].spec;
     updateStrengthComparison();
@@ -3346,6 +3351,8 @@ function setupForceVelocityTest() {
     render();
   });
   id("fv-measure").addEventListener("change", () => { state.measure = id("fv-measure").value; render(); });
+  // Rettelse 5: tegn grafene på nytt ved projektorvalg, så etikettavstanden passer skriftstørrelsen.
+  id("projector").addEventListener("click", () => setTimeout(render, 0));
   id("fv-full-curve").addEventListener("change", () => { state.fullCurve = id("fv-full-curve").checked; render(); });
   id("fv-reset").addEventListener("click", () => {
     state.concentric = new Set(fvDefaults.concentric);
@@ -3584,13 +3591,23 @@ function setupForceVelocityTest() {
     const plot = fvPlot(id("fv-angle"), {xMin: lowFlexion, xMax: highFlexion, yMax,
       xLabel: "Knefleksjon (°)", yLabel: "Moment (N·m)", shade: [state.windowFrom, state.windowTo],
       xTicks: niceTicks(lowFlexion, highFlexion).filter((tick) => tick >= lowFlexion)});
+    const labels = [];
     series.forEach(({points, color, dash, trial}, i) => {
       plot.line(points, {stroke: color, "stroke-width": 1.8, "stroke-dasharray": dash, opacity: 0.55 + 0.45 * (1 - i / Math.max(1, series.length))});
       if (trial.flexionDeg !== null) plot.dot(trial.flexionDeg, trial.torqueNm, color, true);
       const [x, y] = points.at(-1);
-      plot.add("text", {x: plot.X(x) - 3, y: plot.Y(y) - 6, "text-anchor": "end", class: "fv-tick", style: "fill:" + color},
-        fmt(trial.omegaDegS, 0));
+      labels.push({x: plot.X(x) - 3, y: plot.Y(y) - 6, color, text: fmt(trial.omegaDegS, 0), eccentric: trial.omegaDegS < 0});
     });
+    // Rettelse 5: eksentriske etiketter står i en egen kolonne til venstre for de konsentriske,
+    // og etikettene i hver kolonne spres loddrett så de ikke overlapper ved høyre kant.
+    const projector = document.documentElement.classList.contains("projector");
+    const gap = projector ? 18 : 14, shift = projector ? 38 : 32;
+    for (const eccentric of [false, true]) {
+      const column = labels.filter((label) => label.eccentric === eccentric).sort((a, b) => a.y - b.y);
+      for (let i = 1; i < column.length; i++) column[i].y = Math.max(column[i].y, column[i - 1].y + gap);
+    }
+    for (const label of labels) plot.add("text", {x: label.x - (label.eccentric ? shift : 0), y: label.y, "text-anchor": "end", class: "fv-tick",
+      style: "fill:" + label.color + ";paint-order:stroke;stroke:white;stroke-width:3px;stroke-linejoin:round"}, label.text);
     id("fv-angle-desc").textContent = "Heltrukne linjer er konsentriske, stiplede eksentriske med valgt aktivering. Tallet ved linjen er hastigheten i °/s.";
   }
 
@@ -4954,7 +4971,8 @@ function setupIdentifiability() {
     ['ant','Antagonistmoment ved 70° (N·m)',0,40,0.1,' N·m'],
     ['antSlope','Endring i antagonistmoment per 30°',-15,15,0.1,' N·m']
   ];
-  const fmtId=(x,d=1)=>Number.isFinite(x)?x.toLocaleString('nb-NO',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';
+  // Rettelse 8: verdier som avrundes til null, vises uten minustegn (ikke «−0,000»).
+  const fmtId=(x,d=1)=>Number.isFinite(x)?(Math.abs(x)<0.5*10**-d?0:x).toLocaleString('nb-NO',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';
   const clone=(o)=>({...o});
   const clamp=(x,lo,hi)=>Math.min(hi,Math.max(lo,x));
   const maxAbs=(arr)=>Math.max(0,...arr.map(x=>Math.abs(x)));
@@ -4987,6 +5005,8 @@ function setupIdentifiability() {
     const wrap=document.createElement('label');wrap.className='ident-slider';
     wrap.innerHTML=`<span>${label} <output id="ident-v-${key}"></output></span>`;
     const input=document.createElement('input');input.id='ident-p-'+key;
+    // Rettelse 4: <output> er første merkbare element i etiketten; knytt etiketten eksplisitt til glidebryteren.
+    wrap.htmlFor=input.id;
     input.type='range';input.min=min;input.max=max;input.step=step;input.value=varying[key];
     input.addEventListener('input',()=>{
       varying[key]=Number(input.value);invalidMatch=null;fitSummary=null;speedActs=null;solveStatus='manual';
@@ -5181,12 +5201,13 @@ function setupIdentifiability() {
     if(!data.length){svg.innerHTML='';return;}
     const lo=Math.floor((Math.min(...data.map(p=>p.y))-15)/20)*20;
     const hi=Math.ceil((Math.max(...data.map(p=>p.y))+15)/20)*20;
-    const xp=x=>56+(x-20)/70*714,yp=y=>20+(hi-y)/(hi-lo)*242;
+    // Rettelse 6: plottet starter lavere så aksetittelen ikke overlapper øverste tallverdi.
+    const xp=x=>56+(x-20)/70*714,yp=y=>36+(hi-y)/(hi-lo)*226;
     const path=pts=>pts.filter(z=>Number.isFinite(z.y)).map((p,i)=>(i?'L':'M')+xp(p.x).toFixed(1)+' '+yp(p.y).toFixed(1)).join(' ');
-    let out='<rect width="800" height="300" fill="white" rx="8"/><text x="14" y="16" fill="#49616a" font-size="13">Netto leddmoment (N·m)</text>';
-    for(let k=0;k<=4;k++){const y=20+242*k/4,val=hi-(hi-lo)*k/4;
-      out+=`<line x1="56" x2="770" y1="${y}" y2="${y}" stroke="#e4edef"/><text x="51" y="${y+4}" text-anchor="end" font-size="12">${Math.round(val)}</text>`;}
-    for(const x of [20,40,60,80,90])out+=`<text x="${xp(x)}" y="284" text-anchor="middle" font-size="12">${x}°</text>`;
+    let out='<rect width="800" height="300" fill="white" rx="8"/><text x="14" y="18" fill="#49616a" font-size="15">Netto leddmoment (N·m)</text>';
+    for(let k=0;k<=4;k++){const y=36+226*k/4,val=hi-(hi-lo)*k/4;
+      out+=`<line x1="56" x2="770" y1="${y}" y2="${y}" stroke="#e4edef"/><text x="51" y="${y+4}" text-anchor="end" font-size="14">${Math.round(val)}</text>`;}
+    for(const x of [20,40,60,80,90])out+=`<text x="${xp(x)}" y="286" text-anchor="middle" font-size="14">${x}°</text>`;
     out+=`<path d="${path(lines[0])}" stroke="#0b6774" stroke-width="3" fill="none"/>`;
     out+=`<path d="${path(lines[1])}" stroke="#bd612d" stroke-width="3" stroke-dasharray="7 5" fill="none"/>`;
     svg.innerHTML=out;
@@ -5312,19 +5333,24 @@ function setupIdentifiability() {
       byId('ident-data-summary').textContent=`${dataset.length} simulerte observasjoner; ${settings.nDay} dag(er), ${settings.nRep} repetisjon(er), tilfeldig startverdi ${settings.seed}.`;
       svgGraph(b,speedActs);
     }
-    section.dataset.model=JSON.stringify({version:"36.1",origin:'v33-isokineticKneeState',reference:{flex:70,speed:0},
+    section.dataset.model=JSON.stringify({version:"36.2",origin:'v33-isokineticKneeState',reference:{flex:70,speed:0},
       a:base,b,settings,invalidMatch,fitSummary:fitSummary?{free:fitSummary.free,
       rms:fitSummary.cmp.rms,max:fitSummary.cmp.max,dchi2:fitSummary.cmp.dchi2}:null,
       speedActs, maxDiff:cmp.ok?cmp.max:null});
     showIdentifiability(pts);
   }
   const numeric=['repSD','daySD','biasSD','trueBias','nRep','nDay','pcsaCV'];
-  for(const n of numeric)byId('ident-'+n).addEventListener('input',()=>{
+  for(const n of numeric){byId('ident-'+n).addEventListener('input',()=>{
     const input=byId('ident-'+n),x=Number(input.value);
     settings[n]=Number.isFinite(x)?clamp(x,Number(input.min),Number(input.max)):Number(input.min);
+    // Rettelse 7: antall dager og repetisjoner er hele tall.
+    if(n==='nRep'||n==='nDay')settings[n]=Math.round(settings[n]);
     // Forandret støy eller protokoll: tidligere fit er ikke optimal for nye vekter/tester.
     fitSummary=null;update();
   });
+  // Rettelse 7: når feltet forlates, vises verdien som faktisk brukes (for eksempel 1 i stedet for 0).
+  byId('ident-'+n).addEventListener('change',()=>{const input=byId('ident-'+n);
+    if(input.value!==String(settings[n])){input.value=settings[n];input.dispatchEvent(new Event('input'));}});}
   byId('ident-preset').addEventListener('change',()=>setPreset(byId('ident-preset').value));
   byId('ident-match').addEventListener('click',matchAtReference);
   byId('ident-fit-all').addEventListener('click',fitWholeProtocol);
@@ -5349,6 +5375,8 @@ function setupIdentifiability() {
     byId('ident-graph-speed').value='0';
     for(const node of section.querySelectorAll('input[id^="ident-extra-"]'))node.checked=false;
     byId('ident-fit-free-apo').checked=false;byId('ident-fit-free-lever').checked=false;
+    // Rettelse 2: standardvalg for frie parametere (a, ℓopt, pennasjon, vmax på; øvrige av).
+    for(const n of section.querySelectorAll('input[data-fit-key]'))n.checked=['a','opt','penn','vmax'].includes(n.dataset.fitKey);
     byId('ident-fit-wide').checked=false;byId('ident-fit-speedacts').checked=false;
     byId('ident-fit-note').textContent='';setPreset('capacity');
   });
@@ -5357,7 +5385,7 @@ function setupIdentifiability() {
     const b=pairedB(),{dataset}=simulate(plan(),b,speedActs),q=(x)=>String(x).replace('.',',');
     const csv=['day;rep;knefleksjon_deg;hastighet_deg_s;observasjon_Nm;modell_A_Nm;modell_B_Nm'];
     for(const row of dataset)csv.push([row.day,row.rep,row.flex,row.speed,row.y,row.a,row.b].map(q).join(';'));
-    downloadFile('styrke_identifiserbarhet_v36_1_simulerte_data.csv',new Blob(['\ufeff'+csv.join('\n')],{type:'text/csv;charset=utf-8'}));
+    downloadFile('styrke_identifiserbarhet_v36_2_simulerte_data.csv',new Blob(['\ufeff'+csv.join('\n')],{type:'text/csv;charset=utf-8'}));
   });
   setPreset('capacity');
 }
@@ -5385,25 +5413,25 @@ setupHypertrophyStrength();
   const el=(id)=>document.getElementById(id);
   const fmt=(x,d=2)=>Number.isFinite(x)?x.toLocaleString('nb-NO',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';
   const sourceInfo={
-    hug:{desc:'Kneekstensjon ved én isometrisk vinkel. VM/VL-morfologi; frivillig aktivering fra interpolert rykk (VA); EMG-proxy. Personnummer kobles bare innen Hug.',
+    hug:{desc:'Kneekstensjon ved én isometrisk vinkel. Volum: operatørene DB og CG. Fascikkellengde: FH og CG. VM/VL-morfologi; frivillig aktivering fra interpolert rykk (VA); EMG-proxy. Personnummer kobles bare innen Hug.',
       heads:['Mål','Par / n','Signert differanse','SD(parvis differanse)','Rolle i v36'],
       rows:[['VM volum','21','+0,61 %','2,36 prosentpoeng','Observatørforskjell'],
         ['VL volum','21','+4,81 %','2,76 prosentpoeng','Observatørforskjell'],
         ['VM fascikkellengde','21','−0,53 %','2,81 prosentpoeng','Observatørforskjell'],
         ['VL fascikkellengde','20','+1,98 %','3,43 prosentpoeng','Observatørforskjell'],
-        ['VL PCSA=V/ℓ_hvile, direkte per operatør','20','+3,01 % (p=0,010)','SD(diff)/√2 = 3,35 %','Systematisk operatørforskjell + tilfeldig komponent'],
-        ['VM PCSA=V/ℓ_hvile, direkte per operatør','21','+1,14 % (p=0,136)','SD(diff)/√2 = 2,38 %','Observatørkomponent, ikke total PCSA-feil'],
-        ['VL: korr(dV,dℓ)','20','−0,18','95 % KI −0,58 til +0,29','ρ-proxy under særskilte antakelser'],
-        ['VM: korr(dV,dℓ)','21','+0,16','95 % KI −0,29 til +0,56','ρ-proxy under særskilte antakelser'],
+        ['VL PCSA=V/ℓ_hvile, CG mot DB/FH','20','+3,01 % (p=0,010)','SD(diff)/√2 = 3,35 %','Systematisk operatørforskjell + tilfeldig komponent'],
+        ['VM PCSA=V/ℓ_hvile, CG mot DB/FH','21','+1,14 % (p=0,136)','SD(diff)/√2 = 2,38 %','Observatørkomponent, ikke total PCSA-feil'],
+        ['VL: korr(dV,dℓ)','20','−0,18','95 % KI −0,58 til +0,29','Ikke ρ for én operatør (se under)'],
+        ['VM: korr(dV,dℓ)','21','+0,16','95 % KI −0,29 til +0,56','Ikke ρ for én operatør (se under)'],
         ['Frivillig aktivering dag 2 – dag 1','20','−1,20 prosentpoeng','4,36 prosentpoeng','VA-proxy med takeffekt; 17/20 ≥100 % minst én dag']],
-      warn:'Målene er operatørforskjeller, ikke referansestandard. Én VL-fascikkel ble målt med alternativ 2D-metode. Fascikkellengde i hvile er ikke ℓopt. VA har sterk takeffekt (17/20 ≥ 100 % minst én dag) og må ikke forveksles med sann a.'},
+      warn:'Målene er operatørforskjeller, ikke referansestandard. Operatør 1 er to personer (DB for volum, FH for lengde). Én VL-fascikkel ble målt med alternativ 2D-metode. Fascikkellengde i hvile er ikke ℓopt. VA har sterk takeffekt (17/20 ≥ 100 % minst én dag) og må ikke forveksles med sann a.'},
     crouzier:{desc:'Plantarfleksjon: gastrocnemius medialis (GM), lateralis (GL), soleus (SOL); n=20. Ingen direkte knekalibrering.',
       heads:['Mål','Utvalg','Estimert størrelse','Enhet','Rolle i v36'],
       rows:[['GM EMG, to sesjoner','20','1,98','prosentpoeng','Betinget repetisjons-SD'],
         ['GL EMG, to sesjoner','20','1,34','prosentpoeng','Betinget repetisjons-SD'],
         ['SOL EMG, to sesjoner','20','2,80','prosentpoeng','Betinget repetisjons-SD'],
         ['PCSA_GM: publisert vs GM-vinkel','20','+3,94 % i gjennomsnitt','maks. +8,33 %','19/20 rader bruker tilsynelatende GL-vinkel']],
-      warn:'Hug definerer PCSA som V/ℓ; Crouzier benytter V·cos(α)/ℓ. V36s mekanikk bruker cos(α) separat, så Crouzier-PCSA kan ikke settes inn direkte. Kildeavviket i GM er ikke bekreftet som forfatterfeil.'},
+      warn:'Hug definerer PCSA som V/ℓ; Crouzier benytter V·cos(α)/ℓ. V36s mekanikk bruker cos(α) separat, så Crouzier-PCSA kan ikke settes inn direkte. Kildeavviket i GM er ikke bekreftet som forfatterfeil. Artikkelens tabell 2 (GM-PCSA 54,7 og 37,5 cm² for menn og kvinner) svarer til de lagrede verdiene.'},
     care:{desc:'16 postmenopausale kvinner med kneekstensjon og albuefleksjon. Tallene er median parvis forskjell i EKSTRAPOLERT V0 mellom innstilt og faktisk oppnådd hastighet.',
       heads:['Modell','Kne: ΔV0 target/actual','n kne','Albue: ΔV0 target/actual','n albue'],
       rows:[['Lineær','+6,3 %','16','+27,7 %','16'],
@@ -5432,7 +5460,7 @@ setupHypertrophyStrength();
   }
   function renderMoment(){
     const sdRep=Number(el('ident-repSD').value),sdDay=Number(el('ident-daySD').value),sdCal=Number(el('ident-biasSD').value);
-    const nrep=Math.max(1,Number(el('ident-nRep').value)),nday=Math.max(1,Number(el('ident-nDay').value));
+    const nrep=Math.max(1,Math.round(Number(el('ident-nRep').value))||1),nday=Math.max(1,Math.round(Number(el('ident-nDay').value))||1);
     const v=[sdRep**2/(nrep*nday),sdDay**2/nday,sdCal**2],tot=v.reduce((a,b)=>a+b,0);
     for(const [id,num] of [['v36-moment-rep',0],['v36-moment-day',1],['v36-moment-cal',2]])el(id).textContent=fmt(Math.sqrt(v[num]),2)+' N·m';
     el('v36-moment-total').textContent=fmt(Math.sqrt(tot),2)+' N·m';
@@ -5456,7 +5484,10 @@ setupHypertrophyStrength();
   });
   for(const key of ['repSD','daySD','biasSD','nRep','nDay'])el('ident-'+key).addEventListener('input',renderMoment);
   el('ident-reset').addEventListener('click',()=>{
-    el('v36-consent').checked=false;el('v36-apply-pcsa').disabled=true;renderMoment();renderPcsa();
+    el('v36-consent').checked=false;el('v36-apply-pcsa').disabled=true;
+    // Rettelse 3: empiripanelet tilbake til startverdiene (Hug, ρ = −0,18).
+    el('v36-source').value='hug';renderSource();el('v36-rho').value='-0.18';
+    renderMoment();renderPcsa();
   });
   renderSource();renderPcsa();renderMoment();
 })();
