@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="nb"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tomassemodell – mekanikk ved landing | M1</title>
+<style>
+:root{color-scheme:light dark;--bg:#fbfcfb;--fg:#1b2929;--sub:#50615d;--border:#cbd5d2;--panel:#ecf1ef;--a:#156d6a;--b:#a75c2d}
+@media(prefers-color-scheme:dark){:root{--bg:#171f1e;--fg:#eef4f0;--sub:#bac9c4;--border:#485b56;--panel:#25332f;--a:#75d6c1;--b:#ffc089}}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--fg);margin:0;font:16px/1.55 system-ui,sans-serif}main{max-width:980px;margin:auto;padding:24px 25px 55px}a{color:inherit;text-underline-offset:3px}
+h1{font-size:clamp(24px,3.6vw,34px);line-height:1.25}h2{font-size:19px;margin-top:28px}
+.lead,.hint{color:var(--sub)}.hint{font-size:13px}nav{display:flex;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:14px}
+.note{padding:13px 17px;background:var(--panel);border-left:3px solid var(--a);border-radius:5px}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:13px 20px}
+label{font-size:13px;color:var(--sub);display:block}label strong{color:var(--fg);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--a)}.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.tile{padding:12px;border:1px solid var(--border);border-radius:7px}.tile b{font-size:21px;display:block;font-variant-numeric:tabular-nums}
+.twocol{display:grid;grid-template-columns:1.4fr 1fr;gap:24px}@media(max-width:720px){.twocol{grid-template-columns:1fr}main{padding:16px 14px 36px}}
+svg{width:100%;height:auto;display:block}.chart{border:1px solid var(--border);border-radius:8px;padding:9px;min-width:0}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:13px;color:var(--sub)}.line-a,.line-b{display:inline-block;width:19px;border-top:3px solid var(--a);vertical-align:middle;margin-right:5px}.line-b{border-color:var(--b);border-top-style:dashed}
+button{font:inherit;background:var(--panel);color:var(--fg);border:1px solid var(--border);border-radius:6px;padding:7px 13px;cursor:pointer}
+code{font-size:13px;overflow-wrap:anywhere}.status{color:var(--sub);font-size:13px}
+</style></head>
+<body><main>
+<nav><a href="2d.html">M2 – todimensjonal utviklingsmodell</a><a href="../hoppemodell-loping/">Den publiserte løpemodellen</a><a href="../hoppemodell-loping/validering.html">Empirisk kontroll</a><a href="../">Modelloversikt</a></nav>
+<h1>Tomassemodell – mekanikk ved landing</h1>
+<p class="lead">Utviklingsversjon M1. To masser, en intern kompresjonsfjær/demper og en ettergivende kontakt med bakken. Studer hvordan den distale massens hastighet, kontaktstivheten og dempingen påvirker den tidlige kraftresponsen.</p>
+<p class="note"><strong>Avgrensning:</strong> Dette er en <em>vertikal enkeltlandingsmodell</em> (1D), ikke en komplett løpesyklus eller en prediksjon av sprintfart. Den er en selvstendig dynamisk modell, <strong>ikke</strong> en implementering av Clark–Ryan–Weyand (2017), som rekonstruerer kraftkurver med målte inngangsvariabler. Ingen skadegrense eller metabolsk energikostnad beregnes.</p>
+<h2>Parametere</h2>
+<div class="controls">
+<label>Totalkroppsmasse <strong id="v-mass"></strong><input data-key="mass" min="50" max="100" step="1" type="range"></label>
+<label>Distal masseandel <strong id="v-distalFraction"></strong><input data-key="distalFraction" min="0.02" max="0.16" step="0.01" type="range"></label>
+<label>Fotens vertikale landingsfart <strong id="v-initialFootVelocity"></strong><input data-key="initialFootVelocity" min="-4" max="-0.5" step="0.1" type="range"></label>
+<label>Øvre masses vertikale landingsfart <strong id="v-initialBodyVelocity"></strong><input data-key="initialBodyVelocity" min="-1.6" max="-0.2" step="0.1" type="range"></label>
+<label>Intern beinstivhet <strong id="v-legStiffness"></strong><input data-key="legStiffness" min="8000" max="40000" step="1000" type="range"></label>
+<label>Kontaktstivhet mot bakken <strong id="v-groundStiffness"></strong><input data-key="groundStiffness" min="80000" max="400000" step="10000" type="range"></label>
+<label>Intern demping <strong id="v-legDamping"></strong><input data-key="legDamping" min="0" max="600" step="25" type="range"></label>
+<label>Kontaktdemping <strong id="v-groundDamping"></strong><input data-key="groundDamping" min="0" max="2200" step="100" type="range"></label>
+</div>
+<h2>Resultater i dette landingsvinduet</h2>
+<div class="tiles">
+<div class="tile"><small>Topp bakkekraft</small><b id="peak">–</b></div>
+<div class="tile"><small>Tid fra første kontakt til topp</small><b id="peak-time">–</b></div>
+<div class="tile"><small>Vertikal bakkekraftsimpuls</small><b id="impulse">–</b></div>
+<div class="tile"><small>Dissipert energi</small><b id="loss">–</b></div>
+</div>
+<div class="twocol">
+<div>
+<h2>Vertikal bakkekraft – to masser mot kontrollmodell</h2>
+<div class="chart"><svg id="force-chart" viewBox="0 0 640 340" role="img" aria-label="Vertikal bakkekraft i to-masse- og en-masse-modell som funksjon av tid"></svg></div>
+<p class="legend"><span><i class="line-a"></i>Tomassemodell</span><span><i class="line-b"></i>Énmassekontroll (vertikal fjær)</span></p>
+<p class="hint">Énmassekontrollen er en separat 1D-modell med samme totalkroppsmasse og internstivhet. Den er ikke identisk med den publiserte 2D-fjærbeinmodellen.</p>
+</div>
+<div>
+<h2>Bevegelse og bakkekontakt</h2>
+<div class="chart"><svg id="scene" viewBox="0 0 360 340" role="img" aria-label="De to massene over en horisontal bakke, og den interne fjæren"></svg></div>
+<label>Tidspunkt <strong id="v-time"></strong><input id="time" min="0" max="300" value="24" step="1" type="range"></label>
+<button id="play" type="button">Spill landingen</button>
+<p class="status" id="instant">–</p>
+</div>
+</div>
+<p class="status" id="checks"></p>
+<h2>Bevegelseslikningene</h2>
+<p>La <em>m₁</em> være distal masse og <em>m₂</em> resten av kroppen. Positiv vertikal retning er oppover. Fjæren mellom massene kan bare skyve når den er komprimert; bakken kan bare skyve oppover ved inntrengning i kontaktfjæren. Dermed gjelder</p>
+<p><strong>m₁ z̈₁ = F<sub>bakke</sub> − F<sub>bein</sub> − m₁g</strong><br>
+<strong>m₂ z̈₂ = F<sub>bein</sub> − m₂g</strong>.</p>
+<p><strong>F<sub>bakke</sub> = k<sub>g</sub>P + c<sub>g</sub>[−v₁]₊ P/(P+δ)</strong><br>
+<strong>F<sub>bein</sub> = k<sub>l</sub>C + c<sub>l</sub>[v₁−v₂]₊ C/(C+δ)</strong>.</p>
+<p class="hint">Her betyr [x]₊ = max(0,x), P=[−z₁]₊, C=[l₀−(z₂−z₁)]₊ og δ=0,005 m er en numerisk overgangslengde som sikrer kontinuerlig aktivering av dempingen ved første kompresjon. Kontaktfjærens inntrengningsdybde er <em>ikke</em> fysisk synking av foten i underlaget. Dempingen er dissipativ og aktiv bare ved lukking/kompresjon. Resultatene beregnes med RK4 og 0,1 ms tidssteg.</p>
+<h2>Hva må demonstreres før denne modellen kan brukes som løpemodell?</h2>
+<ol>
+<li>At masse- og kraftbalansen samt energibokføringen holder, også når tidssteget halveres.</li>
+<li>At ulike forhold mellom distal masse, fotens innkommende hastighet og kontaktstivhet gir etterprøvbare forskjeller i kraftens tidlige del.</li>
+<li>At en videre 2D-versjon med horisontal bevegelse, fotisett og fraspark kan beskrive en hel, periodisk løpesyklus, ikke bare den første landingen.</li>
+<li>At full kraftkurve, toppens timing, kontakttid og impuls stemmer mot ubrukte måledata; ellers skal den ikke tolkes som validert.</li>
+</ol>
+<p class="hint">Faglig sammenligning: <a href="https://doi.org/10.1242/jeb.138057">Clark, Ryan &amp; Weyand (2017)</a> og <a href="https://doi.org/10.1152/japplphysiol.00174.2014">Clark &amp; Weyand (2014)</a>. Som parameterreferanse brukte Clark mfl. 8 % distal masse, men denne versjonens fjær-/demperverdier er illustrative, ikke estimert fra forsøksdata.</p>
+</main>
+<script type="module">
+import {defaults,simulateTwo,simulateOne,summarize} from './model.mjs';
+let p=defaults(),r=null,one=null,current=24,playing=false,frame=0,lastFrame=0;
+const $=id=>document.getElementById(id),fmt=(v,n=1)=>Number(v).toLocaleString('nb-NO',{minimumFractionDigits:n,maximumFractionDigits:n});
+const labels={mass:v=>fmt(v,0)+' kg',distalFraction:v=>fmt(v*100,0)+' %',initialFootVelocity:v=>fmt(-v,1)+' m/s ned',initialBodyVelocity:v=>fmt(-v,1)+' m/s ned',legStiffness:v=>fmt(v/1000,0)+' kN/m',groundStiffness:v=>fmt(v/1000,0)+' kN/m',legDamping:v=>fmt(v,0)+' N·s/m',groundDamping:v=>fmt(v,0)+' N·s/m'};
+document.querySelectorAll('input[data-key]').forEach(el=>{const k=el.dataset.key;el.value=p[k];el.addEventListener('input',()=>{p[k]=+el.value;update();});});
+function svgPath(arr,ymax,rect){const [left,top,width,height]=rect;return arr.map((r,i)=>(i?'L':'M')+(left+width*r.t/p.duration).toFixed(2)+','+(top+height*(1-r.force/(p.mass*p.g)/ymax)).toFixed(2)).join(' ');}
+function drawChart(){
+ const a=r.rows,b=one.rows,ymax=Math.max(3.4,...a.map(x=>x.force/(p.mass*p.g)),...b.map(x=>x.force/(p.mass*p.g)))*1.10;
+ const coords=[51,18,566,272],pieces=[];for(let i=0;i<=5;i++){let y=18+272*(1-i/5);pieces.push('<line x1="51" x2="617" y1="'+y+'" y2="'+y+'" stroke="currentColor" opacity=".10"/><text x="42" y="'+(y+4)+'" text-anchor="end" font-size="12" fill="currentColor">'+fmt(ymax*i/5,1)+'</text>');}
+ for(let i=0;i<=6;i++){const x=51+566*i/6;pieces.push('<text x="'+x+'" y="315" text-anchor="middle" font-size="12" fill="currentColor">'+fmt(p.duration*1000*i/6,0)+'</text>');}
+ pieces.push('<text x="54" y="12" font-size="12" fill="currentColor">BW</text><text x="617" y="331" text-anchor="end" font-size="12" fill="currentColor">ms</text>');
+ const thin=arr=>arr.filter((_,i)=>i%3===0||i===arr.length-1);
+ pieces.push('<path d="'+svgPath(thin(b),ymax,coords)+'" fill="none" stroke="var(--b)" stroke-width="2.2" stroke-dasharray="7 5"/>');
+ pieces.push('<path d="'+svgPath(thin(a),ymax,coords)+'" fill="none" stroke="var(--a)" stroke-width="2.5"/>');
+ $('force-chart').innerHTML=pieces.join('');
+}
+function drawScene(){
+const row=r.rows[Math.min(r.rows.length-1,Math.max(0,Math.round(current/p.dt/1000)))];
+const y=(z)=>Math.max(26,294-(z+0.04)*215),y1=y(row.zFoot),y2=y(row.zBody);
+const leg=Array.from({length:13},(_,i)=>{const q=i/12;return [180+(i>0&&i<12?(i%2?12:-12):0),y2+(y1-y2)*q]}).map((xy,i)=>(i?'L':'M')+xy.map(v=>v.toFixed(1)).join(',')).join(' ');
+const fbar=Math.min(50,row.force/(p.mass*p.g)*11);
+$('scene').innerHTML='<line x1="24" y1="303" x2="330" y2="303" stroke="currentColor" stroke-width="2"/><text x="24" y="322" font-size="12" fill="currentColor">Bak­ke</text>'+
+'<path d="'+leg+'" fill="none" stroke="var(--a)" stroke-width="2.4"/>'+
+'<circle cx="180" cy="'+y2+'" r="23" fill="var(--a)"/><text x="180" y="'+(y2+4)+'" font-size="12" fill="var(--bg)" text-anchor="middle">m₂</text>'+
+'<circle cx="180" cy="'+y1+'" r="12" fill="var(--b)"/><text x="204" y="'+(y1+4)+'" font-size="12" fill="currentColor">m₁</text>'+
+'<line x1="295" x2="295" y1="298" y2="'+(298-fbar)+'" stroke="var(--b)" stroke-width="7"/>'+
+'<text x="310" y="263" font-size="12" fill="currentColor">F</text>';
+$('v-time').textContent=current+' ms';$('instant').textContent='Bakkekraft '+fmt(row.force/(p.mass*p.g),2)+' BW · Intern kraft '+fmt(row.legForce/1000,2)+' kN';
+}
+function update(){playing=false;cancelAnimationFrame(frame);$('play').textContent='Spill landingen';r=simulateTwo(p);one=simulateOne(p);const s=summarize(r);Object.keys(labels).forEach(k=>$('v-'+k).textContent=labels[k](p[k]));$('peak').textContent=fmt(s.peakBW,2)+' BW';$('peak-time').textContent=fmt((s.timeOfPeak-s.contactTime)*1000,1)+' ms';$('impulse').textContent=fmt(s.groundImpulse,1)+' N·s';$('loss').textContent=fmt(s.dissipatedEnergy,1)+' J';$('checks').textContent='Kontroll: største energibalanseavvik '+fmt(s.energyDrift,4)+' J · impulsavvik '+fmt(s.impulseResidual,3)+' N·s. Verdiene er fra et enkelt landingsvindu, ikke en hel løpssyklus.';drawChart();drawScene();}
+$('time').addEventListener('input',e=>{current=+e.target.value;drawScene();});
+$('play').addEventListener('click',()=>{if(playing){playing=false;cancelAnimationFrame(frame);$('play').textContent='Spill landingen';return;}playing=true;$('play').textContent='Pause';let origin=performance.now(),offset=+current;const tick=now=>{if(!playing)return;current=Math.round((offset+(now-origin)*0.5)%301);$('time').value=current;drawScene();frame=requestAnimationFrame(tick);};frame=requestAnimationFrame(tick);});
+update();
+</script></body></html>
