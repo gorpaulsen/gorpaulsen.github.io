@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Muskelfysiologi forklart v36.2 | Rådatakontrollert PCSA-usikkerhet</title>
+<title>Muskelfysiologi forklart v37.3 | Rådatakontrollert PCSA-usikkerhet</title>
 <style>:root {
   color-scheme: light;
   --ink: #173142;
@@ -125,6 +125,18 @@ footer { font-size: .82rem; color: var(--muted); margin-top: 12px; }
 .lesson-nav { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
 .lesson-nav button { font-size: .91rem; }
 .lesson-nav button[aria-pressed="true"] { color: #09505b; background: var(--accent-light); border-color: #afcfd1; }
+/* v37: faner i knedelen */
+.knee-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; padding: 10px 0 0; border-top: 1px solid var(--border); }
+.knee-tabs button { font-size: .89rem; }
+.knee-tabs button[aria-selected="true"] { color: white; background: var(--accent); border-color: var(--accent); }
+/* v37: sammenfoldbare tilleggsdeler */
+.foldable.folded > :not(.fold-head), .foldable.folded > .fold-head:not(h3) > :not(h3) { display: none !important; }
+.fold-head .fold-toggle { font: inherit; color: inherit; background: none; border: none; padding: 0; text-align: left; white-space: normal; cursor: pointer; }
+.fold-head .fold-toggle:hover { color: var(--accent); background: none; }
+.fold-toggle::before { content: "▸"; display: inline-block; width: 1.1em; color: var(--accent); }
+.fold-toggle[aria-expanded="true"]::before { content: "▾"; }
+.fold-hint { font-weight: 400; font-size: .82rem; color: var(--muted); margin-left: .4em; }
+.foldable:not(.folded) .fold-hint { display: none; }
 .inset { border-top: 1px solid #d9e4e8; margin-top: 10px; padding-top: 12px; }
 .inset h3 { font-size: .96rem; margin-bottom: 8px; }
 .length-row { display: grid; grid-template-columns: minmax(90px, 126px) minmax(0, 1fr); align-items: center; gap: 8px; margin: 5px 0; font-size: .83rem; }
@@ -491,12 +503,16 @@ html.projector .hs-dag-label { font-size: 14px; }
     <button id="lesson-elbow" type="button" aria-pressed="true">Albue · grunnmodell</button>
     <button id="lesson-tendon" type="button" aria-pressed="false">Albue · sene</button>
     <button id="lesson-knee" type="button" aria-pressed="false">Kne · muskelutveksling</button>
-    <a id="strength-link" class="strength-link" href="#styrkefaktorer" hidden>Styrkefaktorer ↓</a>
-    <a id="fv-link" class="strength-link" href="#kraft-hastighet" hidden>Kraft–hastighetstest ↓</a>
-    <a id="hs-link" class="strength-link" href="#hypertrofi-styrke" hidden>Hypertrofi og styrke ↓</a>
-    <a id="ident-link" class="strength-link" href="#identifiserbarhet" hidden>Identifiserbarhet ↓</a>
   </nav>
-  <div class="transport">
+  <div id="knee-tabs" class="knee-tabs" role="tablist" aria-label="Deler av knemodellen" hidden>
+    <button id="knee-tab-motion" type="button" role="tab" aria-controls="transport bevegelse" aria-selected="true">Bevegelse</button>
+    <button id="strength-link" type="button" role="tab" aria-controls="styrkefaktorer" aria-selected="false" tabindex="-1">Styrkefaktorer</button>
+    <button id="fv-link" type="button" role="tab" aria-controls="kraft-hastighet" aria-selected="false" tabindex="-1">Kraft–hastighetstest</button>
+    <button id="hs-link" type="button" role="tab" aria-controls="hypertrofi-styrke" aria-selected="false" tabindex="-1">Hypertrofi og styrke</button>
+    <button id="ident-link" type="button" role="tab" aria-controls="identifiserbarhet" aria-selected="false" tabindex="-1">Identifiserbarhet</button>
+    <button id="details-link" type="button" role="tab" aria-controls="extension-details" aria-selected="false" tabindex="-1" hidden>Modell og parametere</button>
+  </div>
+  <div class="transport" id="transport">
     <div class="playback-controls">
       <button id="play" type="button" class="primary">Spill av</button>
       <div class="playback-speed">
@@ -518,7 +534,7 @@ html.projector .hs-dag-label { font-size: 14px; }
       <button id="down" type="button">90° ned</button>
     </div>
   </div>
-  <div class="stage">
+  <div class="stage" id="bevegelse">
     <section class="panel arm">
       <div class="panel-heading"><h2 id="motion-title">Albuebevegelse</h2><span id="phase"></span></div>
       <section class="load-controls" id="load-controls" aria-label="Motstand og kraftbehov">
@@ -745,6 +761,15 @@ html.projector .hs-dag-label { font-size: 14px; }
           </div>
           <p id="strength-diagram-note">Den vinkelrette avstanden til kraftlinjen er momentarmen. Indre arm er vist forstørret. Leggen følger knevinkelen, der 0° er strakt kne. Begge momentarmene er de samme ved alle vinkler, som i modellen, og ytre kraft står vinkelrett på leggen, som mot puten i et dynamometer.</p>
         </figure>
+        <section class="strength-metric" aria-labelledby="strength-machine-heading">
+          <h3 id="strength-machine-heading">Kneekstensjonsapparat: ekvivalent last</h3>
+          <label for="strength-loadArmCm">Effektiv lastarm (cm)</label>
+          <input id="strength-loadArmCm" type="text" inputmode="decimal" autocomplete="off" value="25" aria-describedby="strength-loadArm-msg" style="width:6rem">
+          <span id="strength-loadArm-msg" class="strength-note" aria-live="polite"></span>
+          <p>Referanse: <strong id="strength-machine-ref">–</strong><br>Ditt valg: <strong id="strength-machine-mass">–</strong> · lastkraft <strong id="strength-machine-force">–</strong></p>
+          <p id="strength-machine-mode" class="strength-note"></p>
+          <p class="strength-note">Massen er beregnet fra positivt netto knemoment / (effektiv lastarm × 9,81 m/s²). Sammenfallende kne- og apparatakse, uendret utveksling, ingen friksjon eller apparattreghet; tyngdemoment fra legg/fot er korrigert bort. En kam eller trinse kan endre den effektive lastarmen med vinkelen. Putearmen bestemmer putekraften, ikke lastmassen.</p>
+        </section>
         <p id="strength-flexion" class="strength-note" hidden>Netto knemoment virker i fleksjonsretningen. Ytre strekkraft er derfor 0 N.</p>
       </div>
     </div>
@@ -805,7 +830,7 @@ html.projector .hs-dag-label { font-size: 14px; }
         <fieldset class="fv-fieldset">
           <legend>Eksentrisk aktivering</legend>
           <div id="fv-activation-control"></div>
-          <p class="fv-hint">Hule punkter viser modellens kapasitet ved full aktivering. Fylte eksentriske punkter viser valgt viljestyrt aktivering.</p>
+          <p class="fv-hint">Hule punkter viser modellens kapasitet ved full aktivering. Fylte eksentriske punkter viser valgt, illustrativ aktivering (82 % som startscenario, ikke et målt universelt nivå). Sammenlign med 100 %. Hos Westing mfl. (1990) lå viljestyrt eksentrisk moment nær isometrisk ved 60, 180 og 360°/s, og stimulering oppå viljestyrt innsats økte det med 21–24 %, omtrent likt ved alle tre hastighetene. 82 % svarer omtrent til forholdet mellom viljestyrt og stimuleringsforsterket moment, dersom stimuleringen antas å gi full aktivering. Modellens eksentriske kapasitet øker derimot med forlengelseshastigheten (ved 60°: 1,10, 1,25 og 1,40 × isometrisk ved −60, −180 og −360°/s). Modellen er ikke kalibrert til disse dataene.</p>
         </fieldset>
         <fieldset class="fv-fieldset">
           <legend>Modellparametere</legend>
@@ -1089,7 +1114,7 @@ html.projector .hs-dag-label { font-size: 14px; }
           <p id="hs-dist-desc" class="fv-legend-text"></p>
           <div class="fv-key">
             <span class="hs-key-ns">Ikke signifikant (p ≥ 0,05)</span>
-            <span class="hs-key-expected">Forventet korrelasjon</span>
+            <span class="hs-key-expected">Populasjonskorrelasjon</span>
             <span class="hs-key-this">Denne studien</span>
           </div>
         </figure>
@@ -1112,7 +1137,7 @@ html.projector .hs-dag-label { font-size: 14px; }
         </article>
         <article class="fv-task">
           <h4>2. Perfekte målinger</h4>
-          <p class="fv-task-question">Kortet «Forventet korrelasjon» viser også korrelasjonen uten målefeil. Hvor sterk er den, og hvorfor blir den ikke 1? Sett deretter begge målefeilene til 0 med glidebryterne. Hvorfor blir svaret et annet?</p>
+          <p class="fv-task-question">Kortet «Populasjonskorrelasjon» viser også korrelasjonen uten målefeil. Hvor sterk er den, og hvorfor blir den ikke 1? Sett deretter begge målefeilene til 0 med glidebryterne. Hvorfor blir svaret et annet?</p>
           <details class="hs-answer"><summary>Fasit</summary><p>Uten målefeil er r = 0,62. Alt annet som endrer styrken, varierer fortsatt mellom personene og står i modellen for 61 % av den sanne spredningen i styrkeendring. Selv perfekte målinger kan ikke skille veksten fra resten. Med glidebryterne på 0 blir r = 0,67, fordi hele den målte spredningen da tolkes som ekte. Det er en annen gruppe personer, ikke den samme gruppen målt uten feil.</p></details>
         </article>
         <article class="fv-task">
@@ -1123,7 +1148,7 @@ html.projector .hs-dag-label { font-size: 14px; }
         <article class="fv-task">
           <h4>4. Hvor mange deltakere trengs?</h4>
           <p class="fv-task-question">Hvor mange deltakere trengs for å finne sammenhengen i 80 % av studiene? Hva om veksten bare bidrar med et halvt prosentpoeng styrkeendring per prosentpoeng (β = 0,5)?</p>
-          <details class="hs-answer"><summary>Fasit</summary><p>28 deltakere med β = 1. Med β = 0,5 faller forventet korrelasjon til 0,25, og det trengs 119 deltakere. Med 20 deltakere blir korrelasjonen da ikke signifikant i 81 % av studiene. En vanlig korrelasjonsstudie kan knapt skille β = 0,5 fra β = 1.</p></details>
+          <details class="hs-answer"><summary>Fasit</summary><p>28 deltakere med β = 1. Med β = 0,5 faller populasjonskorrelasjonen til 0,25, og det trengs 119 deltakere. Med 20 deltakere blir korrelasjonen da ikke signifikant i 81 % av studiene. En vanlig korrelasjonsstudie kan knapt skille β = 0,5 fra β = 1.</p></details>
         </article>
         <article class="fv-task hs-master-only">
           <h4>5. Sammenheng uten årsak</h4>
@@ -1143,10 +1168,10 @@ html.projector .hs-dag-label { font-size: 14px; }
         <li>Alle størrelser er normalfordelte. Prosentendringene legges sammen som om de var logaritmiske endringer, og gjennomsnittet i kontrollgruppen er ikke trukket fra. β er den samme for alle. Ulik β mellom personer havner i <code>n</code>.</li>
         <li>Spredningen i den sanne endringen i det målte tverrsnittet er <code>σ<sub>x</sub><sup>2</sup> = SD<sub>H</sub><sup>2</sup> − s<sub>H</sub><sup>2</sup></code>, der <code>SD<sub>H</sub></code> er standardavviket i treningsgruppen og <code>s<sub>H</sub></code> i kontrollgruppen. Det er samme regnestykke som standardavviket for individuell respons hos Räntilä mfl. (2025). Det forutsetter at variasjonen i kontrollgruppen er like stor hos dem som trener og uavhengig av responsen. Begge standardavvikene er usikre estimater, så <code>σ<sub>x</sub></code> er også usikker.</li>
         <li>Spredningen i andre tilpasninger <code>σ<sub>n</sub></code> er det som gir riktig total spredning i styrkeendring: <code>SD<sub>S</sub><sup>2</sup> = β<sup>2</sup>σ<sub>x</sub><sup>2</sup> + σ<sub>n</sub><sup>2</sup> + 2βρσ<sub>x</sub>σ<sub>n</sub> + s<sub>S</sub><sup>2</sup></code>, der <code>ρ</code> er samvariasjonen mellom <code>x</code> og <code>n</code>. <code>σ<sub>n</sub></code> er altså det som blir igjen når β og ρ er valgt. Andelene i figuren om spredningen følger derfor av β og ρ og er ikke målte bidrag.</li>
-        <li>Forventet korrelasjon er <code>r = (βσ<sub>x</sub><sup>2</sup> + ρσ<sub>x</sub>σ<sub>n</sub>) / (SD<sub>H</sub> · SD<sub>S</sub>)</code>. Uten målefeil deles det på <code>σ<sub>x</sub></code> og <code>√(SD<sub>S</sub><sup>2</sup> − s<sub>S</sub><sup>2</sup>)</code> i stedet.</li>
+        <li>Populasjonskorrelasjon er <code>r = (βσ<sub>x</sub><sup>2</sup> + ρσ<sub>x</sub>σ<sub>n</sub>) / (SD<sub>H</sub> · SD<sub>S</sub>)</code>. Uten målefeil deles det på <code>σ<sub>x</sub></code> og <code>√(SD<sub>S</sub><sup>2</sup> − s<sub>S</sub><sup>2</sup>)</code> i stedet.</li>
         <li>Andelene med ulikt fortegn regnes fra den todimensjonale normalfordelingen. Andelen som havner over medianen på det ene målet og under på det andre, er <code>1/2 − arcsin(r)/π</code>.</li>
-        <li>En korrelasjon er signifikant når p &lt; 0,05 (tosidig) i t-testen for Pearsons r. Den samme grensen brukes for den simulerte studien, det skraverte feltet og sannsynligheten for at en studie ikke finner en signifikant korrelasjon. Fordelingen av korrelasjonen i mange studier er den eksakte utvalgsfordelingen av Pearsons r for n uavhengige par fra en todimensjonal normalfordeling (<a href="https://doi.org/10.2307/2331838">Fisher 1915</a>; formen med hypergeometrisk funksjon fra <a href="https://doi.org/10.1111/j.2517-6161.1953.tb00135.x">Hotelling 1953</a>). Kurven og sannsynlighetene bruker den samme tettheten. Sannsynlighetene regnes ved numerisk integrasjon. I kontrollene, med 4–1 000 000 deltakere og sann korrelasjon 0–0,9999999, avvek de under 10<sup>−8</sup> fra to uavhengige beregninger. Det er ikke vist som en generell feilgrense. Kurven tegnes med ekstra punkter rundt toppen, så også smale fordelinger nær 1 kommer med. Er forventet korrelasjon 1, gir alle studier r = 1, og grafen viser det som en strek ved r = 1. Til og med v29 ble fordelingen tilnærmet med Fishers z-transformasjon. Den undervurderer styrken, mest ved små og middels utvalg: i oppgave 1 ga den 37 % ikke-signifikante studier og 29 deltakere for 80 %, mot 34 % og 28 med den eksakte fordelingen. Antall deltakere for 80 % er det minste antallet der minst 80 % av studiene blir signifikante.</li>
-        <li>Årsaksdiagrammet bygger på at kovariansen mellom målingene er <code>βσ<sub>x</sub><sup>2</sup> + ρσ<sub>x</sub>σ<sub>n</sub></code>. Forventet korrelasjon deles derfor i en del gjennom veksten, <code>βσ<sub>x</sub><sup>2</sup> / (SD<sub>H</sub> · SD<sub>S</sub>)</code>, og en del gjennom samvariasjonen, <code>ρσ<sub>x</sub>σ<sub>n</sub> / (SD<sub>H</sub> · SD<sub>S</sub>)</code>. Målefeil og andre tilpasninger som ikke samvarierer med veksten, bidrar bare til spredningen. Samvariasjonen er tegnet som felles årsaker. Om den i stedet kommer av at veksten selv endrer andre tilpasninger, kan modellen ikke skille.</li>
+        <li>En korrelasjon er signifikant når p &lt; 0,05 (tosidig) i t-testen for Pearsons r. Den samme grensen brukes for den simulerte studien, det skraverte feltet og sannsynligheten for at en studie ikke finner en signifikant korrelasjon. Fordelingen av korrelasjonen i mange studier er den eksakte utvalgsfordelingen av Pearsons r for n uavhengige par fra en todimensjonal normalfordeling (<a href="https://doi.org/10.2307/2331838">Fisher 1915</a>; formen med hypergeometrisk funksjon fra <a href="https://doi.org/10.1111/j.2517-6161.1953.tb00135.x">Hotelling 1953</a>). Kurven og sannsynlighetene bruker den samme tettheten. Sannsynlighetene regnes ved numerisk integrasjon. I kontrollene, med 4–1 000 000 deltakere og sann korrelasjon 0–0,9999999, avvek de under 10<sup>−8</sup> fra to uavhengige beregninger. Det er ikke vist som en generell feilgrense. Kurven tegnes med ekstra punkter rundt toppen, så også smale fordelinger nær 1 kommer med. Er populasjonskorrelasjonen 1, gir alle studier r = 1, og grafen viser det som en strek ved r = 1. Til og med v29 ble fordelingen tilnærmet med Fishers z-transformasjon. Den undervurderer styrken, mest ved små og middels utvalg: i oppgave 1 ga den 37 % ikke-signifikante studier og 29 deltakere for 80 %, mot 34 % og 28 med den eksakte fordelingen. Antall deltakere for 80 % er det minste antallet der minst 80 % av studiene blir signifikante.</li>
+        <li>Årsaksdiagrammet bygger på at kovariansen mellom målingene er <code>βσ<sub>x</sub><sup>2</sup> + ρσ<sub>x</sub>σ<sub>n</sub></code>. Populasjonskorrelasjon deles derfor i en del gjennom veksten, <code>βσ<sub>x</sub><sup>2</sup> / (SD<sub>H</sub> · SD<sub>S</sub>)</code>, og en del gjennom samvariasjonen, <code>ρσ<sub>x</sub>σ<sub>n</sub> / (SD<sub>H</sub> · SD<sub>S</sub>)</code>. Målefeil og andre tilpasninger som ikke samvarierer med veksten, bidrar bare til spredningen. Samvariasjonen er tegnet som felles årsaker. Om den i stedet kommer av at veksten selv endrer andre tilpasninger, kan modellen ikke skille.</li>
         <li>Den simulerte studien trekker deltakere fra den samme fordelingen. p-verdien er fra t-testen for Pearsons korrelasjon. «Ny studie» trekker nye deltakere. Når du endrer en glidebryter, beholdes deltakerne, så du ser hvordan de samme personene flytter seg.</li>
       </ol>
       <p><strong>Räntilä mfl. (2025):</strong> 10 uker styrketrening hos utrente: 20 trente og 27 kontroller. Bare 19 av de trente har tverrsnittsmålinger, så det finnes 19 komplette målepar. Standardavvikene for tverrsnitt bygger på 19 og for 1RM på 20 trente. Simuleringen starter med 20 deltakere, men det er et valg i panelet, ikke antallet målepar. Tverrsnittet av vastus lateralis ble målt med ultralyd, og styrken som 1RM i beinpress delt på kroppsmasse ved start. Vastus lateralis økte 16,0 ± 8,4 % hos de som trente og 1,5 ± 4,1 % i kontrollgruppen. 1RM økte 21,7 ± 12,6 % og 2,9 ± 4,5 %. Studien rapporterer ikke korrelasjonen mellom endring i tverrsnitt og i styrke, så modellens forventning kan ikke sjekkes mot den. Variansen i individuell respons i tverrsnitt (SD<sub>IR</sub><sup>2</sup>) var 5,11 cm<sup>4</sup> med 95 %-konfidensintervall 0,95–9,28 cm<sup>4</sup>. Den er regnet fra absolutte endringer i cm<sup>2</sup> (SD<sub>IR</sub> = 2,26 cm<sup>2</sup>). Panelet bruker prosentendringer, så intervallet er regnet på nytt fra prosenttallene med standardfeilen <code>√(2(SD<sub>E</sub><sup>4</sup>/(n<sub>E</sub> − 1) + SD<sub>K</sub><sup>4</sup>/(n<sub>K</sub> − 1)))</code>. Med 19 trente og 27 kontroller gjenskaper den standardfeilen i artikkelen (2,126 mot 2,125). Prosenttallene gir 53,7 %<sup>2</sup> med 95 %-konfidensintervall 6,7–100,8 %<sup>2</sup>. Nedre grense svarer til 8,0 % målefeil og variasjon for tverrsnitt og r ≈ 0,06. Øvre grense er større enn hele variansen i treningsgruppen og svarer til ingen målefeil for tverrsnitt og r ≈ 0,67. Intervallet tar bare med usikkerheten i tverrsnitt, ikke i styrke. <a href="https://doi.org/10.1002/ejsc.70095">Räntilä mfl. (2025)</a></p>
@@ -1233,7 +1258,7 @@ html.projector .hs-dag-label { font-size: 14px; }
           <dt>Modellert aktiveringskrav</dt>
           <dd><code>a<sub>krav</sub> = F<sub>krav</sub>/C(t)</code>, med <code>C(t) = F<sub>0</sub> · f<sub>L</sub> · f<sub>V</sub> · cos α</code> for modellmuskelen med fast tykkelse. Referansekraften gjelder hele modellmuskelen. Aktiv kraftkapasitet ved full aktivering er en modellstørrelse. Ved maksimale eksentriske forsøk oppnår utrente ofte lavere viljestyrt aktivering. <a href="https://doi.org/10.1007/s10439-016-1591-9">De Groote mfl. (2016)</a> · <a href="https://doi.org/10.1242/jeb.123158">Duchateau og Enoka (2016)</a></dd>
           <dt>Isometrisk momentkapasitet</dt>
-          <dd><code>M<sub>iso</sub> = r · F<sub>0</sub> · f<sub>L</sub> · cos α</code> ved full aktivering. Referansekraften <code>F<sub>0</sub></code> er en illustrativ modellverdi som setter skalaen for momentkapasiteten. Fascikkellengde og pennasjon varierer med knevinkelen. Målt maksimalt viljestyrt moment avhenger også av testvinkelen. Modellen bruker en fast effektiv momentarm på 3,5 cm. Regnet i forhold til momentet ved 60° gir den 0,75 ved 30° og 0,93 ved 90°. De Ruiter mfl. fant maksimal momentkapasitet som tilsvarer 0,60 og 0,78. Referanseverdiene til Šarabon mfl. viser samme mønster, med lavest moment i strakt knevinkel. I Rajagopal-modellen faller vastusmusklenes effektive momentarm fra om lag 4,4 cm ved 20° til 2,0 cm ved 90°. Med stiv sene og én modellmuskel stemte den vinkelavhengige armen dårligere med disse målingene, så den faste armen er beholdt. <a href="https://doi.org/10.3389/fphys.2021.767941">Šarabon mfl. (2021)</a> · <a href="https://www.physoc.org/abstracts/rate-of-torque-development-at-the-start-of-maximal-voluntary-and-electrically-induced-isometric-contractions-at-different-knee-angles/">de Ruiter mfl. (2004, konferanseabstrakt)</a> · <a href="https://github.com/opensim-org/opensim-models/blob/master/Models/Rajagopal/Rajagopal2016.osim">Rajagopal-modellen</a></dd>
+          <dd><code>M<sub>iso</sub> = r · F<sub>0</sub> · f<sub>L</sub> · cos α</code> ved full aktivering. Referansekraften <code>F<sub>0</sub></code> er en illustrativ modellverdi som setter skalaen for momentkapasiteten. Fascikkellengde og pennasjon varierer med knevinkelen. Målt maksimalt viljestyrt moment avhenger også av testvinkelen. Modellen bruker en fast effektiv momentarm på 3,5 cm. Regnet i forhold til momentet ved 60° gir den 0,75 ved 30° og 0,93 ved 90°. De Ruiter mfl. (2004, tabell 1) fant maksimal momentkapasitet (MTC) som tilsvarer 0,60 ved 30° og 0,76 ved 90° (konferanseabstraktet: 0,60 og 0,78). Modellen overvurderer altså momentkapasiteten ved begge vinklene, regnet i forhold til 60°. Referanseverdiene til Šarabon mfl. viser samme mønster, med lavest moment i strakt knevinkel. I Rajagopal-modellen faller vastusmusklenes momentarm, regnet som −dL/dθ med patellabevegelsen og vektet med maksimal isometrisk kraft, fra om lag 4,4 cm ved 20° til 2,0 cm ved 90° (0° er strakt kne). Verdiene er gjenskapt uavhengig fra modellfilen (kontroll 26.11.2026). Med stiv sene og én modellmuskel stemte den vinkelavhengige armen dårligere med disse målingene, så den faste armen er beholdt. <a href="https://doi.org/10.3389/fphys.2021.767941">Šarabon mfl. (2021)</a> · <a href="https://www.physoc.org/abstracts/rate-of-torque-development-at-the-start-of-maximal-voluntary-and-electrically-induced-isometric-contractions-at-different-knee-angles/">de Ruiter mfl. (2004, konferanseabstrakt)</a> · <a href="https://doi.org/10.1152/japplphysiol.00230.2004">de Ruiter mfl. (2004, full artikkel)</a> · <a href="https://github.com/opensim-org/opensim-models/blob/master/Models/Rajagopal/Rajagopal2016.osim">Rajagopal-modellen</a></dd>
           <dt>Dynamisk aktivering</dt>
           <dd><code>da/dt = (u(t − Δ) − a)/τ</code>. Modellen estimerer eksitasjonen <code>u</code> fra kraftbehovet langs den foreskrevne banen og begrenser den til 0–100 %. <code>Δ</code> er en justerbar illustrasjonsverdi før aktiveringen. Tidskonstanten <code>τ</code> styrer hvor raskt aktiveringen stiger eller faller. <a href="https://opensimconfluence.atlassian.net/wiki/spaces/OpenSim/pages/53090590">OpenSim om aktiveringsdynamikk</a></dd>
           <dt>Utviklet knestrekkerkraft</dt>
@@ -1258,7 +1283,7 @@ html.projector .hs-dag-label { font-size: 14px; }
   </section>
 <section id="identifiserbarhet" class="panel strength-panel ident-panel" aria-labelledby="ident-heading" hidden>
   <div class="panel-heading">
-    <div><h2 id="ident-heading">Parameterkompensasjon og identifiserbarhet (v36.2)</h2>
+    <div><h2 id="ident-heading">Parameterkompensasjon og identifiserbarhet (v37.3)</h2>
       <p>To ulike fysiologiske tilstander kan gi samme netto leddmoment. Sammenlign ett målepunkt, flere vinkler, flere hastigheter og usikre anatomiske målinger.</p></div>
     <button id="ident-reset" type="button">Nullstill eksemplet</button>
   </div>
@@ -1308,8 +1333,8 @@ html.projector .hs-dag-label { font-size: 14px; }
           <label>Dagvariasjon (SD, N·m)<input id="ident-daySD" type="number" min="0" max="20" step="1" value="4"></label>
           <label>Kalibreringsusikkerhet (SD, N·m)<input id="ident-biasSD" type="number" min="0" max="20" step="1" value="3"></label>
           <label>Faktisk systematisk feil (N·m)<input id="ident-trueBias" type="number" min="-20" max="20" step="1" value="0"></label>
-          <label>Repetisjoner per test<input id="ident-nRep" type="number" min="1" max="10" step="1" value="3"></label>
-          <label>Uavhengige testdager<input id="ident-nDay" type="number" min="1" max="5" step="1" value="1"></label>
+          <label>Repetisjoner per test (1–10)<input id="ident-nRep" type="number" min="1" max="10" step="1" value="3"></label>
+          <label>Uavhengige testdager (1–5)<input id="ident-nDay" type="number" min="1" max="5" step="1" value="1"></label>
         </div>
         <div class="ident-actions"><button id="ident-resample" type="button">Trekk nye målefeil</button><button id="ident-export" type="button">Eksporter simulerte data (CSV)</button></div>
       </fieldset>
@@ -1348,7 +1373,7 @@ html.projector .hs-dag-label { font-size: 14px; }
       </fieldset>
 
       <section id="v36-empirical" aria-labelledby="v36-heading">
-        <h3 id="v36-heading">Empiriske data og observasjonsmodell (v36.2)</h3>
+        <h3 id="v36-heading">Empiriske data og observasjonsmodell (v37.3)</h3>
         <p class="v36-lead">Tre uavhengige utvalg: Hug (quadriceps, n=21), Crouzier (triceps surae, n=20) og CARE (kne/albue, n=16). Her vises <strong>observerte metodedifferanser</strong> uten å utlede fysiologisk spesifikk kraft. Mekanikk og de illustrativt valgte momentfeilene ovenfor er uendret.</p>
         <div class="v36-controls">
           <label for="v36-source">Vis kilde og estimand: <select id="v36-source"><option value="hug">Hug 2015 · anatomi og VA</option><option value="crouzier">Crouzier 2018 · PCSA og EMG</option><option value="care">CARE 2025 · metodefølsomhet</option></select></label>
@@ -1357,9 +1382,9 @@ html.projector .hs-dag-label { font-size: 14px; }
         <div class="v36-scroll"><table aria-label="Kildespesifikke, observerte estimater"><thead id="v36-table-head"></thead><tbody id="v36-table-body"></tbody></table></div>
         <p id="v36-source-warning" class="v36-warning"></p>
         <h3>Avledet PCSA – illustrasjon av korrelert observatørvariasjon</h3>
-        <p class="v36-note">Fra Hugs individuelle operatørpar kan vi estimere korrelasjonen mellom volum- og fascikkeldifferanser: VL <strong>r = −0,18</strong> (95 % KI −0,58 til +0,29; n=20), VM <strong>r = +0,16</strong> (KI −0,29 til +0,56; n=21). Operatør 1 er ulike personer for volum (DB) og fascikkellengde (FH), mens operatør 2 (CG) målte begge (Dryad-README; Hug mfl. 2015). Korrelasjonene er derfor ikke <code>ρ</code> for én operatør. Med uavhengige og like store feil hos de tre personene svarer VL-verdien r = −0,18 til <code>ρ</code> ≈ −0,36 for CG og <code>ρ</code> ≈ 0 for kombinasjonen DB/FH. For <code>PCSA_proxy = V/ℓ_hvile</code> gir lineær feilforplantning <code>Var(ln PCSA) ≈ Var(ln V) + Var(ln ℓ) − 2·Cov(ln V,ln ℓ)</code>. ±1 er bare matematiske ekstremtilfeller, ikke empirisk støttede korrelasjoner.</p>
+        <p class="v36-note">Fra Hugs individuelle operatørpar kan vi estimere korrelasjonen mellom volum- og fascikkeldifferanser: VL <strong>r = −0,18</strong> (95 % KI −0,58 til +0,29; n=20), VM <strong>r = +0,16</strong> (KI −0,29 til +0,56; n=21). Operatør 1 er ulike personer for volum (DB) og fascikkellengde (FH), mens operatør 2 (CG) målte begge (Dryad-README; Hug mfl. 2015). Korrelasjonene er derfor ikke <code>ρ</code> for én operatør. Kun under antakelsen om uavhengighet mellom personer og like feilvarianser innen hver målemetode svarer VL-verdien r = −0,18 til <code>ρ</code> ≈ −0,36 for CG og <code>ρ</code> ≈ 0 for kombinasjonen DB/FH. For <code>PCSA_proxy = V/ℓ_hvile</code> gir lineær feilforplantning <code>Var(ln PCSA) ≈ Var(ln V) + Var(ln ℓ) − 2·Cov(ln V,ln ℓ)</code>. Startverdien 0 er en illustrativ ukorrelert feilmodell, ikke et estimat. ±1 er bare matematiske ekstremtilfeller, ikke empirisk støttede korrelasjoner.</p>
         <div class="v36-controls">
-          <label for="v36-rho">Feilkorrelasjon ρ (følsomhet; se teksten om r = −0,18): <input id="v36-rho" type="range" min="-1" max="1" step="0.01" value="-0.18"></label>
+          <label for="v36-rho">Feilkorrelasjon ρ (illustrativ følsomhet; start 0): <input id="v36-rho" type="range" min="-1" max="1" step="0.01" value="0"></label>
           <strong id="v36-rho-label">0,00</strong>
         </div>
         <div class="v36-grid">
@@ -2092,12 +2117,13 @@ function advancedLevel() {
 function updateLessonDetails() {
   const advanced = advancedLevel();
   id("model-details").hidden = !advanced || lesson !== "elbow";
-  id("extension-details").hidden = !advanced || lesson === "elbow";
+  id("extension-details").hidden = !advanced || lesson === "elbow" || (lesson === "knee" && kneeTab !== "modell");
   id("overlay-label").hidden = !advanced || lesson !== "elbow";
   id("tendon-math").hidden = lesson !== "tendon";
   id("knee-math").hidden = lesson !== "knee";
   id("kraft-hastighet").classList.toggle("fv-advanced", advanced);
   id("hypertrofi-styrke").classList.toggle("hs-advanced", advanced);
+  if (lesson === "knee") showKneeTab(kneeTab);
 }
 
 function setLevel(advanced) {
@@ -2225,6 +2251,22 @@ function drawStrengthMomentArms(reference, selected, activeFactor) {
   id("strength-figure").dataset.factor = activeFactor;
 }
 
+// v37.2: tallfelt som godtar desimalkomma og sier fra når verdien klippes eller ikke kan leses.
+// Et vanlig number-felt i Chrome forkaster kommaet, slik at «85,0» blir 850 og klippes uten varsel.
+function readDecimalField(input, min, max, message) {
+  const text = input.value.trim().replace(/\s/g, "").replace(",", ".");
+  const value = /^[+-]?(\d+(\.\d*)?|\.\d+)$/.test(text) ? Number(text) : NaN;
+  if (!Number.isFinite(value)) {
+    if (message) message.textContent = "Skriv et tall, for eksempel 85 eller 85,5.";
+    return null;
+  }
+  const used = Math.min(max, Math.max(min, value));
+  if (message) message.textContent = used !== value
+    ? "Utenfor området " + fmt(min, 1) + "–" + fmt(max, 1) + ". Bruker " + fmt(used, 1) + "." : "";
+  return used;
+}
+const decimalText = (value) => String(Number(value.toFixed(4))).replace(".", ",");
+
 function setupStrengthComparison() {
   // The worksheet supplies the specific force and external lever for this comparison.
   const referenceSpecificForce = 25;
@@ -2237,9 +2279,9 @@ function setupStrengthComparison() {
   const groups = {
     "strength-levers": [
       {key: "innerArmCm", label: "Indre momentarm", unit: "cm", digits: 2,
-        range: [50, 175, 1, 100], scale: kneeGeometry.effektiv_momentarm_m, example: 120,
+        range: [50, 175, 1, 100], scale: kneeGeometry.effektiv_momentarm_m,
         outcome: "netMomentNm", explanation: "Når senens kraftlinje flyttes lenger fra kneaksen, gir samme senekraft større knemoment."},
-      {key: "outerArmCm", label: "Ytre momentarm", unit: "cm", digits: 0,
+      {key: "outerArmCm", label: "Ytre momentarm (putearm)", unit: "cm", digits: 0,
         range: [15, 60, 1, referenceOuterArmCm], outcome: "externalForceN",
         explanation: "Med et gitt strekkmoment trengs mindre kraft mot måleputen jo lenger den er fra kneaksen."},
       {key: "antagonistNm", label: "Antagonistmoment", unit: "N·m", digits: 0,
@@ -2315,6 +2357,24 @@ function setupStrengthComparison() {
       tracks: card.querySelectorAll(".strength-track"), values: card.querySelectorAll(".strength-value")};
   });
   const referenceResult = calculateStrengthComparison(reference);
+  const loadArmInput = id("strength-loadArmCm");
+  let effectiveLoadArm = 25;
+  function machineMass(moment, armCm) { return Math.max(0, moment) / (armCm/100) / 9.81; }
+  function renderMachine(result, selected) {
+    id("strength-machine-ref").textContent = fmt(machineMass(referenceResult.netMomentNm, 25),1) + " kg (lastarm 25 cm)";
+    id("strength-machine-mass").textContent = fmt(machineMass(result.netMomentNm,effectiveLoadArm),1) + " kg";
+    id("strength-machine-force").textContent = fmt(Math.max(0,result.netMomentNm)/(effectiveLoadArm/100),1) + " N";
+    id("strength-machine-mode").textContent = Math.abs(selected.shorteningCmS) < 1e-9
+      ? "Statisk likevekt ved valgt fascikkeltilstand; ikke et estimat av dynamisk 1RM."
+      : "Momentekvivalent last ved valgt hastighet; ikke en prediksjon av løftbar masse eller 1RM.";
+  }
+  function readLoadArm(final) {
+    const value = readDecimalField(loadArmInput, 10, 60, final ? id("strength-loadArm-msg") : null);
+    if (value !== null) effectiveLoadArm = value;
+    updateStrengthComparison();
+  }
+  loadArmInput.addEventListener("input",()=>readLoadArm(false));
+  loadArmInput.addEventListener("change",()=>{readLoadArm(true);loadArmInput.value=decimalText(effectiveLoadArm);});
   id("strength-context").textContent = "Isometrisk referanse ved "
     + fmt(model.knee_gearing.flexion_deg[frame], 1) + "° knefleksjon med full aktivering.";
   id("strength-reference").textContent = "Regnearket gir "
@@ -2330,6 +2390,30 @@ function setupStrengthComparison() {
     entry.input.value = value / entry.scale;
     entry.exact = value;
   };
+
+  // Direct entry of physical length (% optimal); do not change the fine legacy slider grid.
+  const lengthEntry = control("lengthPct");
+  const lengthLabel = document.createElement("label");
+  lengthLabel.htmlFor = "strength-lengthExact";
+  lengthLabel.textContent = "Angi fascikkellengde (% av optimal)";
+  const lengthInput = document.createElement("input");
+  lengthInput.type = "text"; lengthInput.inputMode = "decimal"; lengthInput.autocomplete = "off"; lengthInput.id = "strength-lengthExact";
+  const lengthMin = lengthEntry.spec.range[0]*lengthEntry.scale, lengthMax = lengthEntry.spec.range[1]*lengthEntry.scale;
+  lengthInput.style.width = "7rem";
+  const lengthMessage = document.createElement("span");
+  lengthMessage.id = "strength-lengthExact-msg"; lengthMessage.className = "strength-note"; lengthMessage.setAttribute("aria-live", "polite");
+  lengthInput.setAttribute("aria-describedby", lengthMessage.id);
+  const lengthWrap = document.createElement("div");
+  lengthWrap.append(lengthLabel, document.createTextNode(" "), lengthInput, document.createTextNode(" "), lengthMessage);
+  lengthEntry.input.after(lengthWrap);
+  lengthInput.addEventListener("change",()=>{
+    const val=readDecimalField(lengthInput, lengthMin, lengthMax, lengthMessage);
+    if(val !== null) {
+      setValue("lengthPct", val);
+      activeFactor=lengthEntry.spec;
+    }
+    updateStrengthComparison();
+  });
 
   // Knevinkel: fascikkellengde og pennasjon fra knemodellens geometri (fast tykkelse), som i knedelen.
   // Ved referansevinkelen brukes referanseverdiene direkte.
@@ -2383,6 +2467,8 @@ function setupStrengthComparison() {
       selected[spec.key] = value;
     }
     const result = calculateStrengthComparison(selected);
+    lengthInput.value = decimalText(selected.lengthPct);
+    renderMachine(result, selected);
     const outcome = activeFactor.outcome ?? "tendonForceN";
     const effectMetric = metrics.find((metric) => metric.key === outcome);
     // Faktorens referanseverdi med de øvrige verdiene som nå. Knevinkelen virker gjennom fascikkellengde og pennasjon,
@@ -2424,6 +2510,7 @@ function setupStrengthComparison() {
       entry.input.value = entry.defaultValue;
       delete entry.exact;
     }
+    effectiveLoadArm = 25; loadArmInput.value = "25"; id("strength-loadArm-msg").textContent = ""; lengthMessage.textContent = "";
     // Rettelse 1: referansen har koblingen av, slik studentarket forutsetter.
     id("strength-couple").checked = false;
     id("strength-couple-note").hidden = true;
@@ -3321,7 +3408,7 @@ function setupForceVelocityTest() {
     render();
   });
   const activationSlider = slider(id("fv-activation-control"),
-    {key: "aktivering", label: "Viljestyrt aktivering ved forlengelse", min: 50, max: 100, step: 1, unit: " %"});
+    {key: "aktivering", label: "Antatt aktivering ved forlengelse", min: 50, max: 100, step: 1, unit: " %"});
 
   function syncControls() {
     chips(id("fv-concentric"), fvConcentricOptions, state.concentric, 1);
@@ -3601,13 +3688,21 @@ function setupForceVelocityTest() {
     // Rettelse 5: eksentriske etiketter står i en egen kolonne til venstre for de konsentriske,
     // og etikettene i hver kolonne spres loddrett så de ikke overlapper ved høyre kant.
     const projector = document.documentElement.classList.contains("projector");
-    const gap = projector ? 18 : 14, shift = projector ? 38 : 32;
+    const gap = projector ? 20 : 18, shift = projector ? 48 : 42;
     for (const eccentric of [false, true]) {
       const column = labels.filter((label) => label.eccentric === eccentric).sort((a, b) => a.y - b.y);
       for (let i = 1; i < column.length; i++) column[i].y = Math.max(column[i].y, column[i - 1].y + gap);
+      if (column.length) {
+        const overflow = Math.max(0, column.at(-1).y - 226);
+        if (overflow) column.forEach(label=>label.y-=overflow);
+        if (column[0].y < 18) {
+          const adjustedGap = Math.min(gap, (226-18)/Math.max(1,column.length-1));
+          column.forEach((label,i)=>label.y=18+i*adjustedGap);
+        }
+      }
     }
     for (const label of labels) plot.add("text", {x: label.x - (label.eccentric ? shift : 0), y: label.y, "text-anchor": "end", class: "fv-tick",
-      style: "fill:" + label.color + ";paint-order:stroke;stroke:white;stroke-width:3px;stroke-linejoin:round"}, label.text);
+      style: "font-size:" + (projector ? "12px" : "11px") + ";fill:" + label.color + ";paint-order:stroke;stroke:white;stroke-width:3px;stroke-linejoin:round"}, label.text);
     id("fv-angle-desc").textContent = "Heltrukne linjer er konsentriske, stiplede eksentriske med valgt aktivering. Tallet ved linjen er hastigheten i °/s.";
   }
 
@@ -4200,6 +4295,103 @@ function setupForceVelocityTest() {
   render();
 }
 
+// v37: faner i knedelen. «Bevegelse» viser simuleringen; de andre fanene viser ett panel hver.
+const kneeTabSpecs = [
+  {tab: "knee-tab-motion", hash: "bevegelse", panels: [], aliases: ["pennasjon"]},
+  {tab: "strength-link", hash: "styrkefaktorer", panels: ["styrkefaktorer"]},
+  {tab: "fv-link", hash: "kraft-hastighet", panels: ["kraft-hastighet"]},
+  {tab: "hs-link", hash: "hypertrofi-styrke", panels: ["hypertrofi-styrke"]},
+  {tab: "ident-link", hash: "identifiserbarhet", panels: ["identifiserbarhet"]},
+  {tab: "details-link", hash: "modell", panels: ["extension-details"], master: true}
+];
+let kneeTab = "bevegelse";
+
+function kneeTabFromHash(hash) {
+  const name = String(hash).replace(/^#/, "").split("?")[0];
+  return kneeTabSpecs.find((spec) => spec.hash === name || spec.aliases?.includes(name)) ?? null;
+}
+
+function showKneeTab(hash, {updateHash = false, focus = false, scroll = false} = {}) {
+  const knee = lesson === "knee";
+  const advanced = advancedLevel();
+  const active = kneeTabSpecs.find((spec) => spec.hash === hash && (!spec.master || advanced)) ?? kneeTabSpecs[0];
+  kneeTab = active.hash;
+  id("knee-tabs").hidden = !knee;
+  const motion = !knee || active === kneeTabSpecs[0];
+  id("transport").hidden = !motion;
+  id("bevegelse").hidden = !motion;
+  if (!knee) return;
+  for (const spec of kneeTabSpecs) {
+    const tab = id(spec.tab), selected = spec === active;
+    tab.hidden = Boolean(spec.master) && !advanced;
+    tab.setAttribute("aria-selected", String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+    for (const panel of spec.panels) id(panel).hidden = !selected;
+  }
+  if (updateHash) history.replaceState(null, "", "#" + active.hash);
+  if (focus) id(active.tab).focus();
+  if (scroll) {
+    const bar = id("knee-tabs");
+    if (bar.getBoundingClientRect().top < 0) bar.scrollIntoView({block: "start"});
+  }
+}
+
+function setupKneeTabs() {
+  for (const spec of kneeTabSpecs) {
+    id(spec.tab).addEventListener("click", () => showKneeTab(spec.hash, {updateHash: true, scroll: true}));
+  }
+  for (const panel of ["transport", "bevegelse", "styrkefaktorer", "kraft-hastighet", "hypertrofi-styrke", "identifiserbarhet", "extension-details"]) {
+    id(panel).setAttribute("role", "tabpanel");
+  }
+  // Piltaster, Home og End flytter mellom fanene (WAI-ARIA-mønsteret for faner).
+  id("knee-tabs").addEventListener("keydown", (event) => {
+    const visible = kneeTabSpecs.filter((spec) => !id(spec.tab).hidden);
+    const current = visible.findIndex((spec) => spec.hash === kneeTab);
+    let next = null;
+    if (event.key === "ArrowRight") next = visible[(current + 1) % visible.length];
+    else if (event.key === "ArrowLeft") next = visible[(current - 1 + visible.length) % visible.length];
+    else if (event.key === "Home") next = visible[0];
+    else if (event.key === "End") next = visible.at(-1);
+    if (!next) return;
+    event.preventDefault();
+    showKneeTab(next.hash, {updateHash: true, focus: true});
+  });
+  window.addEventListener("hashchange", () => {
+    const spec = kneeTabFromHash(location.hash);
+    if (!spec) return;
+    if (lesson !== "knee") setLesson("knee");
+    showKneeTab(spec.hash);
+  });
+}
+
+// v37: lange tilleggsdeler foldes sammen. Overskriften blir en knapp som åpner og lukker delen.
+function makeFoldable(section, hint) {
+  const heading = section.querySelector("h3");
+  if (!heading) return;
+  let head = heading;
+  while (head.parentElement !== section) head = head.parentElement;
+  head.classList.add("fold-head");
+  section.classList.add("foldable", "folded");
+  if (!section.id) section.id = heading.id + "-del";
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "fold-toggle";
+  button.setAttribute("aria-expanded", "false");
+  button.setAttribute("aria-controls", section.id);
+  button.append(...heading.childNodes);
+  if (hint) {
+    const small = document.createElement("span");
+    small.className = "fold-hint";
+    small.textContent = hint;
+    button.append(small);
+  }
+  heading.append(button);
+  button.addEventListener("click", () => {
+    const open = section.classList.toggle("folded") === false;
+    button.setAttribute("aria-expanded", String(open));
+  });
+}
+
 function setLesson(name) {
   lesson = name;
   const config = lessons[name];
@@ -4225,14 +4417,9 @@ function setLesson(name) {
   id("angle-shortcuts").hidden = knee;
   id("tendon-visual").hidden = name !== "tendon";
   id("knee-visual").hidden = !knee;
-  id("strength-link").hidden = !knee;
-  id("styrkefaktorer").hidden = !knee;
-  id("fv-link").hidden = !knee;
-  id("kraft-hastighet").hidden = !knee;
-  id("hs-link").hidden = !knee;
-  id("ident-link").hidden = !knee;
-  id("identifiserbarhet").hidden = !knee;
-  id("hypertrofi-styrke").hidden = !knee;
+  // v37: knedelene vises som faner. Leksjonsknappen åpner alltid «Bevegelse».
+  for (const panel of ["styrkefaktorer", "kraft-hastighet", "hypertrofi-styrke", "identifiserbarhet"]) id(panel).hidden = true;
+  kneeTab = "bevegelse";
   for (const [i, selector] of plotSelectors.entries()) {
     selector.replaceChildren();
     if (i === 1) selector.add(new Option("Én graf", ""));
@@ -4240,6 +4427,7 @@ function setLesson(name) {
     selector.value = i === 0 ? config.topics[0] : "";
   }
   updateLessonDetails();
+  showKneeTab(kneeTab);
   renderGraphs();
   update(index);
 }
@@ -4562,7 +4750,7 @@ function hypertrophyStrengthModel({sizeMean, sizeSd, strengthMean, strengthSd, s
       other: sn ** 2 / total,
       noise: strengthNoise ** 2 / total
     },
-    // Forventet korrelasjon delt etter vei: kovariansen er βσx² (gjennom veksten) + ρσxσn (gjennom samvariasjonen).
+    // Populasjonskorrelasjon delt etter vei: kovariansen er βσx² (gjennom veksten) + ρσxσn (gjennom samvariasjonen).
     rViaGrowth: beta * varX / (sizeSd * strengthSd),
     rViaCommon: rho * sx * sn / (sizeSd * strengthSd)
   };
@@ -4572,7 +4760,7 @@ const hsPresets = [
   {key: "rantila", label: "Räntilä mfl. 2025: 10 uker, vastus lateralis og beinpress",
     note: "Tverrsnitt av vastus lateralis med ultralyd og 1RM i beinpress etter 10 uker. 20 utrente trente, og 27 var kontroller. 19 av de trente har både tverrsnitt og 1RM, men simuleringen starter med 20 deltakere. "
       + "Målefeil og variasjon over tid er satt lik standardavviket i kontrollgruppen. Standardavvikene er usikre med så få deltakere. Med 95 %-konfidensintervallet for variansen "
-      + "i individuell respons i tverrsnitt ligger forventet korrelasjon mellom omtrent 0,06 og 0,67.",
+      + "i individuell respons i tverrsnitt ligger populasjonskorrelasjonen mellom omtrent 0,06 og 0,67.",
     values: {sizeMean: 16.0, sizeSd: 8.4, strengthMean: 21.7, strengthSd: 12.6, sizeNoise: 4.1, strengthNoise: 4.5, beta: 1, rho: 0, n: 20}},
   {key: "ahtiainen", label: "Ahtiainen mfl. 2016: samlede data, 287 som trente",
     note: "Samlede treningsstudier med 287 utrente som trente og 72 kontroller. Muskelstørrelsen ble målt på ulike måter i studiene (ultralyd, MR eller muskeltykkelse), "
@@ -4730,7 +4918,7 @@ function setupHypertrophyStrength() {
   function drawDistribution(values, model, sample) {
     const n = values.n;
     const critical = hsCriticalR(n);
-    // Er forventet korrelasjon 1 (ingen målefeil og ingen andre tilpasninger), gir alle studier r = 1. Det vises som en strek.
+    // Er populasjonskorrelasjonen 1 (ingen målefeil og ingen andre tilpasninger), gir alle studier r = 1. Det vises som en strek.
     const pointMass = model.r >= 1 - 1e-12;
     // Mellom 0,9999999 og 1 tegnes kurven for 0,9999999. Forskjellen er usynlig på aksen; sannsynlighetene bruker den sanne r.
     const rho = Math.min(model.r, 0.9999999);
@@ -4773,7 +4961,7 @@ function setupHypertrophyStrength() {
     plot.add("circle", {cx: plot.X(sample.r), cy: plot.bottom, r: 5.5, fill: "#8c5428", stroke: "white", "stroke-width": 1.5, class: "hs-this-study"});
     id("hs-dist-note").textContent = "Studier med " + n + " deltakere";
     id("hs-dist-desc").textContent = pointMass
-      ? "Med " + n + " deltakere og forventet korrelasjon 1 er korrelasjonen 1 i alle studier, så alle blir signifikante. "
+      ? "Med " + n + " deltakere og populasjonskorrelasjon 1 er korrelasjonen 1 i alle studier, så alle blir signifikante. "
         + "Fordelingen vises derfor som en strek ved r = 1, ikke som en kurve."
       : "Med " + n + " deltakere ligger korrelasjonen i " + hsPercent(model.notSignificant)
         + " av studiene i det skraverte feltet, der den ikke er signifikant (|r| < " + fmt(critical, 2) + ").";
@@ -4848,16 +5036,16 @@ function setupHypertrophyStrength() {
     const direct = model.rViaGrowth, viaCommon = model.rViaCommon;
     let text;
     if (!(direct + viaCommon > 1e-12)) {
-      text = "Ingen vei forbinder de to målingene, så forventet korrelasjon er 0.";
+      text = "Ingen vei forbinder de to målingene, så populasjonskorrelasjonen er 0.";
     } else if (!(viaCommon > 1e-12)) {
-      text = "Forventet korrelasjon (r = " + fmt(model.r, 2) + ") kommer bare fra den direkte veien, der veksten gir styrke (β = "
+      text = "Populasjonskorrelasjon (r = " + fmt(model.r, 2) + ") kommer bare fra den direkte veien, der veksten gir styrke (β = "
         + fmt(beta, 2) + ")." + (model.r < 1 - 1e-9 ? " Andre tilpasninger og målefeil svekker den." : "");
     } else if (!(direct > 1e-12)) {
-      text = "Forventet korrelasjon (r = " + fmt(model.r, 2) + ") kommer bare fra omveien gjennom felles årsaker (ρ = " + fmt(rho, 2)
+      text = "Populasjonskorrelasjon (r = " + fmt(model.r, 2) + ") kommer bare fra omveien gjennom felles årsaker (ρ = " + fmt(rho, 2)
         + "). Veksten gir ingen styrke (β = 0), men målingene henger likevel sammen.";
     } else {
       const share = Math.round(100 * direct / (direct + viaCommon));
-      text = "Av forventet korrelasjon (r = " + fmt(model.r, 2) + ") går " + share + " % gjennom den direkte veien (β = " + fmt(beta, 2)
+      text = "Av populasjonskorrelasjonen (r = " + fmt(model.r, 2) + ") går " + share + " % gjennom den direkte veien (β = " + fmt(beta, 2)
         + ") og " + (100 - share) + " % gjennom felles årsaker (ρ = " + fmt(rho, 2) + "). En korrelasjonsstudie ser bare summen.";
     }
     id("hs-dag-desc").textContent = text;
@@ -4908,7 +5096,7 @@ function setupHypertrophyStrength() {
     id("hs-scatter").setAttribute("data-r", sample.r);
     id("hs-scatter").setAttribute("data-p", sample.p);
     id("hs-numbers").replaceChildren(
-      card("Forventet korrelasjon", "r = " + fmt(model.r, 2), Number.isFinite(model.rTrue) ? "Uten målefeil: r = " + fmt(model.rTrue, 2) : ""),
+      card("Populasjonskorrelasjon", "r = " + fmt(model.r, 2), Number.isFinite(model.rTrue) ? "Uten målefeil: r = " + fmt(model.rTrue, 2) : ""),
       card("Sterkere uten målt vekst", hsPercent(model.strongerWithoutGrowth), "Målt vekst ≤ 0, styrke > 0"),
       card("Målt vekst uten å bli sterkere", hsPercent(model.growthWithoutStronger), "Styrke ≤ 0, målt vekst > 0"),
       card("Over medianen på det ene målet, under på det andre", hsPercent(model.oppositeHalves), "Ingen sammenheng gir 50 %"),
@@ -5271,7 +5459,8 @@ function setupIdentifiability() {
     byId('ident-extra-apo').disabled=!unknownApo;
     if(!unknownApo)byId('ident-extra-apo').checked=false;
     const {keys,J,rank}=sensitivity(pts,unknownApo);
-    byId('ident-rank').textContent=`Numerisk lokal rang: ${rank} av ${keys.length} parametre (${pts.length} momentbetingelser).`;
+    const rankNames={pcsa:'PCSA',sigma:'spesifikk kraft',a:'aktivering',lever:'momentarm',penn:'pennasjon',opt:'ℓopt',vmax:'vmax',ant:'antagonistmoment',apo:'aponevroselengde'};
+    byId('ident-rank').textContent=`Numerisk lokal rang: ${rank} av ${keys.length} parametre (${keys.map(k=>rankNames[k]).join(', ')}; ${pts.length} momentbetingelser).`;
     const nullCount=keys.length-rank;
     byId('ident-null').textContent=`${nullCount} lokalt uidentifiserbare parameterretninger. `+
       'PCSA, spesifikk kraft og aktivering opptrer som produkt. '+
@@ -5333,7 +5522,7 @@ function setupIdentifiability() {
       byId('ident-data-summary').textContent=`${dataset.length} simulerte observasjoner; ${settings.nDay} dag(er), ${settings.nRep} repetisjon(er), tilfeldig startverdi ${settings.seed}.`;
       svgGraph(b,speedActs);
     }
-    section.dataset.model=JSON.stringify({version:"36.2",origin:'v33-isokineticKneeState',reference:{flex:70,speed:0},
+    section.dataset.model=JSON.stringify({version:"37.3",origin:'v33-isokineticKneeState',reference:{flex:70,speed:0},
       a:base,b,settings,invalidMatch,fitSummary:fitSummary?{free:fitSummary.free,
       rms:fitSummary.cmp.rms,max:fitSummary.cmp.max,dchi2:fitSummary.cmp.dchi2}:null,
       speedActs, maxDiff:cmp.ok?cmp.max:null});
@@ -5385,7 +5574,7 @@ function setupIdentifiability() {
     const b=pairedB(),{dataset}=simulate(plan(),b,speedActs),q=(x)=>String(x).replace('.',',');
     const csv=['day;rep;knefleksjon_deg;hastighet_deg_s;observasjon_Nm;modell_A_Nm;modell_B_Nm'];
     for(const row of dataset)csv.push([row.day,row.rep,row.flex,row.speed,row.y,row.a,row.b].map(q).join(';'));
-    downloadFile('styrke_identifiserbarhet_v36_2_simulerte_data.csv',new Blob(['\ufeff'+csv.join('\n')],{type:'text/csv;charset=utf-8'}));
+    downloadFile('styrke_identifiserbarhet_v37_3_simulerte_data.csv',new Blob(['\ufeff'+csv.join('\n')],{type:'text/csv;charset=utf-8'}));
   });
   setPreset('capacity');
 }
@@ -5394,10 +5583,19 @@ setupIdentifiability();
 setupStrengthComparison();
 setupForceVelocityTest();
 setupHypertrophyStrength();
+setupKneeTabs();
+for (const [selector, hint] of [
+  ["#kraft-hastighet > .fv-tasks", "vis oppgavene"],
+  ["#kraft-hastighet > .fv-sensitivity", "vis analysen"],
+  ["#kraft-hastighet > .fv-protocols", "vis testoppsettene"],
+  ["#hypertrofi-styrke > .fv-tasks", "vis oppgavene"]
+]) makeFoldable(document.querySelector(selector), hint);
 {
   // #kraft-hastighet?arm=3.85&kons=0,60,120 … åpner kneet med dette oppsettet i kraft–hastighetstesten.
   const link = /^#kraft-hastighet\?(.*)$/.exec(location.hash);
-  setLesson(["#styrkefaktorer", "#pennasjon", "#kraft-hastighet", "#hypertrofi-styrke", "#identifiserbarhet"].includes(location.hash) || link ? "knee" : "elbow");
+  const startTab = kneeTabFromHash(location.hash);
+  setLesson(startTab || link ? "knee" : "elbow");
+  if (startTab) showKneeTab(startTab.hash);
   if (link) {
     const query = new URLSearchParams(link[1]);
     if (query.get("nivaa") === "master") setLevel(true);
@@ -5460,7 +5658,8 @@ setupHypertrophyStrength();
   }
   function renderMoment(){
     const sdRep=Number(el('ident-repSD').value),sdDay=Number(el('ident-daySD').value),sdCal=Number(el('ident-biasSD').value);
-    const nrep=Math.max(1,Math.round(Number(el('ident-nRep').value))||1),nday=Math.max(1,Math.round(Number(el('ident-nDay').value))||1);
+    const count=id=>{const input=el(id);return Math.min(Number(input.max),Math.max(Number(input.min),Math.round(Number(input.value))||1));};
+    const nrep=count('ident-nRep'),nday=count('ident-nDay');
     const v=[sdRep**2/(nrep*nday),sdDay**2/nday,sdCal**2],tot=v.reduce((a,b)=>a+b,0);
     for(const [id,num] of [['v36-moment-rep',0],['v36-moment-day',1],['v36-moment-cal',2]])el(id).textContent=fmt(Math.sqrt(v[num]),2)+' N·m';
     el('v36-moment-total').textContent=fmt(Math.sqrt(tot),2)+' N·m';
@@ -5485,8 +5684,8 @@ setupHypertrophyStrength();
   for(const key of ['repSD','daySD','biasSD','nRep','nDay'])el('ident-'+key).addEventListener('input',renderMoment);
   el('ident-reset').addEventListener('click',()=>{
     el('v36-consent').checked=false;el('v36-apply-pcsa').disabled=true;
-    // Rettelse 3: empiripanelet tilbake til startverdiene (Hug, ρ = −0,18).
-    el('v36-source').value='hug';renderSource();el('v36-rho').value='-0.18';
+    // Empiripanelet tilbake til Hug og illustrativ, ukorrelert feil (ρ = 0).
+    el('v36-source').value='hug';renderSource();el('v36-rho').value='0';
     renderMoment();renderPcsa();
   });
   renderSource();renderPcsa();renderMoment();
