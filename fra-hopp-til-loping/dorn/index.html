@@ -1,0 +1,155 @@
+<!doctype html><html lang="nb"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dorn 2012 – fart og muskelfunksjon</title><style>
+*{box-sizing:border-box}body{margin:0;color:#183238;background:#fff;font:14px/1.5 system-ui,sans-serif}main{max-width:1060px;margin:auto;padding:24px}h1{font-size:27px;letter-spacing:-.04em;margin:0}h2{font-size:18px;margin:0 0 10px}h3{font-size:15px}p{margin:8px 0 14px}.muted,small{color:#536a6a}.top{display:flex;justify-content:space-between;align-items:start;gap:12px}.tag{font-size:12px;color:#536a6a}.panel{border:1px solid #d4e0dd;border-radius:12px;padding:16px;margin:15px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}.metric{background:#eff5f3;padding:12px;border-radius:8px}.metric b{font-size:23px;display:block;font-variant-numeric:tabular-nums}.choice{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}button,select{font:inherit;border:1px solid #b8ceca;background:white;color:inherit;padding:9px 12px;border-radius:7px;cursor:pointer}button[aria-pressed=true]{background:#176b62;color:white;border-color:#176b62}label{display:block;font-size:13px;color:#536a6a}input[type=range]{width:100%;accent-color:#176b62}.plot{width:100%;display:block}.legend{display:flex;gap:13px;flex-wrap:wrap;font-size:12px}.key{display:inline-block;width:11px;height:11px;margin-right:4px;border-radius:2px}.table{overflow:auto}table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}td,th{padding:8px;border-bottom:1px solid #dce7e4;text-align:right;white-space:nowrap}td:first-child,th:first-child{text-align:left}th{font-size:12px;color:#536a6a}.note{border-left:3px solid #b17a43;padding-left:10px;color:#536a6a;font-size:13px}a{color:#176b62}#status{font-size:13px} @media(max-width:660px){main{padding:12px}.grid{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.top{display:block}}
+</style><body><nav style="padding:10px 16px;font:14px system-ui"><a href="../">← Fra hopp til løping</a></nav><main><div class="top"><div><div class="tag">DORN · SCHACHE · PANDY (2012) · REFERANSEDATA + EGEN MODELL</div><h1>Hva endres når vi løper fortere?</h1></div><a href="https://doi.org/10.1242/jeb.064527" target="_blank" rel="noopener">Originalstudien</a></div><p class="muted">Velg et målt fartsnivå. Sammenlign mekanikken, estimerte muskelkrefter og arbeidet i svingfasen. Test deretter vår énmassemodell mot de publiserte gruppeverdiene.</p><div class="choice" id="speeds"></div><div class="cards" id="metrics"></div>
+<section class="panel"><h2>1 · Fra steglengde til stegfrekvens</h2><div class="grid"><div><h3>Steglengde (m)</h3><svg id="length" class="plot" viewBox="0 0 460 210"></svg></div><div><h3>Stegfrekvens (Hz)</h3><svg id="freq" class="plot" viewBox="0 0 460 210"></svg></div></div><p id="transition"></p><small>Tabell 2: stride-lengde delt på 2 og stride-frekvens ganget med 2. Gjennomsnitt ± SD i originalstudien. Gruppeverdiene er ikke en enkelt dynamisk konsistent løpssyklus.</small></section>
+<section class="panel"><h2>2 · Musklenes funksjon ved valgt fart</h2><div class="grid"><div><h3>Maksimal muskel-sene-kraft i kontaktfasen (BW)</h3><svg id="stance" class="plot" viewBox="0 0 460 215"></svg></div><div><h3>Maksimal muskel-sene-kraft i svingfasen (BW)</h3><svg id="swing" class="plot" viewBox="0 0 460 250"></svg></div></div><div class="grid"><div><h3>Maksimale bidrag til vertikal bakkekraft (BW)</h3><svg id="support" class="plot" viewBox="0 0 460 215"></svg><small>Bidragene kan ha ulike tidspunkt for maksimum og skal ikke summeres som samtidige topper.</small></div><div><h3>Muskelarbeid i svingfasen</h3><label>Vis enhet <select id="unit"><option value="kg">J/kg</option><option value="J">J ved valgt masse</option></select></label><svg id="work" class="plot" viewBox="0 0 460 235"></svg><small>Første halvdel: iliopsoas, rectus femoris. Andre halvdel: gluteus maximus, hamstrings. Ikke nettoarbeid for hele beinet.</small></div></div><p class="note">Muskelkrefter, kraftbidrag og arbeid er estimert ved statisk optimalisering og indusert akselerasjonsanalyse. De er ikke målt direkte. Ved sprint rapporterte studien at soleus/gastrocnemius ved maksimal kraft opererte ved 37/23 % av maksimal fiberforkortningshastighet og omtrent 30/40 % av maksimal isometrisk kraft. Dette er ikke en målt universell terskel.</p></section>
+<section class="panel"><h2>3 · Test vår énmassemodell mot Dorn</h2><div class="grid"><div><label>Kroppsmasse <b id="mv"></b><input id="mass" type="range" min="45" max="120" step="1" value="75"></label><label>Beinstivhet <b id="kv"></b><input id="stiff" type="range" min="8" max="35" step="0.1" value="14.4"></label></div><div><label>Svingtid for ett bein<select id="mode"><option value="default">Original fartsprofil</option><option value="dorn">Avledet fra Dorn (1/stridefrekvens − kontakttid)</option><option value="short">Kort svingtid (original sprintalternativ)</option></select></label><p class="muted" id="swingtime"></p></div></div><div class="table"><table id="compare"></table></div><p id="status"></p><svg id="force" class="plot" viewBox="0 0 740 250"></svg><p class="note">Kurven er beregnet med den eksisterende fjærbeinløseren, ikke en målt Dorn-kurve. Sammenligning med gruppeverdier er en referansetest, ikke individuell validering. Valg av Dorn-svingtid er datainformert innstilling, ikke uavhengig prediksjon.</p></section>
+<section class="panel"><h2>4 · Impulsforsøk (Dorns appendiks)</h2><p>Ved lik COM-høyde og motsatt vertikal hastighet ved isett og avspark gjelder netto vertikal impuls per kroppsvekt = svevtid. Varier impulsen, med fast fart og kontakttid.</p><label>Netto vertikal impuls / kroppsvekt <b id="iv"></b><input id="imp" type="range" min="0" max="0.25" step="0.001" value="0.10"></label><div class="cards" id="impmetrics"></div><svg id="flight" class="plot" viewBox="0 0 740 180"></svg><small>Idealisert ballistisk svev. Ingen prediksjon av svingbeinets kapasitet. Økt impuls forlenger steget, men reduserer stegfrekvensen ved fast fart og kontakttid.</small></section>
+<section class="panel"><h2>5 · Kilder og avgrensning</h2><p>Dorn, Schache &amp; Pandy (2012), J Exp Biol 215:1944–1956. Tabell 2 og appendiks. <a href="https://doi.org/10.1242/jeb.075051" target="_blank">Erratum til figur 2B</a>. Ni løpere totalt, 7 i raskeste gruppe. Originaldata og OpenSim-modell er oppgitt tilgjengelig på <a href="https://simtk.org/home/runningspeeds" target="_blank">SimTK Running Speeds</a>; arkivinnholdet er ikke hentet (403).</p><p>Tomassemodellene i de foregående fanene er uendret. Clark-modellen (to impulser) og våre M2B/M2C (fremoverdynamikk) er forskjellige modeller. Se <a href="https://doi.org/10.1242/jeb.138357">Clark et al. 2017</a>, <a href="https://doi.org/10.1152/japplphysiol.00925.2018">Udofa et al. 2019</a>, <a href="https://doi.org/10.1080/14763141.2019.1584238">Verheul et al. 2019</a> og <a href="https://doi.org/10.1080/10255842.2023.2178846">uavhengig validering 2023</a>.</p><button id="export">Eksporter tabell 2-data (CSV)</button></section></main><script>
+const D=[{"v": 3.49, "n": 9, "L": 2.62, "f": 1.31, "tc": 0.243, "peak": 2.71, "sd": [0.12, 0.1, 0.03, 0.022, 0.46], "mus": [6.7, 1.94, 4.7, 1.97, 0.38, 2.1, 0.67, 0.17], "support": [1.61, 0.53, 1.12], "work": [0.36, 0.07, -0.11, -0.27]}, {"v": 5.17, "n": 9, "L": 3.42, "f": 1.47, "tc": 0.188, "peak": 3.14, "sd": [0.13, 0.13, 0.05, 0.015, 0.55], "mus": [7.92, 2.65, 5.35, 3.49, 0.64, 2.66, 1.19, 0.22], "support": [1.98, 0.73, 1.02], "work": [0.64, 0.19, -0.21, -0.53]}, {"v": 6.96, "n": 8, "L": 3.99, "f": 1.75, "tc": 0.145, "peak": 3.58, "sd": [0.13, 0.22, 0.1, 0.009, 0.67], "mus": [8.71, 3.23, 4.93, 5.91, 1.03, 4.61, 1.81, 0.31], "support": [2.4, 0.81, 0.92], "work": [0.85, 0.43, -0.31, -0.95]}, {"v": 8.99, "n": 7, "L": 4.1, "f": 2.18, "tc": 0.118, "peak": 3.59, "sd": [0.67, 0.26, 0.1, 0.011, 0.71], "mus": [7.34, 2.97, 4.89, 9.04, 2.22, 8.95, 2.8, 0.5], "support": [2.3, 0.74, 0.74], "work": [1.12, 0.77, -0.41, -1.75]}], M={"g": 9.81, "beinLengde": 1.0, "utveksling": 0.5555555555555556, "seneStivhet": 192413.7931034483, "seneHvilelengde": 0.29, "seneOvergang": 0.005219999999999999, "kuletetthet": 1000.0, "fart": [2.5, 2.6, 2.7, 2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 7.0, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 8.0, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 9.0, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8, 9.9, 10.0, 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7, 10.8, 10.9, 11.0, 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 12.0, 12.1, 12.2, 12.3, 12.4, 12.5, 12.6, 12.7, 12.8, 12.9, 13.0], "seneArealMM2": 62.0, "svingprofil": [[2.78, 0.512], [3.89, 0.512], [5.0, 0.509], [6.11, 0.473], [7.22, 0.441]], "kortSvingtid": 0.373, "seneToyningReferanse": 9.0, "hoyesteMalteFart": 12.32, "standard": {"masse": 75.0, "stivhet": 14.4, "svingjustering": 0, "makskraft": 4.5}};
+function svingtidVedFart(fart, profil) {
+  const i=profil.findIndex(([v])=>v>=fart);
+  if (i===0) return profil[0][1];
+  if (i<0) return profil.at(-1)[1];
+  const [fartLav,tidLav]=profil[i-1];
+  const [fartHoy,tidHoy]=profil[i];
+  return tidLav+(tidHoy-tidLav)*(fart-fartLav)/(fartHoy-fartLav);
+}
+
+function simulerLopssteg(fart, valg, modell) {
+  if (!(fart>=modell.fart[0] && fart<=modell.fart.at(-1))) return null;
+  const {masse, stivhet} = valg;
+  const svingtid=valg.svingtid ?? (svingtidVedFart(fart,modell.svingprofil)+(valg.svingjustering??0));
+  if (!(svingtid>0 && Number.isFinite(svingtid))) return null;
+  const {g, beinLengde, utveksling, seneStivhet, seneHvilelengde, seneOvergang} = modell;
+  const serie = utveksling*seneStivhet/stivhet - 1/utveksling;
+  const omvendtUtveksling = 1/utveksling;
+  const overgangBein = seneOvergang*(omvendtUtveksling+serie/2);
+  const delsteg = 384;
+
+  function seneforlengelse(q) {
+    if (q < overgangBein) {
+      return 2*q/(omvendtUtveksling+Math.sqrt(omvendtUtveksling**2+2*serie*q/seneOvergang));
+    }
+    return (q+serie*seneOvergang/2)/(omvendtUtveksling+serie);
+  }
+
+  function stotte(svevandel, fartstillegg, lagre=false) {
+    if (svevandel<=0 || svevandel>=1 || fartstillegg<-.005 || fartstillegg>.60) return null;
+    // Svingtid for ett bein er kontakttiden på motsatt bein pluss de to svevfasene.
+    const svev = svingtid*svevandel/2;
+    const halvTid = (svingtid-2*svev)/2;
+    const tid = 2*halvTid+svev;
+    const lengde = fart*tid;
+    const dt = halvTid/delsteg;
+    const vxStart = fart*(1+fartstillegg);
+    const xStart = (lengde-vxStart*svev)/2;
+    if (xStart<=0 || xStart>=.999*beinLengde) return null;
+    const yStart = Math.sqrt(beinLengde**2-xStart**2);
+    let x=-xStart, y=yStart, vx=vxStart, vy=-g*svev/2, f=0, ax=0, ay=-g;
+    let toppRfd=0, toppKraft=0;
+    const punkter = lagre ? [[0,0,y,0,0,0]] : null;
+    for (let i=1; i<=delsteg; i++) {
+      x += (vx+ax*dt/2)*dt;
+      y += (vy+ay*dt/2)*dt;
+      const l=Math.hypot(x,y);
+      if (y<=.35*beinLengde || l<.35*beinLengde) return null;
+      const strekk=seneforlengelse(Math.max(0,beinLengde-l));
+      const nyKraft=utveksling*seneStivhet*(strekk<seneOvergang
+        ? strekk*strekk/(2*seneOvergang) : strekk-seneOvergang/2);
+      const nyAx=nyKraft*x/(masse*l), nyAy=nyKraft*y/(masse*l)-g;
+      vx += (ax+nyAx)*dt/2;
+      vy += (ay+nyAy)*dt/2;
+      ax=nyAx;
+      ay=nyAy;
+      if(lagre){
+        if (nyKraft < f-0.001 || vx<=0) return null;
+        const stivhetsandel=Math.min(1,strekk/seneOvergang);
+        const tangent=utveksling*seneStivhet*stivhetsandel/(omvendtUtveksling+serie*stivhetsandel);
+        const forkortningsfart=-(x*vx+y*vy)/l;
+        toppRfd=Math.max(toppRfd,tangent*forkortningsfart);
+        toppKraft=Math.max(toppKraft,nyKraft);
+        punkter.push([i*dt,x+xStart,y,nyAx/g,(nyAy+g)/g,nyKraft/1000]);
+      }
+      f=nyKraft;
+    }
+    return {rest:[x,vy*tid/2],halvTid,svev,vxStart,xStart,yStart,punkter,
+      toppRfd,toppKraft};
+  }
+
+  function finnLosning(startA, startB) {
+    let a=startA, b=startB, h=stotte(a,b);
+    if (!h) return null;
+    const e=.0002;
+    for (let i=0; i<20; i++) {
+      const [x,y]=h.rest;
+      const avvik=Math.hypot(x,y);
+      if (avvik<2e-7) return stotte(a,b,true);
+      const ha=stotte(a+e,b), hb=stotte(a,b+e);
+      if (!ha || !hb) return null;
+      const [xa,ya]=ha.rest.map((v,j)=>(v-h.rest[j])/e);
+      const [xb,yb]=hb.rest.map((v,j)=>(v-h.rest[j])/e);
+      const det=xa*yb-xb*ya;
+      if (Math.abs(det)<1e-10) return null;
+      const da=(y*xb-x*yb)/det, db=(x*ya-y*xa)/det;
+      let neste=null;
+      for (let steg=1; steg>=1/128; steg/=2) {
+        const kandidat=stotte(a+steg*da,b+steg*db);
+        if (kandidat && Math.hypot(...kandidat.rest)<avvik) {
+          a+=steg*da;
+          b+=steg*db;
+          neste=kandidat;
+          break;
+        }
+      }
+      if (!neste) return null;
+      h=neste;
+    }
+    return null;
+  }
+
+  const anslag = Math.max(.015,Math.min(.68,1-.82*Math.PI*Math.sqrt(masse/stivhet)/svingtid));
+  let h=null;
+  for (const a of [anslag,.36,.16,.55,.07,.70]) {
+    h=finnLosning(a,.035);
+    if (h) break;
+  }
+  if (!h) return null;
+
+  const kontakt=2*h.halvTid;
+  const tid=kontakt+h.svev;
+  const lengde=fart*tid;
+  const punkter=h.punkter.filter((_,i)=>i%4===0);
+  const midt=punkter.at(-1);
+  midt[1]=h.xStart;
+  midt[3]=0;
+  const toppFy=Math.max(...punkter.map(r=>r[4]));
+  for (let i=punkter.length-2; i>=0; i--) {
+    const [s,x,y,fx,fy,aksial]=punkter[i];
+    punkter.push([kontakt-s,2*h.xStart-x,y,fx===0?0:-fx,fy,aksial]);
+  }
+  const vyStart=g*h.svev/2;
+  for (let i=1; i<=40; i++) {
+    const dt=h.svev*i/40;
+    punkter.push([kontakt+dt,2*h.xStart+h.vxStart*dt,h.yStart+vyStart*dt-g*dt*dt/2,0,0,0]);
+  }
+  const senekraft=h.toppKraft/utveksling;
+  const senestrekk=senekraft<seneStivhet*seneOvergang/2
+    ? Math.sqrt(2*senekraft*seneOvergang/seneStivhet)
+    : senekraft/seneStivhet+seneOvergang/2;
+  return {fart,tid,kontakt,svingtid,lengde,fotposisjon:h.xStart,punkter,toppFy,
+    gjennomsnittFy:tid/kontakt,
+    toppKraft:h.toppKraft,toppRfd:h.toppRfd,toppSene:senekraft,toppToyning:100*senestrekk/seneHvilelengde,
+    masse,kuleRadius:Math.cbrt(3*masse/(4*Math.PI*modell.kuletetthet))};
+}
+
+
+const $=s=>document.getElementById(s), fmt=(n,d=2)=>Number(n).toLocaleString('nb-NO',{minimumFractionDigits:d,maximumFractionDigits:d}), colors=['#176b62','#b86b37','#5476a3','#8b6796','#718c87'];let index=2;
+function bars(id,labels,values,max,unit){let h=Number($(id).getAttribute('viewBox').split(' ').at(-1)), x0=140,x1=400,y0=19,y1=h-27,lo=id==='work'?-1.9*(unit==='J'?+$ ('mass').value:1):Math.min(0,...values),hi=Math.max(max,...values),x=v=>x0+(v-lo)/(hi-lo)*(x1-x0),row=(y1-y0)/labels.length;let s=`<line x1="${x(0)}" y1="5" x2="${x(0)}" y2="${y1}" stroke="#95a9a6"/>`;labels.forEach((l,i)=>{let y=y0+i*row,v=values[i];s+=`<text x="${x0-8}" y="${y+4}" text-anchor="end" font-size="12">${l}</text><rect x="${Math.min(x(0),x(v))}" y="${y-9}" width="${Math.max(0,Math.abs(x(v)-x(0)))}" height="18" rx="3" fill="${colors[i%colors.length]}"/><text x="${v>=0?x(v)+5:x(v)-5}" y="${y+4}" text-anchor="${v>=0?'start':'end'}" font-size="12">${fmt(v,2)}</text>`});s+=`<text x="${x1}" y="${h-5}" font-size="11" text-anchor="end">${unit}</text>`;$(id).innerHTML=s}
+function trend(id,vals,hi){const X=v=>48+(v-3)/(9.5-3)*380,Y=v=>174-v/hi*145;let s='';for(let k=0;k<=4;k++){let v=hi*k/4;s+=`<line x1="48" x2="428" y1="${Y(v)}" y2="${Y(v)}" stroke="#dce7e4"/><text x="40" y="${Y(v)+4}" text-anchor="end" font-size="11">${fmt(v,1)}</text>`}s+=`<polyline points="${D.map((r,i)=>[X(r.v),Y(vals[i])].join(',')).join(' ')}" stroke="#176b62" fill="none" stroke-width="2.5"/>`;D.forEach((r,i)=>s+=`<circle cx="${X(r.v)}" cy="${Y(vals[i])}" r="${i===index?7:4}" fill="${i===index?'#b86b37':'#176b62'}"/><text x="${X(r.v)}" y="${Y(vals[i])-11}" text-anchor="middle" font-size="12">${fmt(vals[i])}</text><text x="${X(r.v)}" y="195" text-anchor="middle" font-size="11">${fmt(r.v,1)}</text>`);$(id).innerHTML=s}
+function card(l,v){return `<div class="metric"><small>${l}</small><b>${v}</b></div>`}
+function calc(){const r=D[index],mass=+$('mass').value,k=+$('stiff').value,mode=$('mode').value;let o={masse:mass,stivhet:k*1000,svingjustering:0};if(mode==='dorn')o.svingtid=1/r.f-r.tc;if(mode==='short')o.svingtid=M.kortSvingtid;let t=simulerLopssteg(r.v,o,M);$('mv').textContent=fmt(mass,0)+' kg';$('kv').textContent=fmt(k,1)+' kN/m';$('swingtime').textContent='Svingtid brukt: '+fmt(1000*(o.svingtid??svingtidVedFart(r.v,M.svingprofil)),0)+' ms';let ref=[r.tc*1000,1/(2*r.f)*1000-r.tc*1000,r.L/2,r.f*2,r.peak],sim=t?[t.kontakt*1000,(t.tid-t.kontakt)*1000,t.lengde,1/t.tid,t.toppFy]:[];let names=['Kontakttid (ms)','Svevtid (ms)*','Steglengde (m)','Stegfrekvens (Hz)','Maks. vertikalkraft (BW)'];$('compare').innerHTML='<tr><th>Variabel</th><th>Dorn</th><th>Énmassemodell</th><th>Avvik</th></tr>'+names.map((n,i)=>`<tr><td>${n}</td><td>${fmt(ref[i],i<2?0:2)}</td><td>${t?fmt(sim[i],i<2?0:2):'–'}</td><td>${t?fmt(sim[i]-ref[i],i<2?0:2):'–'}</td></tr>`).join('');$('status').textContent=(t?'Løseren fant en mekanisk løsning. '+(t.toppKraft>M.standard.makskraft*1000?'Overskrider originalens aksiale kraftgrense.':'Under originalens aksiale kraftgrense.'):'Ingen løsning ved disse innstillingene.')+' * Dorn-svevtid avledet fra gruppens stridefrekvens og kontakttid, ikke direkte målt her.';if(!t){$('force').innerHTML='';return}let max=Math.max(5,t.toppFy,r.peak),X=v=>50+v/t.tid*650,Y=v=>210-v/max*170;let s='';for(let i=0;i<=Math.floor(max);i++)s+=`<line x1="50" x2="700" y1="${Y(i)}" y2="${Y(i)}" stroke="#dce7e4"/><text x="42" y="${Y(i)+4}" text-anchor="end" font-size="11">${i}</text>`;s+=`<rect x="${X(t.kontakt)}" y="35" width="${700-X(t.kontakt)}" height="175" fill="#eaf2f0"/><line x1="50" x2="700" y1="${Y(r.peak)}" y2="${Y(r.peak)}" stroke="#b86b37" stroke-dasharray="5 5"/><text x="695" y="${Y(r.peak)-6}" text-anchor="end" font-size="11" fill="#b86b37">Dorn toppverdi (ikke kurve)</text><polyline points="${t.punkter.map(p=>[X(p[0]),Y(p[4])].join(',')).join(' ')}" fill="none" stroke="#176b62" stroke-width="3"/><text x="50" y="20" font-size="12">Vertikalkraft (BW)</text><text x="50" y="234" font-size="11">0 ms</text><text x="700" y="234" text-anchor="end" font-size="11">${fmt(t.tid*1000,0)} ms</text>`;$('force').innerHTML=s}
+function impulse(){let r=D[index],I=+$('imp').value,T=r.tc+I,m=+$('mass').value; $('iv').textContent=fmt(I,3)+' BW·s';$('impmetrics').innerHTML=card('Netto impuls',fmt(I*m*9.81,1)+' Ns')+card('Svevtid',fmt(I*1000,0)+' ms')+card('Steglengde',fmt(r.v*T)+' m')+card('Stegfrekvens',fmt(1/T)+' Hz');let dist=r.v*I,peak=9.81*I**2/8,X=u=>70+u*600,Y=y=>145-y/.09*110;let points=Array.from({length:61},(_,i)=>{let u=i/60,t=u*I;return [X(u),Y(9.81*I/2*t-4.905*t*t)].join(',')});$('flight').innerHTML=`<line x1="70" x2="670" y1="145" y2="145" stroke="#95a9a6"/><polyline points="${points.join(' ')}" fill="none" stroke="#176b62" stroke-width="3"/><circle cx="370" cy="${Y(peak)}" r="6" fill="#176b62"/><text x="370" y="${Y(peak)-10}" font-size="12" text-anchor="middle">COM stiger ${fmt(peak*100,1)} cm</text><text x="70" y="165" font-size="12">Avspark</text><text x="670" y="165" font-size="12" text-anchor="end">Neste isett · ${fmt(dist)} m svev</text>`}
+function render(reset=false){let r=D[index];document.querySelectorAll('#speeds button').forEach((b,i)=>b.setAttribute('aria-pressed',i===index));$('metrics').innerHTML=card('Fart',fmt(r.v)+' m/s')+card('Kontakttid',fmt(r.tc*1000,0)+' ms')+card('Vertikal krafttopp',fmt(r.peak)+' BW')+card('Antall løpere',r.n);trend('length',D.map(r=>r.L/2),2.5);trend('freq',D.map(r=>r.f*2),5);$('transition').textContent='Fra 6,96 til 8,99 m/s: steglengden øker '+fmt((D[3].L/D[2].L-1)*100,1)+' %, stegfrekvensen '+fmt((D[3].f/D[2].f-1)*100,1)+' %. Krafttoppen endres lite.';bars('stance',['Soleus','Gastrocnemius','Vasti'],r.mus.slice(0,3),10,'BW');bars('swing',['Iliopsoas','Gluteus maximus','Hamstrings','Rectus femoris','Tibialis anterior'],r.mus.slice(3),10,'BW');bars('support',['Soleus','Gastrocnemius','Vasti'],r.support,3,'BW');let f=$('unit').value==='J'?+$('mass').value:1;bars('work',['Iliopsoas','Gluteus max.','Rectus femoris','Hamstrings'],r.work.map(x=>x*f),1.2*f,$('unit').value==='J'?'J':'J/kg');if(reset)$('imp').value=Math.max(0,1/(2*r.f)-r.tc);calc();impulse()}
+D.forEach((r,i)=>{let b=document.createElement('button');b.textContent=fmt(r.v)+' m/s';b.onclick=()=>{index=i;render(true)};$('speeds').append(b)});for(let id of ['mass','stiff'])$(id).oninput=()=>render();$('mode').onchange=()=>calc();$('unit').onchange=()=>render();$('imp').oninput=()=>impulse();$('export').onclick=()=>{let csv='speed_m_s,n,stride_length_m,stride_frequency_Hz,contact_s,peak_Fz_BW,soleus_BW,gastrocnemius_BW,vasti_BW,iliopsoas_BW,gluteus_max_BW,hamstrings_BW,rectus_femoris_BW,tibialis_anterior_BW,soleus_support_BW,gastrocnemius_support_BW,vasti_support_BW,iliopsoas_J_kg,gluteus_max_J_kg,rectus_femoris_J_kg,hamstrings_J_kg\n'+D.map(r=>[r.v,r.n,r.L,r.f,r.tc,r.peak,...r.mus,...r.support,...r.work].join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='Dorn2012_tabell2.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};render(true);
+</script></body></html>

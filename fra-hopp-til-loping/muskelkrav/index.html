@@ -1,0 +1,508 @@
+<!doctype html><html lang="nb"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Muskelkrav ved gitt fart · v0.3.1</title><style>
+*{box-sizing:border-box}body{font:16px/1.5 system-ui,sans-serif;color:#183337;background:#f3f6f5;margin:0}main{max-width:1080px;margin:auto;padding:24px}h1{font-size:clamp(26px,4vw,39px);line-height:1.12}h2{font-size:23px}section{background:#fff;border:1px solid #cddbd7;border-radius:12px;margin:18px 0;padding:18px}p{max-width:85ch}small,.muted{color:#496568}.warning{border-left:4px solid #ac7932;padding:8px 12px;background:#faf6ed}.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.controls label{min-width:0;overflow-wrap:anywhere;display:block;font-weight:600;font-size:14px}input,select{min-width:0;max-width:100%;width:100%;font:inherit;padding:9px;border:1px solid #a9bcb7;border-radius:6px;background:white;color:#183337}button{font:inherit;padding:8px 12px;border:1px solid #a9bcb7;background:white;border-radius:6px;color:#183337;cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #167b71}.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:10px;margin:16px 0}.metric{border-top:2px solid #286d64;padding:6px 2px}.metric b{display:block;font-size:24px;font-variant-numeric:tabular-nums}.metric span{font-size:13px;color:#496568}.scroll{overflow:auto}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 8px;border-bottom:1px solid #dfe8e5;text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}a{color:#176b62}.bar{height:15px;background:#e4eeec;border-radius:4px;overflow:hidden}.bar i{height:100%;display:block;background:#297e74}.bars{display:grid;gap:10px}.barrow{display:grid;grid-template-columns:minmax(100px,1fr) 2fr 65px;align-items:center;gap:10px;font-size:14px}#status,#absStatus{min-height:24px;font-weight:600;color:#875b25}footer{font-size:13px} @media(max-width:500px){main{padding:12px}section{padding:12px}.barrow{grid-template-columns:1fr 1fr 56px}.metric b{font-size:20px}}
+</style></head><body><nav style="padding:10px 16px;font:14px system-ui"><a href="../">← Fra hopp til løping</a></nav><main><header><div class="muted">FRA HOPP TIL LØPING · FORSKNINGSPROTOTYPE v0.3.1 · 26.11.2026</div><h1>Muskelkrav ved gitt løpshastighet</h1><p>To inverse problemer og empiriske sammenligninger, inkludert enkeltmuskelanatomi og modellerte hamstringkrefter: (A) relativ kapasitet ved foreskrevet løpssteg og (B) absolutt muskelvolum ved et foreskrevet ankelmoment. De er ikke koblet via en validert invers dynamikk. Ingen universelle styrke- eller muskelmassekrav.</p></header>
+<section><h2>A · Relativt PCSA-krav ved ønsket fart</h2><p>Referanse: 80,3 kg, 1,7675 m, kontaktlengde 1,10 m. Foreskrevet svevtid, ikke optimalisert. Samme PCSA-faktor i ankel, øvrige støttemuskler og hoftens svinggruppe. Fascikkellengdene holdes uendret. Fart og kontaktlengde gir kontakttiden.</p><div class="controls"><label>Fart (m/s)<input id="v" type="number" value="12.3" min="4" max="20" step="0.1"></label><label>Svevtid (ms)<input id="tf" type="number" value="114" min="20" max="600" step="1"></label><label>Fiberprofil i alle grupper<select id="profile"><option value="reference">Historisk referanse</option><option value="slow">Illustrativ langsommere</option><option value="fast">Illustrativ raskere</option></select></label><label>Driftspunkt (andel IIa Vmax)<input id="dp" type="number" value="0.30" min="0.02" max="0.8" step="0.01"></label><label>Aktiveringsprofil<select id="tau"><option value="0.4">20 / 12 / 10 ms</option><option value="0.6">30 / 18 / 15 ms</option><option value="1">50 / 30 / 25 ms</option></select></label><label>Massebetingelse<select id="coupled"><option value="1">Muskelmasse medregnet</option><option value="0">Kroppsmasse konstant</option></select></label></div><p class="muted" id="profileText"></p><div id="status" role="status"></div><div id="relMetrics" class="metrics"></div><p class="warning">Masseendring i A gjelder bare modellens antatte samlede muskelandel 15,5 % av referansekroppsmassen. Dette er ikke MR-målt muskelmasse. Faktoren under 1 betyr en matematisk kapasitetsterskel, ikke anbefalt muskeltap. Ved konstant kroppsmasse er faktoren et kontrafaktisk styrkescenario.</p><h3>Fart og nødvendig felles PCSA-faktor</h3><div id="relBars" class="bars"></div><button id="download">Eksporter A-scenarioer (CSV)</button></section>
+<section><h2>B · Absolutt kapasitet: triceps surae i ett bein</h2><p>Angi det momentet som de tre musklene må bidra med. Det er <strong>ikke</strong> beregnet fra farten i A. Ved samme momentarm og kraftutnyttelse for alle tre beregnes nødvendig muskelvolum med fast volumfordeling fra MR-gruppen. Andre plantarfleksorer, antagonister og passive momenter er ikke representert.</p><div class="controls"><label>MR-proporsjoner<select id="group"><option value="0">Kontroll (n=11)</option><option value="1">Subelite (n=26)</option><option value="2" selected>Elite (n=5)</option></select></label><label>Kroppsmasse (kg)<input id="mass" type="number" value="80.3" min="35" max="150" step="0.1"></label><label>Foreskrevet moment (Nm/kg)<input id="moment" type="number" value="3" min="0.1" max="8" step="0.1"></label><label>Akillesmomentarm (cm)<input id="arm" type="number" value="5" min="2" max="8" step="0.1"></label><label>Spesifikk kraft (N/cm²)<input id="sigma" type="number" value="26.8" min="10" max="60" step="0.1"></label><label>Kraftutnyttelse (andel)<input id="util" type="number" value="0.50" min="0.05" max="1" step="0.05"></label></div><div id="absStatus" role="status"></div><div id="absMetrics" class="metrics"></div><div class="scroll"><table><thead><tr><th>Muskel</th><th>MR-volum cm³</th><th>Fiberlengde cm</th><th>Pennasjon °</th><th>Beregnet volum cm³</th></tr></thead><tbody id="absTable"></tbody></table></div><p class="warning">Kroppsmassen holdes fast i B. Den beregnede massen er ikke en validert terskel. Målte MR-volumer (Miller 2021) kombineres her med arkitektur fra et annet, kadaverbasert utvalg (Ward 2009). Moment, momentarm og kraftutnyttelse er illustrativt valgte. Kraftutnyttelsen samler aktivering, lengde og hastighet; ikke bruk den som en målt aktiveringsgrad.</p></section>
+<section><h2>C · Empirisk sammenligning (MR)</h2><p>Miller et al. (2021), tabell 2. Volum per bein (gjennomsnitt av begge sider), gjennomsnitt ± SD i cm³. Muskelgruppene overlapper; ikke summer gruppene. «Alle målte muskler» er originalens unike sum.</p><div class="scroll"><table><thead><tr><th>Muskelgruppe</th><th>Kontroll</th><th>Subelite</th><th>Elite</th></tr></thead><tbody id="mri"></tbody></table></div><p>Dette er tverrsnittsdata. De beskriver gruppene, ikke minimumskrav til fart. De gir heller ikke årsaksvirkning av hypertrofi.</p></section>
+<section><h2>D · Weyand &amp; Davis (2005): total kroppsmasse</h2><p>Empirisk struktur–funksjonsrelasjon mellom 16 elitegruppers gjennomsnittsverdier. M = D × H² × Fg, der Fg er estimert gjennomsnittlig vertikalkraft i kontaktfasen (BW). Fg = 1,27 + 0,105v (menn), 1,24 + 0,106v (kvinner); D = 10 kg/m². Dette er ikke en kausal hypertrofimodell, et minimum eller et individuelt mål.</p><div class="controls"><label>Høyde (m)<input id="wh" type="number" value="1.7675" min="1.3" max="2.2" step="0.01"></label><label>Kraft–fart-relasjon<select id="wsex"><option value="male">Menn</option><option value="female">Kvinner</option></select></label><label>Fart (m/s)<input id="wv" type="number" value="10.84" min="2.5" max="15" step="0.01"></label></div><div id="wstatus" role="status" class="warning"></div><div id="wmetrics" class="metrics"></div><h3>Sammenligning ved samme referansehøyde (1,7675 m, menn)</h3><div class="scroll"><table><thead><tr><th>Fart m/s</th><th>Weyand Fg (BW)</th><th>Vår Fg (BW)</th><th>Weyand totalmasse (kg)</th><th>Δ Weyand (kg)</th><th>Δ A (kg)</th></tr></thead><tbody id="wtable"></tbody></table></div><p class="muted">Δ fra 10,84 m/s; A bruker fast kontaktlengde 1,10 m, svevtid 114 ms, standardprofil, koblet masse. For Weyand er 11,2 m/s øvre målte fart hos menn og 8,0 hos kvinner; stjerne = ekstrapolasjon. Elitegruppenes fartsverdier var gjennomsnittlig konkurransefart, ikke øyeblikkelig toppfart. Forfatterne rapporterer 2,5 kg per m/s for menn ved 1,77 m, men de publiserte likningene gir 3,29 kg per m/s; her brukes likningene konsekvent. <a href="https://doi.org/10.1242/jeb.01609">Originalartikkel</a>.</p></section>
+<section><h2>E · Fra fart til leddmoment (Schache et al. 2011)</h2><p>Originalstudie med invers dynamikk fra målt kinematikk og bakkekraft. Tabellen viser toppverdier for nettomoment i sagittalplanet (absolutte størrelser i Nm/kg, gjennomsnitt ± SD). Fasene og momentretningene er forskjellige, og toppene kan ikke summeres. Kun publiserte fartspunkter, ingen ekstrapolasjon.</p><div class="scroll"><table><thead><tr><th>Moment og fase</th><th>3,50 m/s (n=8)</th><th>5,02 m/s (n=8)</th><th>6,97 m/s (n=8)</th><th>8,95 m/s (n=7)</th></tr></thead><tbody id="jtable"></tbody></table></div><p>Momentet øker særlig i svingfasen når farten stiger. Dette støtter at en modell må omfatte både støtte og sving, men etablerer ikke at sving bestemmer toppfarten.</p><h3>Betinget triceps surae-scenario ved et publisert fartspunkt</h3><div class="controls"><label>Publisert fart<select id="jidx"><option value="0">3,50 m/s</option><option value="1">5,02 m/s</option><option value="2">6,97 m/s</option><option value="3" selected>8,95 m/s</option></select></label><label>Antatt tricepsmoment/nettomoment<input id="jratio" type="number" min="0.1" max="1.5" step="0.05" value="1"></label></div><p>Bruker kroppsmasse, MR-gruppe, momentarm, spesifikk kraft og utnyttelsesfaktor valgt i B. Forholdet er en fri antakelse, ikke målt: andre plantarfleksorer kan redusere tricepsbidraget, antagonister kan øke det nødvendige bidraget. Eksempel 1,0 betyr at hele nettomomentet tilordnes triceps surae.</p><div id="jstatus" role="status"></div><div id="jmetrics" class="metrics"></div><p class="warning">Dette er et betinget moment–volum-scenario, ikke et målt massekrav. Spennet ved middel ± SD varierer bare nettomomentet, ikke de andre antakelsene; det er ikke et konfidensintervall eller en total usikkerhetsanalyse. Fartene er gruppemiddel fra en annen studie enn MR/arkitekturdata. Ingen individuelle dynamometerkrav. <a href="https://doi.org/10.1249/MSS.0b013e3182084929">Schache et al. (2011), tabell 1</a>.</p></section>
+<section id="anatomy"><h2>F · Anatomisk kapasitet: Folland-gruppens MR-data</h2><p>23 målte muskler/kompartmenter i fem grupper. Volumer er unilaterale middelverdier fra Miller et al. (2021, 2022), tabell 2. 16 har en direkte match til Ward et al. (2009), tabell 3. De andre vises uten estimert kraft. Arkitektur fra 21 kadaverbein (alder 83 ± 9 år) er ikke individuell sprinterarkitektur.</p><div class="controls"><label>MR-gruppe<select id="ag"></select></label><label>Spesifikk isometrisk kraft (N/cm²)<input id="asig" type="number" min="10" max="100" step="0.1" value="26.8"></label></div><div id="astatus" role="status"></div><div id="ametrics" class="metrics"></div><div class="scroll"><table><thead><tr><th>Muskel / kompartment</th><th>Volum ± SD (cm³)</th><th>Volum/kg (cm³/kg)</th><th>Fiberlengde (cm)</th><th>Pennasjon (°)</th><th>PCSA (cm²)</th><th>Isometrisk senekraftproxy (N)</th></tr></thead><tbody id="atable"></tbody></table></div><p>PCSA = V/L; isometrisk senekraftproxy = σ × PCSA × cos(α). Ikke målt styrke. Ingen modell av kraft–lengde, kraft–hastighet eller individuell aktivering her. Totalvolum vises fra originalens sum; funksjonelle grupper i C overlapper.</p><h3>Hamstrings · sammenligning med Schache et al. (2012)</h3><p>Estimert toppkraft i muskel–sene-enheten ved gjennomsnittlig sprintfart 9,0 ± 0,7 m/s (7 sprintere, 5 menn og 2 kvinner). Toppene inntreffer ved ulike tidspunkter. Dette er en kryss-studie-plausibilitetskontroll, ikke en validering eller et individuelt krav. Brukes ikke ved andre farter.</p><div class="controls"><label>Fase<select id="aphase"><option value="swing">Sving</option><option value="stance">Støtte</option></select></label></div><div id="hamBars" class="bars"></div><div class="scroll"><table><thead><tr><th>Muskel</th><th>Schache MTU (N/kg)</th><th>MR/Ward isometrisk proxy (N/kg)</th><th>Forhold MTU/proxy</th><th>Implisitt σ ved isometrisk antakelse (N/cm²)</th><th>Schache F0 (N)</th></tr></thead><tbody id="hamtable"></tbody></table></div><p class="warning">Forhold over 1 betyr at estimert MTU-topp er større enn vår isometriske proxy; dette er ikke aktiveringsgrad og heller ikke bevis for fysiologisk umulighet. Eksentrisk og passiv kraft, modellens F0, fascikkeldynamikk og geometri kan endre forholdet. Schache benyttet ulike F0 (tabell 1) i statisk optimalisering; MTU-hastighet er ikke fiberhastighet.</p><h3>Eksperiment: omfordel volum ved konstant hamstringmasse</h3><p>Flytt volum fra semimembranosus til semitendinosus (positiv verdi) eller motsatt. Hold fascikkellengde, pennasjon, spesifikk kraft og samlet volum konstant. Dette er en kontrafaktisk geometrisk øvelse, ikke et adaptasjonsforløp eller et løpsfartestimat.</p><div class="controls"><label>Overført volum (cm³)<input id="ashift" type="number" min="-100" max="100" step="10" value="0"></label></div><div id="shiftmetrics" class="metrics"></div><p>Lengre fibre gir ved samme normaliserte forkortningshastighet høyere absolutt hastighet, men mindre PCSA ved samme volum. Semitendinosus kan derfor ha andre funksjonelle fortrinn enn maksimal isometrisk kraft.</p><p>Kilder: <a href="https://doi.org/10.1249/MSS.0000000000002522">Miller 2021</a> · <a href="https://doi.org/10.1249/MSS.0000000000002999">Miller 2022</a> · <a href="https://doi.org/10.1007/s11999-008-0594-8">Ward 2009</a> · <a href="https://doi.org/10.1249/MSS.0b013e318236a3d2">Schache 2012, tabell 1–2</a>.</p><p>Schaches estimerte kraftfordeling er avhengig av valgt F₀; forholdet MTU/proxy er ikke diagnostisk. Isometrisk omfordeling kan ikke rangere dynamisk kapasitet. Ward 2009 og Schache 2012 beskrev allerede STs store ekskursjon og MTU-forlengelseshastighet; dette er ikke en ny hypotese. Miller 2021 rapporterte r = −0,530 for absolutt ST-volum og 100 m-tid og r = −0,342 (ikke signifikant) for volum/kg. Miller 2022 rapporterte −0,242 og −0,245 hos kvinner. Sprintsteget-data er ikke inkludert eller validert i denne pakken.</p></section>
+<section id="joint"><h2>G · Samtidig momentbalanse i hofte og kne</h2><p>Ved ett og samme tidspunkt i sen sving: H = netto hofteekstensjonsmoment minus øvrige bidrag, K = netto knefleksjonsmoment minus øvrige bidrag. De fire hamstringsmusklene må sammen dekke disse restmomentene. Netto- og restmomenter er ikke det samme. Schache 2011s separate toppmomenter (4,18 og 1,76 Nm/kg ved 8,95 m/s) er oppslag, ikke et synkront momentpar. Derfor brukes et fritt, konstruert momentpar her.</p><p class="warning">Dette er en statisk, betinget gjennomførbarhetstest, ikke invers dynamikk eller en validert fysiologisk øvre grense. Momentarmene under er illustrative og konstante. Krafttak = isometrisk MR/Ward-proxy × valgt effektiv faktor, som kan representere større eksentrisk kapasitet, passivt bidrag eller lavere utnyttelse. Ingen modell av faktisk fiberlengde, -hastighet, senedynamikk eller koaktivering. Et umulig restmomentpar betyr bare at de valgte antakelsene ikke er tilstrekkelige.</p><div class="controls"><label>Netto hofteekstensjon (Nm/kg)<input id="jh" type="number" min="0" max="10" step=".1" value="3"></label><label>Netto knefleksjon (Nm/kg)<input id="jk" type="number" min="0" max="10" step=".1" value="1.5"></label><label>Øvrig hoftebidrag (Nm/kg, signert)<input id="joh" type="number" min="-10" max="10" step=".1" value="1.5"></label><label>Øvrig knebidrag (Nm/kg, signert)<input id="jok" type="number" min="-10" max="10" step=".1" value="0.3"></label><label>Spesifikk kraft (N/cm²)<input id="jsig" type="number" min="22.5" max="55" step=".1" value="26.8"></label><label>Effektiv krafttaksfaktor (illustrativ)<input id="ju" type="number" min="0.1" max="2" step=".1" value="1.3"></label></div><p>MR-gruppe velges i del F. BFSH krysser ikke hoften, så dens hoftemomentarm er null. Endre de øvrige momentarmene for å undersøke følsomheten.</p><div class="scroll"><table><thead><tr><th>Muskel</th><th>Hofte (cm)</th><th>Kne (cm)</th><th>Krafttak (N/kg)</th><th>Én mulig kraft (N/kg)</th></tr></thead><tbody id="jointRows"></tbody></table></div><div id="jointStatus" role="status"></div><div id="jointMetrics" class="metrics"></div><p>Metode: Ved gitt knekrav minimeres og maksimeres hoftemoment ved å fylle krafttakene i rekkefølge etter forholdet mellom momentarmene. Alle mellomliggende hoftemomenter er mulige ved konveks kombinasjon. Løsningen er bare ett mulig kraftsett, ikke en prediksjon av rekruttering. Nettomomentet er bestemt av invers dynamikk, men summen av muskelkrefter er ikke det. Andre muskler og passive momenter må inngå i restmomentet.</p><h3>Hvorfor kraftfordelingen er modellavhengig</h3><p>I en forenklet, ubundet ettleddsmodell med lik momentarm og lik kontraktil tilstand gir minimering av kvadrerte aktiveringer Fᵢ ∝ F₀ᵢ². Dette er ikke Schaches fulle flerløddsanalyse. For ST/SM blir kraftforholdet <span id="shareRatio"></span>. Schaches modellfordeling er derfor ikke uavhengig evidens for fysiologisk kraftfordeling.</p><h3>Samme volum, ulik kapasitet ved forkortning</h3><p>Anta samme absolutte fiberhastighet for alle fire hamstringmusklene, optimallengde, full aktivering, uendret pennasjon og Hill-krumning 0,25. Dette er et separat tankeeksperiment, ikke en gjengivelse av sprintens MTU-hastigheter. Vmax er illustrativ i fiberlengder/s. Når foreskrevet hastighet overskrider Vmax settes aktiv konsentrisk kapasitet til null; passiv kraft er utelatt.</p><div class="controls"><label>Antatt fiberhastighet (m/s)<input id="hfvel" type="number" min="0" max="4" step=".05" value=".8"></label><label>Normalisert Vmax (fiberlengder/s)<input id="hfmax" type="number" min="4" max="25" step="1" value="10"></label></div><div id="hillMetrics" class="metrics"></div><p>Volumoverføringen i F påvirker dette eksperimentet. Kraftverdier er projisert aktiv isometrisk/konsentrisk kapasitet ved de antatte betingelsene. Ingen beregning av eksentrisk kraft eller sprintprestasjon.</p><h3>Forskningsoppgave</h3><p>Varier σ (22,5–55 N/cm²), krafttaksfaktor og momentarm. Kan de to restmomentene dekkes samtidig, selv når hvert ledd isolert sett har tilstrekkelig kapasitet? Forklar hvorfor en løsning ikke er en validert prediksjon. Neste trinn krever synkroniserte nettomomenter, vinkelavhengige momentarmer og muskeldynamikk.</p></section>
+<section><h2>Forskningsoppgaver</h2><ol><li>Ved 12,3 m/s, sammenlign fast kroppsmasse og medregnet masse. Hva er forskjellen mellom fysiologisk kapasitet og massetillegg?</li><li>Endre svevtid og fiberprofil. Hvilken begrensning bestemmer den felles PCSA-faktoren? Hvorfor kan vi ikke tolke den som et minimum over alle mulige løpsteknikker?</li><li>Bruk B med kraftutnyttelse 0,50 og 0,75. Hvorfor endres volumkravet selv med identisk ankelmoment? Hva må måles for å velge mellom dem?</li></ol><h2>Kilder og status</h2><p><a href="https://doi.org/10.1249/MSS.0000000000002522">Miller et al. 2021</a> (originalstudie, tabell 2); <a href="https://doi.org/10.1007/s11999-008-0594-8">Ward et al. 2009</a> (originalstudie, tabell 3); <a href="https://doi.org/10.1152/japplphysiol.00296.2024">systematisk oversikt over spesifikk kraft, 2024</a> (26,8 N/cm² som standard, usikkert for enkeltmuskel); <a href="https://doi.org/10.1371/journal.pcbi.1011410">Van Wouwe et al. 2024</a> (regional volumoptimalisering); <a href="https://doi.org/10.1152/japplphysiol.00174.2014">Clark &amp; Weyand 2014</a> (historisk kalibrering av A). Kapasitetsmotor v0.3.3 er uendret. Forskningsprototype, ikke prediktiv diagnostikk.</p></section></main><script>/* Kraftbudsjett for et sprintsteg – JavaScript-port av kraftbudsjett.py (v0.2.1).
+ * Samme likninger og konstanter som Python-versjonen. Kontrollert mot Python i
+ * test_paritet.mjs. Ingen avhengigheter.
+ */
+(function (root) {
+  'use strict';
+
+  // --- Fibertyper (Trappe mfl. 2015, tabell 1; vastus lateralis, 15 °C) ---
+  const TYPER = ['I', 'IIa', 'IIx'];
+  const SPESIFIKK_KRAFT = { I: 141.0, IIa: 187.0, IIx: 196.0 };
+  const VMAX = { I: 0.89, IIa: 3.92, IIx: 5.82 };
+  const HILL_KRUMNING = 0.25;
+  const TAU_AKTIVERING = { I: 0.050, IIa: 0.030, IIx: 0.025 };
+
+  const BEINLENGDE_ANDEL = 0.530;
+  const MUSKELANDEL = { ankel: 0.025, prox: 0.10, hofte: 0.03 };
+
+  function fibre(I = 0.486, IIa = 0.412, IIx = 0.102) {
+    const s = I + IIa + IIx;
+    if (Math.abs(s - 1) > 1e-9 || Math.min(I, IIa, IIx) < -1e-12) {
+      throw new Error('Fibertypeandelene må være ikke-negative og summere til 1 (summen er ' + s.toFixed(4) + ').');
+    }
+    return { I, IIa, IIx };
+  }
+
+  function medIIx(f, iix) {
+    const ii = f.IIa + f.IIx;
+    iix = Math.min(Math.max(iix, 0), ii);
+    return fibre(f.I, ii - iix, iix);
+  }
+
+  function hill(vrel, k = HILL_KRUMNING) {
+    if (vrel >= 1) return 0;
+    return (1 - vrel) / (1 + vrel / k);
+  }
+
+  function blandetKraft(f, vIIa, vmaxSkala = 1) {
+    const vAbs = vIIa * VMAX.IIa;
+    let total = 0;
+    for (const t of TYPER) {
+      total += f[t] * (SPESIFIKK_KRAFT[t] / SPESIFIKK_KRAFT.I) * hill(vAbs / (VMAX[t] * vmaxSkala));
+    }
+    return total;
+  }
+
+  /** Kraft per type ved en gitt fiberhastighet (andel av IIa-Vmax), relativt til type I isometrisk. */
+  function kraftPerType(vIIa) {
+    const vAbs = vIIa * VMAX.IIa;
+    const ut = {};
+    for (const t of TYPER) ut[t] = (SPESIFIKK_KRAFT[t] / SPESIFIKK_KRAFT.I) * hill(vAbs / VMAX[t]);
+    return ut;
+  }
+
+  function aktivering(tid, f, a0, tauSkala = 1) {
+    let tau = 0;
+    for (const t of TYPER) tau += f[t] * TAU_AKTIVERING[t];
+    tau = Math.max(tau * tauSkala, 1e-9);
+    return 1 - (1 - a0) * (tau / tid) * (1 - Math.exp(-tid / tau));
+  }
+  /** Aktivering ved tid t etter isett (første ordens stigning fra a0). */
+  function aktiveringKurve(t, f, a0, tauSkala = 1) {
+    let tau = 0;
+    for (const k of TYPER) tau += f[k] * TAU_AKTIVERING[k];
+    tau = Math.max(tau * tauSkala, 1e-9);
+    return 1 - (1 - a0) * Math.exp(-t / tau);
+  }
+  const a0Av = (l, m) => (l.forhaandsaktivering == null ? m.forhaandsaktivering : l.forhaandsaktivering);
+
+  // --- Løperen ---
+  function loper(o = {}) {
+    const l = Object.assign({
+      navn: 'løper', hoyde: 1.8, masse: 80, svevtid: null, beinlengde: null, kontaktvinkel: null,
+      fibre: fibre(), akillesarm: 1, forfotarm: 1, pcsa_ankel: 1, pcsa_prox: 1, pcsa_hofte: 1,
+      fiberandel_ankel: 1, fiberandel_prox: 1, fiberandel_hofte: 1, fasikkellengde: 1, vmax_skala: 1,
+      aktiveringstid: 1, forhaandsaktivering: null, uten_masse: false,
+    }, o);
+    return l;
+  }
+  const L0 = (l) => (l.beinlengde != null ? l.beinlengde : BEINLENGDE_ANDEL * l.hoyde);
+  const muskeltillegg = (l) => (l.uten_masse ? 0 :
+    l.masse * (MUSKELANDEL.ankel * (l.pcsa_ankel - 1) + MUSKELANDEL.prox * (l.pcsa_prox - 1) +
+      MUSKELANDEL.hofte * (l.pcsa_hofte - 1)));
+  const totalMasse = (l) => l.masse + muskeltillegg(l);
+
+  // --- Trinn 1: krav (Clark 2022) ---
+  function steg(fart, kontaktvinkel, l0, svevtid) {
+    const kontaktlengde = 2 * l0 * Math.sin(kontaktvinkel / 2);
+    const tc = kontaktlengde / fart;
+    const stegtid = tc + svevtid;
+    const hoftefrekvens = 1 / (2 * stegtid);
+    const larutslag = kontaktvinkel / Math.sin(Math.PI * hoftefrekvens * tc);
+    return {
+      fart, kontaktvinkel, L0: l0, svevtid, kontaktlengde, tc, stegtid,
+      stegfrekvens: 1 / stegtid, steglengde: fart * stegtid, kraftkrav: stegtid / tc,
+      hoftefrekvens, larutslag, lar_vinkelfart: larutslag / stegtid,
+      lar_vinkelakselerasjon: 2 * Math.PI ** 2 * larutslag * hoftefrekvens ** 2,
+    };
+  }
+  function halvdeler(s, forhold = 1.55) {
+    const f = s.kraftkrav;
+    return [2 * f * forhold / (1 + forhold), 2 * f / (1 + forhold)];
+  }
+  const kontaktvinkelFraLengde = (Lc, l0) => 2 * Math.asin(Lc / (2 * l0));
+
+  // --- Trinn 2: kapasitet ---
+  function modell(o = {}) {
+    return Object.assign({
+      driftspunkt_ankel: 0.30, driftspunkt_prox: 0.30, driftspunkt_hofte: 0.30,
+      ankelandel: 0.60, forhaandsaktivering: 0.6, tau_skala: 1.0,
+    }, o);
+  }
+
+  const CLARK_WEYAND_MENN = {
+    loper: loper({ navn: 'Clark & Weyand 2014, menn (n = 4)', hoyde: (1.85 + 1.78 + 1.74 + 1.70) / 4,
+      masse: (91.6 + 83.4 + 74.4 + 71.8) / 4 }),
+    fart: 10.84, kontaktlengde: 1.10, kontakttid: 0.102, svevtid: 0.114,
+  };
+
+  function stotteKomponenter(l, s, kal) {
+    const m = kal.modell;
+    const ref = kal.referanse.loper;
+    const tidsforhold = kal.tc_ref / s.tc;
+    const aEff = aktivering(s.tc, l.fibre, a0Av(l, m), m.tau_skala * l.aktiveringstid);
+    const aRef = aktivering(kal.tc_ref, ref.fibre, m.forhaandsaktivering, m.tau_skala);
+    const pcsaRel = (l.masse / l.hoyde) / (ref.masse / ref.hoyde);
+    const utveksling = l.akillesarm / l.forfotarm;
+    const vAnkel = m.driftspunkt_ankel * l.fiberandel_ankel * utveksling * tidsforhold / l.fasikkellengde;
+    const vProx = m.driftspunkt_prox * l.fiberandel_prox * tidsforhold / l.fasikkellengde;
+    const fAnkel = blandetKraft(l.fibre, vAnkel, l.vmax_skala) / blandetKraft(ref.fibre, m.driftspunkt_ankel);
+    const fProx = blandetKraft(l.fibre, vProx, l.vmax_skala) / blandetKraft(ref.fibre, m.driftspunkt_prox);
+    const vekt = totalMasse(l) / ref.masse;
+    const ankel = kal.kappa_ankel * pcsaRel * l.pcsa_ankel * utveksling * fAnkel * (aEff / aRef) / vekt;
+    const prox = kal.kappa_prox * pcsaRel * l.pcsa_prox * fProx * (aEff / aRef) / vekt;
+    return [ankel, prox];
+  }
+  function stottemargin(l, s, kal) {
+    const [a, p] = stotteKomponenter(l, s, kal);
+    return (a + p) / s.kraftkrav;
+  }
+  function svingmargin(l, s, kal) {
+    const m = kal.modell;
+    const ref = kal.referanse.loper;
+    const vHofte = m.driftspunkt_hofte * l.fiberandel_hofte * (s.lar_vinkelfart / kal.vinkelfart_ref) / l.fasikkellengde;
+    const f = blandetKraft(l.fibre, vHofte, l.vmax_skala) / blandetKraft(ref.fibre, m.driftspunkt_hofte);
+    const aEff = aktivering(s.stegtid, l.fibre, a0Av(l, m), m.tau_skala * l.aktiveringstid);
+    const aRef = aktivering(kal.stegtid_ref, ref.fibre, m.forhaandsaktivering, m.tau_skala);
+    const kapasitet = kal.kappa_sving * (l.masse / ref.masse) * l.pcsa_hofte * f * (aEff / aRef);
+    const krav = (totalMasse(l) / ref.masse) * (L0(l) / L0(ref)) ** 2 * s.lar_vinkelakselerasjon;
+    return kapasitet / krav;
+  }
+  function kalibrer(mod = modell(), referanse = CLARK_WEYAND_MENN) {
+    const l = referanse.loper;
+    const theta = kontaktvinkelFraLengde(referanse.kontaktlengde, L0(l));
+    const s = steg(referanse.fart, theta, L0(l), referanse.svevtid);
+    const krav = s.kraftkrav;
+    const kal = {
+      modell: mod, referanse, kappa_ankel: mod.ankelandel * krav, kappa_prox: (1 - mod.ankelandel) * krav,
+      kappa_sving: 1, kontaktvinkel_ref: theta, tc_ref: s.tc, vinkelfart_ref: s.lar_vinkelfart, stegtid_ref: s.stegtid,
+    };
+    kal.kappa_sving = 1 / svingmargin(l, s, kal);
+    return kal;
+  }
+
+  // --- Trinn 3: toppfart ---
+  const FART_GRENSER = [4.0, 20.0];
+  const SVEVTID_GRENSER = [0.02, 0.60];
+
+  /** Brents metode (som scipy.optimize.brentq). */
+  function brent(f, a, b, xtol = 1e-12, maxit = 200) {
+    let fa = f(a), fb = f(b);
+    if (fa * fb > 0) throw new Error('Roten er ikke omsluttet');
+    if (fa === 0) return a;
+    if (fb === 0) return b;
+    let c = a, fc = fa, d = b - a, e = d;
+    for (let i = 0; i < maxit; i++) {
+      if (fb * fc > 0) { c = a; fc = fa; d = b - a; e = d; }
+      if (Math.abs(fc) < Math.abs(fb)) { a = b; b = c; c = a; fa = fb; fb = fc; fc = fa; }
+      const tol = 2 * Number.EPSILON * Math.abs(b) + 0.5 * xtol;
+      const m = 0.5 * (c - b);
+      if (Math.abs(m) <= tol || fb === 0) return b;
+      if (Math.abs(e) >= tol && Math.abs(fa) > Math.abs(fb)) {
+        let p, q, r;
+        const s = fb / fa;
+        if (a === c) { p = 2 * m * s; q = 1 - s; } else {
+          q = fa / fc; r = fb / fc;
+          p = s * (2 * m * q * (q - r) - (b - a) * (r - 1));
+          q = (q - 1) * (r - 1) * (s - 1);
+        }
+        if (p > 0) q = -q; else p = -p;
+        if (2 * p < Math.min(3 * m * q - Math.abs(tol * q), Math.abs(e * q))) { e = d; d = p / q; }
+        else { d = m; e = m; }
+      } else { d = m; e = m; }
+      a = b; fa = fb;
+      b += Math.abs(d) > tol ? d : (m > 0 ? tol : -tol);
+      fb = f(b);
+    }
+    return b;
+  }
+
+  const vinkel = (l, kal) => (l.kontaktvinkel == null ? kal.kontaktvinkel_ref : l.kontaktvinkel);
+
+  function svevtid(l, fart, kal, theta = null) {
+    if (l.svevtid != null) return l.svevtid;
+    theta = theta == null ? vinkel(l, kal) : theta;
+    const f = (ta) => svingmargin(l, steg(fart, theta, L0(l), ta), kal) - 1;
+    const [lo, hi] = SVEVTID_GRENSER;
+    if (f(lo) >= 0) return lo;
+    if (f(hi) < 0) return hi;
+    return brent(f, lo, hi, 1e-12);
+  }
+  function stegVed(l, fart, kal) {
+    const theta = vinkel(l, kal);
+    return steg(fart, theta, L0(l), svevtid(l, fart, kal, theta));
+  }
+  function toppfart(l, kal) {
+    const f = (v) => stottemargin(l, stegVed(l, v, kal), kal) - 1;
+    const [lo, hi] = FART_GRENSER;
+    let v;
+    if (f(lo) < 0) v = lo; else if (f(hi) > 0) v = hi; else v = brent(f, lo, hi, 1e-10);
+    const s = stegVed(l, v, kal);
+    const [ankel, prox] = stotteKomponenter(l, s, kal);
+    return {
+      fart: v, kontaktvinkel_grader: s.kontaktvinkel * 180 / Math.PI, tc: s.tc, svevtid: s.svevtid,
+      svingtid: s.tc + 2 * s.svevtid, stegfrekvens: s.stegfrekvens, steglengde: s.steglengde,
+      kraftkrav_bw: s.kraftkrav, forste_halvdel_bw: halvdeler(s)[0], ankelandel: ankel / (ankel + prox),
+      larutslag_grader: s.larutslag * 180 / Math.PI, total_masse: totalMasse(l), beinlengde: L0(l),
+      kontaktlengde: s.kontaktlengde,
+    };
+  }
+
+  const FOLSOMHET = [
+    ['Styrke, alle muskler (PCSA +10 %, uten massetillegg)', (l, e) => ({ pcsa_ankel: l.pcsa_ankel * e, pcsa_prox: l.pcsa_prox * e, pcsa_hofte: l.pcsa_hofte * e, uten_masse: true })],
+    ['Styrke, alle muskler (PCSA +10 %, med massetillegg)', (l, e) => ({ pcsa_ankel: l.pcsa_ankel * e, pcsa_prox: l.pcsa_prox * e, pcsa_hofte: l.pcsa_hofte * e })],
+    ['Styrke, bare støttemuskler', (l, e) => ({ pcsa_ankel: l.pcsa_ankel * e, pcsa_prox: l.pcsa_prox * e })],
+    ['Styrke, bare plantarfleksorer', (l, e) => ({ pcsa_ankel: l.pcsa_ankel * e })],
+    ['Styrke, bare hofte (sving)', (l, e) => ({ pcsa_hofte: l.pcsa_hofte * e })],
+    ['Fasikkellengde +10 % (Fmax uendret)', (l, e) => ({ fasikkellengde: l.fasikkellengde * e })],
+    ['Iboende Vmax +10 %, alle fibertyper', (l, e) => ({ vmax_skala: l.vmax_skala * e })],
+    ['Senen tar 10 % mer av lengdeendringen', (l, e) => ({ fiberandel_ankel: l.fiberandel_ankel / e, fiberandel_prox: l.fiberandel_prox / e, fiberandel_hofte: l.fiberandel_hofte / e })],
+    ['IIx +10 %-poeng av %CSA (fra IIa)', (l) => ({ fibre: medIIx(l.fibre, l.fibre.IIx + 0.10) })],
+    ['Akillesarm −10 %', (l, e) => ({ akillesarm: l.akillesarm / e })],
+    ['Forfotarm (tålengde) +10 %', (l, e) => ({ forfotarm: l.forfotarm * e })],
+    ['Beinlengde +10 % (samme masse)', (l, e) => ({ beinlengde: L0(l) * e })],
+    ['Raskere aktivering (RFD): tidskonstant −10 %', (l, e) => ({ aktiveringstid: l.aktiveringstid / e })],
+    ['Forhåndsaktivering +10 %', (l, e, kal) => ({ forhaandsaktivering: Math.min(1, a0Av(l, kal.modell) * e) })],
+  ];
+
+  /** Merk: i Python-versjonen settes PCSA-faktorene til 1,1 (ikke ganges); for en
+   * referanseløper (faktor 1) er det det samme. Her ganges de, slik at følsomheten
+   * gjelder fra løperens egen tilstand. */
+  function folsomhet(l, kal, endring = 0.10) {
+    const v0 = toppfart(l, kal).fart;
+    const e = 1 + endring;
+    return FOLSOMHET.map(([navn, g]) => [navn, 100 * (toppfart(Object.assign({}, l, g(l, e, kal)), kal).fart / v0 - 1)]);
+  }
+
+  function nodvendigFaktor(l, kal, maal, hva) {
+    if (hva === 'pcsa') {
+      const f = (x) => toppfart(Object.assign({}, l, { pcsa_ankel: x, pcsa_prox: x, pcsa_hofte: x }), kal).fart - maal;
+      if (f(0.5) * f(3.0) > 0) return NaN;
+      return brent(f, 0.5, 3.0, 1e-8);
+    }
+    if (hva === 'iix') {
+      const ii = l.fibre.IIa + l.fibre.IIx;
+      const f = (x) => toppfart(Object.assign({}, l, { fibre: medIIx(l.fibre, x) }), kal).fart - maal;
+      if (f(ii) < 0 || f(0) > 0) return NaN;
+      return brent(f, 0, ii, 1e-10);
+    }
+    throw new Error(hva);
+  }
+
+  // --- Trinn 4: adaptasjon (kalibrert i Python: kalibrer_iix, kalibrer_hypertrofi) ---
+  const KINETIKK = { tau_iix: 28.0, tau_u: 7.0, tau_s_opp: 25.0, tau_s_ned: 120.0,
+    trening: -0.015497370647149932, beta: 0.18104148958497085 };
+  const DOSERESPONS = { vekst: 0.009692871233873772, tidskonstant: 2.5, grense: 2.5, tap: 0.01, detrening_tau: 60.0 };
+  const PROGRAMMER = {
+    tung: { pcsa: 1.0, tung: 1.0, sene: 0.6 },
+    sprint: { pcsa: 0.25, tung: 0.3, sene: 0.5, hofte: 0.6 },
+    plyo: { pcsa: 0.15, tung: 0.2, sene: 1.0 },
+    hvile: {},
+  };
+
+  function simulerTrening(l, plan, kin = KINETIKK, dr = DOSERESPONS, status = 1.0, iixBasis = null) {
+    const iix0 = iixBasis == null ? l.fibre.IIx : iixBasis;
+    let x = iix0, y = iix0, u = 0, s = 0;
+    const pcsa = { ankel: l.pcsa_ankel, prox: l.pcsa_prox, hofte: l.pcsa_hofte };
+    let rest = 0, sene = 1;
+    const ut = [];
+    const avt = Math.exp(-1 / dr.tidskonstant);
+    plan.forEach((okt, dag) => {
+      const d = PROGRAMMER[okt];
+      const tung = d.tung || 0;
+      u += (tung * 7 / 3 - u) / kin.tau_u;
+      s += (u - s) / (u > s ? kin.tau_s_opp : kin.tau_s_ned);
+      const uu = Math.min(Math.max(u, 0), 1);
+      const mal = Math.max(0, iix0 * (1 - uu) + kin.trening * uu + kin.beta * Math.max(0, s - u));
+      y += (mal - y) / kin.tau_iix;
+      x += (y - x) / kin.tau_iix;
+      rest = avt * rest + (d.pcsa || 0);
+      const dose = d.pcsa || 0;
+      const forb = status * dr.vekst * (1 - Math.exp(-dose)) / (1 + 0.25 * rest);
+      const svek = dr.tap * Math.max(0, rest - dr.grense) ** 2;
+      for (const g of ['ankel', 'prox', 'hofte']) {
+        const ekstra = g === 'hofte' ? (d.hofte || 0) : 0;
+        pcsa[g] += forb * (1 + ekstra) - svek - (pcsa[g] - 1) / dr.detrening_tau;
+      }
+      sene += 0.002 * (d.sene || 0) - (sene - 1) / dr.detrening_tau;
+      ut.push({ dag: dag + 1, okt, iix: x, pcsa: Object.assign({}, pcsa), sene });
+    });
+    return ut;
+  }
+
+  /** Toppfart dag for dag (fart i m/s), som vurder() i kjor_kraftbudsjett.py. */
+  function forlop(l, tr, kal) {
+    const start = toppfart(l, kal);
+    const rader = [{ dag: 0, uke: 0, iix: l.fibre.IIx, pcsa: l.pcsa_prox, fart: start.fart }];
+    for (const d of tr) {
+      const ny = Object.assign({}, l, { fibre: medIIx(l.fibre, d.iix), pcsa_ankel: d.pcsa.ankel,
+        pcsa_prox: d.pcsa.prox, pcsa_hofte: d.pcsa.hofte });
+      rader.push({ dag: d.dag, uke: d.dag / 7, iix: d.iix, pcsa: d.pcsa.prox, fart: toppfart(ny, kal).fart });
+    }
+    return rader;
+  }
+
+  const API = {
+    TYPER, SPESIFIKK_KRAFT, VMAX, HILL_KRUMNING, TAU_AKTIVERING, BEINLENGDE_ANDEL, MUSKELANDEL,
+    fibre, medIIx, hill, blandetKraft, kraftPerType, aktivering, aktiveringKurve, a0Av, loper, L0, totalMasse, steg, halvdeler,
+    kontaktvinkelFraLengde, modell, CLARK_WEYAND_MENN, stotteKomponenter, stottemargin, svingmargin,
+    kalibrer, brent, svevtid, stegVed, toppfart, folsomhet, nodvendigFaktor, KINETIKK, DOSERESPONS,
+    PROGRAMMER, simulerTrening, forlop,
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = API;
+  else root.KB = API;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+/* v0.3.3: explicit re-calibration of activation time constants; reduced-order, conditional feasibility model. Original engine kept separately. */
+(function(root){'use strict';
+const K=typeof module==='object'&&module.exports?require('./kraftbudsjett_original.js'):root.KB;
+const groups=['ankel','prox','hofte'];
+const ref=K.CLARK_WEYAND_MENN.loper;
+const baseF=Object.freeze({...ref.fibre});
+const massShare={ankel:.025,prox:.10,hofte:.03};
+const defaults=()=>({height:ref.hoyde,mass:ref.masse,leg:K.L0(ref),theta:K.kontaktvinkelFraLengde(1.10,K.L0(ref)),swing:0.114, speed:10.84,profiles:Object.fromEntries(groups.map(g=>[g,{...baseF}])),dp:{ankel:.3,prox:.3,hofte:.3},pcsa:{ankel:1,prox:1,hofte:1},length:{ankel:1,prox:1,hofte:1},vmax:{ankel:1,prox:1,hofte:1},a0:{ankel:.6,prox:.6,hofte:.6},tau:{ankel:1,prox:1,hofte:1}, leverage:1,extraMass:0, volumeMode:'pcsa',massMode:'coupled',activation:'perFiber',baseTau:.4,supportShare:.60});
+const finite=(v,n,lo,hi)=>{if(!Number.isFinite(v)||v<lo||v>hi)throw Error(n+' utenfor området');return v};
+const meanAct=(t,tau,a0)=>1-(1-a0)*(-Math.expm1(-t/tau))*tau/t;
+function fiberForce(profile,d,dt,a0,tau,vm=1,activation='perFiber'){
+  if(d<0)throw Error('Kun konsentrisk scenario');
+  K.fibre(profile.I,profile.IIa,profile.IIx);
+  let sum=0;const common=K.aktivering(dt,profile,a0,tau);
+  for(const i of K.TYPER){const act=activation==='perFiber'?meanAct(dt,K.TAU_AKTIVERING[i]*tau,a0):common;sum+=profile[i]*K.SPESIFIKK_KRAFT[i]/K.SPESIFIKK_KRAFT.I*K.hill(d*K.VMAX.IIa/(K.VMAX[i]*vm))*act}
+  return sum;
+}
+function validate(q){finite(q.height,'høyde',1.3,2.3);finite(q.mass,'masse',35,150);finite(q.leg,'beinlengde',.6,1.3);finite(q.theta,'kontaktvinkel',.5,1.7);finite(q.swing,'svevtid',.02,.6);finite(q.speed,'fart',4,20);finite(q.leverage,'utveksling',.5,1.5);finite(q.extraMass,'ekstra masse',-10,30);finite(q.baseTau,'referanse-tidskonstant',.4,1);finite(q.supportShare,'ankelandel',.2,.8);if(!['pcsa','volume'].includes(q.volumeMode)||!['coupled','fixed'].includes(q.massMode)||!['perFiber','legacy'].includes(q.activation))throw Error('Ugyldig modus');for(const g of groups){for(const t of K.TYPER)finite(q.profiles[g][t],'fiberandel '+g+' '+t,-1e-12,1);K.fibre(q.profiles[g].I,q.profiles[g].IIa,q.profiles[g].IIx);for(const [n,l,h] of [['dp',.02,.8],['pcsa',.5,2],['length',.7,1.4],['vmax',.5,1.5],['a0',0,1],['tau',.25,3]])finite(q[n][g],n+' '+g,l,h)}return q;}
+function structure(q){const A={},V={};for(const g of groups){A[g]=q.volumeMode==='volume'?q.pcsa[g]/q.length[g]:q.pcsa[g];V[g]=A[g]*q.length[g]};const added=q.mass*groups.reduce((s,g)=>s+massShare[g]*(V[g]-1),0);return {A,V,added,mass:q.mass+q.extraMass+(q.massMode==='coupled'?added:0)}}
+function at(q,v=q.speed,ta=q.swing){validate(q);finite(v,'evaluert fart',4,20);finite(ta,'evaluert svevtid',.02,.6000000000000001);const s=K.steg(v,q.theta,q.leg,ta),r=K.steg(10.84,K.kontaktvinkelFraLengde(1.10,K.L0(ref)),K.L0(ref),.114),str=structure(q);const f={},relative={},vrel={},acts={};for(const g of groups){const dt=g==='hofte'?s.stegtid:s.tc,dt0=g==='hofte'?r.stegtid:r.tc;vrel[g]=q.dp[g]*(g==='hofte'?s.lar_vinkelfart/r.lar_vinkelfart:r.tc/s.tc)*(g==='ankel'?q.leverage:1)/q.length[g];f[g]=fiberForce(q.profiles[g],vrel[g],dt,q.a0[g],q.tau[g]*q.baseTau,q.vmax[g],q.activation);const norm=fiberForce(baseF,q.dp[g],dt0,.6,q.baseTau,1,q.activation);relative[g]=norm>0?f[g]/norm:NaN;acts[g]=K.aktivering(dt,q.profiles[g],q.a0[g],q.tau[g]*q.baseTau)}
+const size=(q.mass/q.height)/(ref.masse/ref.hoyde),w=str.mass/ref.masse;
+const ankle=r.kraftkrav*q.supportShare*size*str.A.ankel*q.leverage*relative.ankel/w;
+const prox=r.kraftkrav*(1-q.supportShare)*size*str.A.prox*relative.prox/w;
+// Legacy calibrated hip moment scaling; added mass treated as uniform mass for inertia, not anatomical distribution.
+const swing=(q.mass/ref.masse)*str.A.hofte*relative.hofte/((str.mass/ref.masse)*(q.leg/K.L0(ref))**2*s.lar_vinkelakselerasjon/r.lar_vinkelakselerasjon);
+return {v,ta,tc:s.tc,frequency:s.stegfrekvens,step:s.steglengde,required:s.kraftkrav,ankle,prox,support:(ankle+prox)/s.kraftkrav,swing,vrel,relative,acts,...str};}
+// No clipped numeric optimum. Fixed-technique grid, not prediction of free running.
+function envelope(q){validate(q);let feasible=[],best=null;const n=161;for(let i=0;i<n;i++){const v=4+i*.1;let atv=null;for(let j=0;j<=290;j++){const ta=.02+j*.002;const a=at(q,v,ta);if(a.support>=1-1e-10&&a.swing>=1-1e-10){atv=a;break}}if(atv){feasible.push(v);best=atv}}return {best,status:!best?'none':best.v>=20-1e-9?'upper-bound':'grid',count:feasible.length,step:.1,flightStep:.002,feasible};}
+function demand(v,tc,tf,mass){if(![v,tc,tf,mass].every(Number.isFinite)||v<=0||tc<=0||tf<0||mass<=0)throw Error('Ugyldig steg');const T=tc+tf;return {T,f:1/T,step:v*T,swing:tc+2*tf,meanBW:T/tc,meanN:mass*9.81*T/tc,impulse:mass*9.81*T};}
+
+function limit(q){validate(q);
+  const bisect=(f,lo,hi)=>{let a=f(lo),b=f(hi);if(a===0)return lo;if(b===0)return hi;if(a*b>0)throw Error('Ingen omsluttet rot');for(let i=0;i<44;i++){let m=(lo+hi)/2,c=f(m);if(c===0)return m;if(Math.sign(c)===Math.sign(a)){lo=m;a=c}else{hi=m;b=c}}return (lo+hi)/2};
+  const atV=v=>{let low=at(q,v,.02),high=at(q,v,.6);if(high.swing<1)return {margin:-1,a:high};if(low.swing>=1)return {margin:low.support-1,a:low};let ta=bisect(t=>at(q,v,t).swing-1,.02,.6);let a=at(q,v,ta);return {margin:a.support-1,a}};
+  let prev=atV(4),best=prev.margin>=0?prev.a:null,roots=[],monotone=true;
+  for(let i=1;i<=160;i++){let v=4+i*.1,cur=atV(v);if(cur.margin>prev.margin+1e-7)monotone=false;if(cur.margin>=0)best=cur.a;if(prev.margin>=0&&cur.margin<0){let r=bisect(x=>atV(x).margin,v-.1,v);let a=atV(r).a;if(a.swing>=1-1e-8&&a.support>=1-1e-8)roots.push(a)}prev=cur}
+  if(!monotone)return {status:'unresolved',best:null,monotone};
+  if(prev.margin>=0)return {status:'upper-bound',best:null,monotone};
+  const candidate=roots.at(-1);if(candidate&&(!best||candidate.v>=best.v-1e-9))return {status:'root',best:candidate,monotone};return {status:best?'unresolved':'none',best:null,monotone};
+}
+const api={limit,groups,defaults,validate,structure,meanAct,fiberForce,at,envelope,demand};if(typeof module==='object'&&module.exports)module.exports=api;else root.Cap=api;
+})(typeof window!=='undefined'?window:globalThis);
+
+(function(root){'use strict';
+const C=typeof module==='object'&&module.exports?require('./capacity_v033.js'):root.Cap;
+const density=1.06, shares=.155;
+const profiles={reference:{I:.486,IIa:.412,IIx:.102},slow:{I:.65,IIa:.30,IIx:.05},fast:{I:.30,IIa:.45,IIx:.25}};
+// Miller 2021, Table 2; unilateral group means (mean, SD), cm³. Groups overlap: never sum functional groups.
+const mri={all:[[7628,1548],[9164,1207],[11323,1328]],hipFlex:[[1031,151],[1314,216],[1620,200]],hipExt:[[2257,220],[3029,422],[4002,489]],kneeFlex:[[1460,196],[1859,301],[2304,178]],kneeExt:[[2202,315],[2636,401],[3218,400]],plantar:[[860,172],[943,156],[1112,181]],soleus:[[453,95],[510,76],[610,137]],mg:[[251,52],[262,58],[300,38]],lg:[[156,41],[170,37],[202,34]]};
+// Ward 2009 Table 3, normalized fascicle length (cm) and pennation (degrees). Different sample, not sprinters.
+const arch=[{name:'Soleus',key:'soleus',L:4.40,alpha:28.3},{name:'Gastrocnemius medialis',key:'mg',L:5.10,alpha:9.9},{name:'Gastrocnemius lateralis',key:'lg',L:5.88,alpha:12.0}];
+function valid(x,lo,hi,label){if(!Number.isFinite(x)||x<lo||x>hi)throw Error(label+' utenfor intervallet');return x}
+function inverse({v=10.84,tf=.114,profile='reference',dp=.3,baseTau=.4,coupled=true}={}){
+  valid(v,4,20,'Fart');valid(tf,.02,.6,'Svevtid');valid(dp,.02,.8,'Driftspunkt');valid(baseTau,.4,1,'Tidskonstant');if(!profiles[profile])throw Error('Ukjent fiberprofil');
+  const q=C.defaults(); q.speed=v;q.swing=tf;q.baseTau=baseTau;q.massMode=coupled?'coupled':'fixed';
+  for(const g of C.groups){q.profiles[g]={...profiles[profile]};q.dp[g]=dp;}
+  const a=C.at(q), B=Math.max(1/a.support,1/a.swing);const s=coupled?shares:0;
+  const demand=C.demand(v,a.tc,tf,q.mass);const denominator=1-B*s;
+  if(!Number.isFinite(B)||denominator<=0)return {status:'no-finite-solution',a,demand,B};
+  const x=B*(1-s)/denominator;
+  if(x<.5-1e-10||x>2+1e-10)return {status:'outside-model-domain',a,demand,B,x};
+  for(const g of C.groups)q.pcsa[g]=Math.min(2,Math.max(.5,x));
+  const result=C.at(q);return {status:'ok',a,demand,B,x,deltaMass:coupled?result.added:0,volumeEquivalent:result.added,realizedMass:result.mass,finalSupport:result.support,finalSwing:result.swing,limiter:a.support<a.swing-1e-10?'støtte':a.swing<a.support-1e-10?'sving':'begge',newDemand:C.demand(v,a.tc,tf,result.mass)};
+}
+// Inverse of a one-joint, common-tendon, fixed volume ratio model. This is NOT an inverse dynamics solution.
+function absolute({group=2,mass=80.3,moment=3,arm=5,sigma=26.8,util=.5}={}){
+  valid(group,0,2,'MR-gruppe');if(!Number.isInteger(group))throw Error('MR-gruppe');valid(mass,35,150,'Kroppsmasse');valid(moment,.1,8,'Moment');valid(arm,2,8,'Momentarm');valid(sigma,10,60,'Spesifikk kraft');valid(util,.05,1,'Kraftutnyttelse');
+  const list=arch.map(m=>({...m,volume:mri[m.key][group][0]}));const refV=list.reduce((s,m)=>s+m.volume,0);let p=0,proj=0;for(const m of list){m.pcsa=m.volume/m.L;m.projected=m.pcsa*Math.cos(m.alpha*Math.PI/180);p+=m.pcsa;proj+=m.projected;}
+  const torque=moment*mass,tendonForce=torque/(arm/100);const referenceTorque=proj*sigma*util*arm/100;const x=torque/referenceTorque;
+  return {list,refV,referenceMass:refV*density/1000,referenceTorque,torque,tendonForce,x,requiredVolume:refV*x,requiredMass:refV*x*density/1000,pcsa:p*x,projectedPCSA:proj*x,isometricMoment:torque/util,requiredByMuscle:list.map(m=>({name:m.name,volume:m.volume*x,mass:m.volume*x*density/1000,pcsa:m.pcsa*x}))};
+}
+const api={inverse,absolute,mri,arch,profiles,density,shares};if(typeof module==='object'&&module.exports)module.exports=api;else root.MK=api;
+})(typeof window!=='undefined'?window:globalThis);
+
+(function(root){'use strict';
+const M=typeof module==='object'&&module.exports?require('./muscle_requirements.js'):root.MK;
+const params={male:{a:1.27,b:.105,min:2.5,max:11.2},female:{a:1.24,b:.106,min:2.5,max:8.0}};
+function check(x,lo,hi,name){if(!Number.isFinite(x)||x<lo||x>hi)throw Error(name+' utenfor intervallet');return x}
+function weyand(v,h=1.7675,sex='male',D=10){check(v,2.5,15,'Fart');check(h,1.3,2.2,'Høyde');check(D,1,20,'D');const p=params[sex];if(!p)throw Error('Ukjent gruppe');const Fg=p.a+p.b*v;return {v,h,sex,D,Fg,mass:D*h*h*Fg,bmi:D*Fg,slope:D*h*h*p.b,extrapolated:v<p.min||v>p.max};}
+// Schache et al. 2011 table 1, p.1264; mean ± SD. Positive magnitudes for flexion; not muscle forces.
+const speeds=[3.50,5.02,6.97,8.95], ns=[8,8,8,7];
+const moments={hipExtStance:{label:'Hofteekstensjon, tidlig støtte',values:[[2.02,.36],[2.95,1.08],[3.18,.85],[4.09,.69]]},kneeExtStance:{label:'Kneekstensjon, midtstøtte',values:[[3.12,.56],[3.52,.51],[3.59,.63],[3.55,.38]]},ankle:{label:'Plantarfleksjon, midtstøtte',values:[[2.94,.35],[3.55,.39],[3.77,.44],[4,.42]]},hipFlexSwing:{label:'Hoftefleksjon, tidlig sving',values:[[1.09,.06],[1.69,.25],[2.59,.35],[4.30,.87]]},hipExtSwing:{label:'Hofteekstensjon, sen sving',values:[[.91,.17],[1.41,.22],[2.45,.46],[4.18,1.26]]},kneeExtSwing:{label:'Kneekstensjon, tidlig sving',values:[[.17,.02],[.30,.07],[.64,.24],[1.01,.26]]},kneeFlexSwing:{label:'Knefleksjon, sen sving',values:[[.53,.09],[.71,.13],[1.08,.16],[1.76,.28]]}};
+function ankleScenario({index=3,ratio=1,...p}={}){if(!Number.isInteger(index)||index<0||index>=speeds.length)throw Error('Velg en publisert fart');check(ratio,.1,1.5,'Forhold triceps/nettomoment');const [mean,sd]=moments.ankle.values[index];return {speed:speeds[index],n:ns[index],mean,sd,ratio,estimate:M.absolute({...p,moment:mean*ratio}),low:M.absolute({...p,moment:(mean-sd)*ratio}),high:M.absolute({...p,moment:(mean+sd)*ratio})};}
+const api={weyand,params,speeds,ns,moments,ankleScenario};if(typeof module==='object'&&module.exports)module.exports=api;else root.Bench=api;
+})(typeof window!=='undefined'?window:globalThis);
+
+(function(root){'use strict';
+// Miller et al 2021/2022 Table 2. Each group: [unilateral volume cm3, SD, reported mean volume/body mass cm3/kg].
+// Ward et al 2009 Table 3: normalized fiber length (cm), pennation (deg). null means no matched architecture, not zero.
+const groups=['Kontroll menn (n=11)','Subelite menn (n=26)','Elite menn (n=5)','Subelite kvinner (n=17)','Elite kvinner (n=5)'];
+const total=[7628,9164,11323,6665,7665];
+const rows=[
+['iliopsoas','Iliopsoas',null,[[514,75,6.84],[618,101,8.18],[702,97,8.18],[369,50,5.91],[443,49,6.55]]],
+['sar','Sartorius',[40.30,1.3],[[142,25,1.89],[209,50,2.77],[306,46,3.56],[128,27,2.03],[185,37,2.74]]],
+['tfl','Tensor fasciae latae',null,[[73,24,.97],[86,25,1.14],[135,41,1.56],[57,12,.92],[81,24,1.19]]],
+['am','Adductor magnus',[14.44,15.5],[[624,81,8.30],[828,128,10.99],[1056,83,12.31],[585,99,9.30],[732,100,10.82]]],
+['gra','Gracilis',[22.78,8.2],[[98,23,1.31],[142,37,1.89],[180,37,2.10],[101,24,1.62],[113,9,1.69]]],
+['gmax','Gluteus maximus',[15.69,21.9],[[931,108,12.40],[1257,197,16.65],[1797,376,20.75],[891,160,14.17],[1161,128,17.19]]],
+['gmed','Gluteus medius',[7.33,20.5],[[384,49,5.11],[405,69,5.38],[434,92,5.01],[309,51,4.94],[339,53,5.02]]],
+['gmin','Gluteus minimus',null,[[199,39,2.66],[170,36,2.25],[192,46,2.22],[159,32,2.54],[148,38,2.20]]],
+['rf','Rectus femoris',[7.59,13.9],[[303,55,4.05],[401,78,5.33],[476,45,5.53],[272,45,4.33],[350,39,5.23]]],
+['vl','Vastus lateralis',[9.94,18.4],[[743,98,9.88],[925,156,12.26],[1132,180,13.07],[619,122,9.84],[788,113,11.69]]],
+['vi','Vastus intermedius',[9.93,4.5],[[680,115,9.01],[789,140,10.48],[962,145,11.17],[540,111,8.59],[607,74,9.03]]],
+['vm','Vastus medialis',[9.68,29.6],[[476,111,6.28],[521,79,6.92],[649,97,7.53],[379,75,6.03],[440,62,6.52]]],
+['sm','Semimembranosus',[6.90,15.1],[[262,18,3.50],[327,59,4.34],[359,60,4.16],[251,40,4.00],[270,65,3.99]]],
+['st','Semitendinosus',[19.30,12.9],[[219,39,2.93],[350,79,4.63],[449,70,5.20],[242,43,3.84],[287,51,4.29]]],
+['bfl','Biceps femoris, langt hode',[9.76,11.6],[[221,42,2.97],[267,47,3.55],[340,31,3.96],[204,42,3.25],[210,26,3.14]]],
+['bfs','Biceps femoris, kort hode',[11.03,12.3],[[110,28,1.46],[131,34,1.73],[167,26,1.94],[81,14,1.30],[101,17,1.49]]],
+['pop','Popliteus',null,[[19,6,.26],[17,5,.22],[23,5,.27],[15,4,.25],[19,3,.28]]],
+['lg','Gastrocnemius lateralis',[5.88,12.0],[[156,41,2.06],[170,37,2.25],[202,34,2.36],[164,32,2.62],[172,27,2.56]]],
+['mg','Gastrocnemius medialis',[5.10,9.9],[[251,52,3.33],[262,58,3.50],[300,38,3.50],[276,71,4.40],[225,25,3.34]]],
+['sol','Soleus',[4.40,28.3],[[453,95,6.00],[510,76,6.77],[610,137,7.05],[381,73,6.07],[359,64,5.33]]],
+['ant','Fremre leggkompartment',null,[[291,47,3.87],[273,47,3.62],[302,59,3.48],[216,34,3.46],[216,28,3.22]]],
+['lat','Laterale leggkompartment',null,[[153,35,2.02],[161,42,2.13],[147,32,1.69],[129,21,2.06],[129,17,1.92]]],
+['post','Bakre leggkompartment (øvrig)',null,[[326,93,4.32],[345,71,4.57],[401,76,4.63],[292,65,4.64],[291,91,4.34]]]
+];
+// Schache et al 2012 Tables 1 and 2. MTU forces N/kg (mean, SD), not fiber forces; peaks at separate times.
+const ham={sm:{swing:[46.81,6.25],stance:[6.48,1.63],F0:3864,L:8.0,alpha:15,vel:0.84},st:{swing:[5.49,.78],stance:[3.64,.73],F0:1230,L:20.1,alpha:13,vel:1.04},bfl:{swing:[26.35,5.15],stance:[4.61,.99],F0:2688,L:10,alpha:11.6,vel:.96},bfs:{swing:[10.36,1.47],stance:[14.78,7.99],F0:2412,L:11.03,alpha:12.3,vel:.71}};
+function check(x,min,max,name){if(!Number.isFinite(x)||x<min||x>max)throw Error(name+' utenfor intervallet');return x}
+function profile(g=2,sigma=26.8){check(g,0,4,'MR-gruppe');if(!Number.isInteger(g))throw Error('Ugyldig gruppe');check(sigma,10,100,'Spesifikk kraft');return rows.map(([id,name,arch,data])=>{const [volume,sd,relative]=data[g];if(!arch)return {id,name,volume,sd,relative,arch:null};const [L,alpha]=arch,cos=Math.cos(alpha*Math.PI/180),pcsa=volume/L,proj=pcsa*cos,cap=sigma*proj,capRel=sigma*relative/L*cos;return {id,name,volume,sd,relative,arch,L,alpha,pcsa,proj,cap,capRel}})}
+function hamCheck(g=2,sigma=26.8,phase='swing'){if(!['swing','stance'].includes(phase))throw Error('Ugyldig fase');return profile(g,sigma).filter(r=>ham[r.id]).map(r=>{const h=ham[r.id],d=h[phase][0];return {...r,demand:d,demandSD:h[phase][1],ratio:d/r.capRel,equivalentStress:sigma*d/r.capRel,schacheF0:h.F0,schacheProjF0:h.F0*Math.cos(h.alpha*Math.PI/180),mtuLengthening:h.vel}})}
+// fixed volume shift from one hamstring to the other; only geometry/isometric proxy, not sprint prediction.
+function shift(g=2,sigma=26.8,delta=0){const a=profile(g,sigma).filter(r=>ham[r.id]),st=a.find(r=>r.id==='st'),sm=a.find(r=>r.id==='sm');check(delta,-st.volume,sm.volume,'Overført volum');const base=a.reduce((s,r)=>s+r.cap,0),slope=sigma*(Math.cos(st.alpha*Math.PI/180)/st.L-Math.cos(sm.alpha*Math.PI/180)/sm.L);return {delta,base,after:base+delta*slope,stVolume:st.volume+delta,smVolume:sm.volume-delta,stCap:st.cap+delta*sigma*Math.cos(st.alpha*Math.PI/180)/st.L,smCap:sm.cap-delta*sigma*Math.cos(sm.alpha*Math.PI/180)/sm.L,volume:a.reduce((s,r)=>s+r.volume,0)}}
+const api={groups,total,rows,ham,profile,hamCheck,shift};if(typeof module==='object'&&module.exports)module.exports=api;else root.Anat=api;
+})(typeof window!=='undefined'?window:globalThis);
+
+(function(root){'use strict';
+const ids=['sm','st','bfl','bfs'];
+// Conditional simultaneous residual moments; all forces are nonnegative and bounded.
+// Units: caps N/kg, moment arms m, residual moments Nm/kg.
+function balance(caps,hip,knee,H,K){
+ if([caps,hip,knee].some(x=>!Array.isArray(x)||x.length!==4)||caps.some(x=>!Number.isFinite(x)||x<0)||hip.some(x=>!Number.isFinite(x)||x<0)||knee.some(x=>!Number.isFinite(x)||x<=0)||![H,K].every(x=>Number.isFinite(x)&&x>=0))throw Error('Ugyldige kapasitetstall, momentarmer eller restmomenter');
+ const maxK=caps.reduce((s,x,i)=>s+x*knee[i],0), maxH=caps.reduce((s,x,i)=>s+x*hip[i],0),eps=1e-9;
+ if(K>maxK+eps)return {status:'knee-exceeds',maxK,maxH};
+ function extreme(desc){let rem=K, F=[0,0,0,0];const order=[0,1,2,3].sort((a,b)=>(desc?-1:1)*(hip[a]/knee[a]-hip[b]/knee[b]));for(const i of order){F[i]=Math.min(caps[i],Math.max(0,rem)/knee[i]);rem-=F[i]*knee[i]}return {F,H:F.reduce((s,x,i)=>s+x*hip[i],0)}}
+ const lo=extreme(false),hi=extreme(true);if(H<lo.H-eps||H>hi.H+eps)return {status:'joint-incompatible',maxK,maxH,lo:lo.H,hi:hi.H};
+ const t=hi.H-lo.H>eps?Math.max(0,Math.min(1,(H-lo.H)/(hi.H-lo.H))):0,F=lo.F.map((x,i)=>x+t*(hi.F[i]-x));return {status:'feasible',maxK,maxH,lo:lo.H,hi:hi.H,F,H:F.reduce((s,x,i)=>s+x*hip[i],0),K:F.reduce((s,x,i)=>s+x*knee[i],0)};
+}
+// Illustrative concentric Hill factor; v is actual assumed FIBER speed (m/s), not MTU speed.
+function hill(v,L,nu,a=.25){if(![v,L,nu,a].every(Number.isFinite)||v<0||L<=0||nu<=0||a<=0)throw Error('Ugyldig Hill-parameter');const x=v/(L/100*nu);return Math.max(0,(1-x)/(1+x/a));}
+const api={ids,balance,hill};if(typeof module==='object'&&module.exports)module.exports=api;else root.Joint=api;
+})(typeof window!=='undefined'?window:globalThis);
+</script><script>
+const $=id=>document.getElementById(id);const n=(x,d=2)=>Number.isFinite(x)?x.toLocaleString('nb-NO',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';const val=id=>$(id).valueAsNumber;function metric(label,text){return `<div class="metric"><span>${label}</span><b>${text}</b></div>`}
+const speeds=[8,9,10,10.84,11,11.5,12,12.3];let rows=[];
+function relative(){try{const params={v:val('v'),tf:val('tf')/1000,profile:$('profile').value,dp:val('dp'),baseTau:Number($('tau').value),coupled:$('coupled').value==='1'};const r=MK.inverse(params);$('profileText').textContent='Arealandeler I / IIa / IIx: '+Object.values(MK.profiles[params.profile]).map(v=>n(100*v,1)+' %').join(' / ')+' (illustrative utenom historisk kalibrering; samme i alle tre grupper).';$('status').textContent=r.status==='ok'?'Løsning innenfor motorens parameterområde.':r.status==='outside-model-domain'?'Faktor utenfor testet område 0,5–2. Ingen godkjent modelløsning.':'Ingen endelig løsning i denne antakelsen.';let m=metric('Kontakttid',n(r.a.tc*1000,1)+' ms')+metric('Kraftkrav, kroppsvekt',n(r.a.required)+' BW')+metric('Støttemargin før skalering',n(r.a.support,3))+metric('Svingmargin før skalering',n(r.a.swing,3));if(r.status==='ok')m+=metric('PCSA-faktor',n(r.x,3)+' ×')+metric('Endring i modellert masse',params.coupled?n(r.deltaMass,2)+' kg':'0 kg (holdes fast)')+metric('Kraftkrav etter skalering',n(r.newDemand.meanN,0)+' N')+metric('Begrensende funksjon',r.limiter);$('relMetrics').innerHTML=m;rows=speeds.map(v=>{const a=MK.inverse({...params,v});return {v,status:a.status,factor:a.status==='ok'?a.x:null,delta:a.status==='ok'?a.deltaMass:null,limiter:a.limiter||''}});$('relBars').innerHTML=rows.map(r=>`<div class="barrow"><span>${n(r.v,2)} m/s</span><div class="bar"><i style="width:${r.factor===null?0:100*r.factor/2}%"></i></div><b>${r.factor===null?'utenfor':n(r.factor,3)}</b></div>`).join('');}catch(e){$('status').textContent=e.message;$('relMetrics').replaceChildren();$('relBars').replaceChildren();rows=[]}}
+function absolute(){try{const r=MK.absolute({group:Number($('group').value),mass:val('mass'),moment:val('moment'),arm:val('arm'),sigma:val('sigma'),util:val('util')});$('absStatus').textContent='Betinget modellberegning – ikke estimert fra løpshastighet.';$('absMetrics').innerHTML=metric('Momentkrav',n(r.torque,1)+' Nm')+metric('Senekraft',n(r.tendonForce,0)+' N')+metric('Nødvendig PCSA (fiber-normal)',n(r.pcsa,1)+' cm²')+metric('Nødvendig muskelmasse',n(r.requiredMass,2)+' kg')+metric('MR-basert muskelmasse',n(r.referenceMass,2)+' kg')+metric('Isometrisk moment ved samme geometri',n(r.isometricMoment,1)+' Nm')+metric('Volumfaktor',n(r.x,3)+' ×');$('absTable').innerHTML=r.list.map((m,i)=>`<tr><td>${m.name}</td><td>${n(m.volume,0)}</td><td>${n(m.L)}</td><td>${n(m.alpha,1)}</td><td>${n(r.requiredByMuscle[i].volume,0)}</td></tr>`).join('')}catch(e){$('absStatus').textContent=e.message;$('absMetrics').replaceChildren();$('absTable').replaceChildren()}}
+const labels={all:'Alle målte muskler',hipFlex:'Hoftefleksorer',hipExt:'Hofteekstensorer',kneeFlex:'Knefleksorer',kneeExt:'Kneekstensorer',plantar:'Plantarfleksorer'};$('mri').innerHTML=Object.entries(labels).map(([k,l])=>`<tr><td>${l}</td>${MK.mri[k].map(a=>`<td>${a[0]} ± ${a[1]}</td>`).join('')}</tr>`).join('');
+for(const id of ['v','tf','profile','dp','tau','coupled'])$(id).addEventListener('input',relative);for(const id of ['group','mass','moment','arm','sigma','util'])$(id).addEventListener('input',absolute);$('download').onclick=()=>{if(!rows.length)return;const csv='speed_mps,status,PCSA_factor,delta_mass_kg,limiter\n'+rows.map(r=>[r.v,r.status,r.factor??'',r.delta??'',r.limiter].join(',')).join('\n');const u=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));const a=document.createElement('a');a.href=u;a.download='muskelkrav_scenarioer.csv';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};relative();absolute();function weyandUI(){try{const w=Bench.weyand(val('wv'),val('wh'),$('wsex').value);$('wstatus').textContent=w.extrapolated?'Utenfor målt kraft–fart-område: ekstrapolasjon.':'Innenfor opprinnelig målt kraft–fart-område, men ikke individuelt validert.';$('wmetrics').innerHTML=metric('Gjennomsnittlig støtte Fg',n(w.Fg,3)+' BW')+metric('Modellert totalmasse',n(w.mass)+' kg')+metric('Modellert BMI',n(w.bmi)+' kg/m²')+metric('Helning ved fast høyde',n(w.slope)+' kg per m/s');}catch(e){$('wstatus').textContent=e.message;$('wmetrics').replaceChildren()}}
+const wr=Bench.weyand(10.84);$('wtable').innerHTML=speeds.map(v=>{const w=Bench.weyand(v);const a=MK.inverse({v});return `<tr><td>${n(v)}${w.extrapolated?'*':''}</td><td>${n(w.Fg,3)}</td><td>${n(a.a.required,3)}</td><td>${n(w.mass)}</td><td>${n(w.mass-wr.mass)}</td><td>${n(a.deltaMass)}</td></tr>`}).join('');
+$('jtable').innerHTML=Object.values(Bench.moments).map(m=>`<tr><td>${m.label}</td>${m.values.map(([a,b])=>`<td>${n(a)} ± ${n(b)}</td>`).join('')}</tr>`).join('');
+function jointUI(){try{const r=Bench.ankleScenario({index:Number($('jidx').value),ratio:val('jratio'),group:Number($('group').value),mass:val('mass'),arm:val('arm'),sigma:val('sigma'),util:val('util')});$('jstatus').textContent='Betinget modell ved '+n(r.speed)+' m/s, n='+r.n;$('jmetrics').innerHTML=metric('Estimert nettomoment',n(r.mean)+' ± '+n(r.sd)+' Nm/kg')+metric('Antatt tricepsmoment',n(r.estimate.torque,1)+' Nm')+metric('Beregnet senekraft',n(r.estimate.tendonForce,0)+' N')+metric('Beregnet muskelmasse, én side',n(r.estimate.requiredMass)+' kg')+metric('Ved middel ± SD i moment',n(r.low.requiredMass)+'–'+n(r.high.requiredMass)+' kg')+metric('MR-basert masse',n(r.estimate.referenceMass)+' kg');}catch(e){$('jstatus').textContent=e.message;$('jmetrics').replaceChildren()}}
+for(const id of ['wv','wh','wsex'])$(id).addEventListener('input',weyandUI);for(const id of ['jidx','jratio','group','mass','arm','sigma','util'])$(id).addEventListener('input',jointUI);weyandUI();jointUI();
+$('ag').innerHTML=Anat.groups.map((g,i)=>`<option value="${i}" ${i===2?'selected':''}>${g}</option>`).join('');
+function anatomy(){try{const g=Number($('ag').value),sig=val('asig'),phase=$('aphase').value,rows=Anat.profile(g,sig),h=Anat.hamCheck(g,sig,phase);$('astatus').textContent='Kryss-studie-estimat. Ikke en individuell prestasjonsprediksjon.';$('ametrics').innerHTML=metric('Målt totalvolum per bein',n(Anat.total[g],0)+' cm³')+metric('MR-basert masse begge bein',n(2*1.06*Anat.total[g]/1000,2)+' kg')+metric('Arkitekturmatch',rows.filter(r=>r.arch).length+' / '+rows.length);$('atable').innerHTML=rows.map(r=>`<tr><td>${r.name}</td><td>${n(r.volume,0)} ± ${n(r.sd,0)}</td><td>${n(r.relative)}</td><td>${n(r.L)}</td><td>${n(r.alpha,1)}</td><td>${n(r.pcsa,1)}</td><td>${n(r.cap,0)}</td></tr>`).join('');const top=Math.max(...h.flatMap(r=>[r.demand,r.capRel]));$('hamBars').innerHTML=h.map(r=>`<div><b>${r.name}</b><div class="barrow"><span>MTU-topp</span><div class="bar"><i style="width:${100*r.demand/top}%;background:#a46738"></i></div><b>${n(r.demand,1)}</b></div><div class="barrow"><span>Isometrisk proxy</span><div class="bar"><i style="width:${100*r.capRel/top}%"></i></div><b>${n(r.capRel,1)}</b></div></div>`).join('');$('hamtable').innerHTML=h.map(r=>`<tr><td>${r.name}</td><td>${n(r.demand)} ± ${n(r.demandSD)}</td><td>${n(r.capRel)}</td><td>${n(r.ratio)}</td><td>${n(r.equivalentStress,1)}</td><td>${n(r.schacheF0,0)}</td></tr>`).join('');const z=Anat.shift(g,sig,val('ashift'));$('shiftmetrics').innerHTML=metric('Samlet hamstringvolum',n(z.volume,0)+' cm³')+metric('Isometrisk kraftproxy før',n(z.base,0)+' N')+metric('Isometrisk kraftproxy etter',n(z.after,0)+' N')+metric('Endring',n(100*(z.after/z.base-1),1)+' %')+metric('ST-volum',n(z.stVolume,0)+' cm³')+metric('SM-volum',n(z.smVolume,0)+' cm³');}catch(e){$('astatus').textContent=e.message;for(const id of ['ametrics','atable','hamBars','hamtable','shiftmetrics'])$(id).replaceChildren();}}
+for(const id of ['ag','asig','aphase','ashift'])$(id).addEventListener('input',anatomy);anatomy();
+const jrIds=Joint.ids; $('jointRows').innerHTML=jrIds.map((id,i)=>`<tr><td>${Anat.rows.find(r=>r[0]===id)[1]}</td><td><input aria-label="${id} hoftearm cm" id="jh${i}" type="number" min="0" max="10" step=".1" value="${[5,5,5,0][i]}" ${i===3?'disabled':''} style="width:85px"></td><td><input aria-label="${id} knearm cm" id="jk${i}" type="number" min=".1" max="10" step=".1" value="${[3.5,4.5,3.5,3][i]}" style="width:85px"></td><td id="jc${i}"></td><td id="jf${i}"></td></tr>`).join('');
+function jointUpdate(){try{let H=val('jh')-val('joh'),K=val('jk')-val('jok'),sig=val('jsig'),u=val('ju');if(![val('jh'),val('jk')].every(x=>x>=0&&x<=10)||![val('joh'),val('jok')].every(x=>x>=-10&&x<=10)||!(sig>=22.5&&sig<=55&&u>=.1&&u<=2))throw Error('Kontroller inndata og intervaller');const p=Anat.profile(Number($('ag').value),sig),c=jrIds.map(id=>p.find(x=>x.id===id).capRel*u),h=jrIds.map((_,i)=>val('jh'+i)/100),k=jrIds.map((_,i)=>val('jk'+i)/100);if(h.some(x=>!(x>=0&&x<=.1))||k.some(x=>!(x>=.001&&x<=.1)))throw Error('Kontroller momentarmene');const z=Joint.balance(c,h,k,H,K);c.forEach((x,i)=>{$('jc'+i).textContent=n(x);$('jf'+i).textContent=z.F?n(z.F[i]):'–'});$('jointStatus').textContent=z.status==='feasible'?'Restmomentparet kan dekkes innenfor valgte krafttak.':z.status==='knee-exceeds'?'Knekravet overstiger modellert isolert kapasitet.':'Restmomentparet kan ikke dekkes samtidig.';$('jointMetrics').innerHTML=metric('Rest hofte',n(H)+' Nm/kg')+metric('Rest kne',n(K)+' Nm/kg')+metric('Isolert maks hofte',n(z.maxH)+' Nm/kg')+metric('Isolert maks kne',n(z.maxK)+' Nm/kg')+(z.lo===undefined?'':metric('Mulig hofte ved valgt kne',n(z.lo)+'–'+n(z.hi)+' Nm/kg'));const a=p.find(x=>x.id==='st').cap/p.find(x=>x.id==='sm').cap,b=Anat.ham.st.F0/Anat.ham.sm.F0;$('shareRatio').textContent=n(b*b,3)+' med Schaches F₀ mot '+n(a*a,3)+' med MR/Ward-proxy (lik σ)';}catch(e){$('jointStatus').textContent=e.message;$('jointMetrics').replaceChildren();$('shareRatio').textContent='–';jrIds.forEach((_,i)=>{$('jc'+i).textContent='–';$('jf'+i).textContent='–'})}}
+for(const id of ['ag','jh','jk','joh','jok','jsig','ju',...jrIds.flatMap((_,i)=>['jh'+i,'jk'+i])])$(id).addEventListener('input',jointUpdate);jointUpdate();
+
+function hillUpdate(){try{const g=Number($('ag').value),sig=val('jsig'),v=val('hfvel'),nu=val('hfmax'),d=val('ashift');if(!(sig>=22.5&&sig<=55&&v>=0&&v<=4&&nu>=4&&nu<=25))throw Error('Kontroller Hill-inndata');const a=Anat.profile(g,sig),z=Anat.shift(g,sig,d),sm=a.find(x=>x.id==='sm'),st=a.find(x=>x.id==='st'),bfl=a.find(x=>x.id==='bfl'),bfs=a.find(x=>x.id==='bfs'),f=Joint.hill(v,sm.L,nu),g2=Joint.hill(v,st.L,nu),rest=bfl.cap*Joint.hill(v,bfl.L,nu)+bfs.cap*Joint.hill(v,bfs.L,nu),before=sm.cap*f+st.cap*g2+rest,after=z.smCap*f+z.stCap*g2+rest;$('hillMetrics').innerHTML=metric('SM etter overføring',n(z.smCap*f,0)+' N')+metric('ST etter overføring',n(z.stCap*g2,0)+' N')+metric('Samlet før',n(before,0)+' N')+metric('Samlet etter',n(after,0)+' N')+metric('Endring',before>0?n(100*(after/before-1),1)+' %':'–');}catch(e){$('hillMetrics').textContent=e.message}}
+for(const id of ['ag','jsig','ashift','hfvel','hfmax'])$(id).addEventListener('input',hillUpdate);hillUpdate();
+
+</script></body></html>
